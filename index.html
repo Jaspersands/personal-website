@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jasper Sands | Quantum Algorithms & Machine Learning</title>
+  <meta name="description"
+    content="Personal portfolio of Jasper Sands, MS Candidate in Computer Science at Columbia University focusing on Quantum Algorithms and Machine Learning.">
+  <meta name="author" content="Jasper Sands">
+
+  <!-- SEO & Social Meta Tags -->
+  <meta property="og:title" content="Jasper Sands | Quantum Algorithms & Machine Learning">
+  <meta property="og:description"
+    content="Personal portfolio of Jasper Sands, MS Candidate at Columbia University. Research, projects, and experiences in Quantum Computing and AI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jaspersands.com/">
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=3">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       NAVIGATION HEADER
+       ========================================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="logo" id="nav-logo">
+        Jasper Sands <span class="logo-dot"></span>
+      </a>
+
+      <!-- Mobile menu toggle button -->
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          viewBox="0 0 24 24" width="24" height="24">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+        </svg>
+      </button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#education" class="nav-link">Education</a></li>
+        <li><a href="#research" class="nav-link">Research</a></li>
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#other" class="nav-link">Activities</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+        <li class="theme-toggle-li">
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme">
+            <!-- Sun Icon -->
+            <svg class="sun-icon" viewBox="0 0 16 16">
+              <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+            </svg>
+            <!-- Moon Icon -->
+            <svg class="moon-icon" viewBox="0 0 16 16">
+              <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       HERO SECTION
+       ========================================== -->
+  <header class="hero section" id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <h5>GRADUATE STUDENT @ COLUMBIA UNIVERSITY</h5>
+          <h1>Hi! I'm <span>Jasper Sands</span></h1>
+          <p class="hero-tagline">
+            Pursuing a personalized thesis in <strong>Quantum Computing</strong>. Leveraging computational modeling and
+            AI to tackle high-complexity frontiers.
+          </p>
+          <div class="hero-buttons">
+            <a href="assets/jaspersands_resume.pdf" class="btn btn-primary" target="_blank" id="btn-resume">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+              </svg>
+              View Resume
+            </a>
+            <a href="assets/jaspersands_cv.pdf" class="btn btn-secondary" target="_blank" id="btn-cv">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              Read CV
+            </a>
+          </div>
+        </div>
+        <div class="hero-image-wrapper">
+          <div class="profile-card">
+            <img src="assets/profile.jpeg" alt="Jasper Sands">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         ABOUT ME SECTION
+         ========================================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-grid">
+          <div class="about-text glass-card">
+            <p>
+              Born and raised in the heart of Silicon Valley, I grew up surrounded by technology, curiosity, and
+              constant reinvention. That environment sparked my passion for understanding how systems work, and how to
+              make them better. Over the years, my journey in computer science has evolved from building software and
+              hacking together creative projects to exploring the deep theoretical and computational frontiers of
+              quantum computing and machine learning.
+            </p>
+            <p>
+              I’ve developed a strong foundation in AI-driven research, spanning topics from large language models and
+              data-driven drug discovery to quantum algorithms and distributed systems. My portfolio includes hands-on
+              work in both academia and industry, from fine-tuning LLMs for policy analysis to designing scalable
+              inference pipelines and investigating ways to improve the reliability of generative protein modeling.
+            </p>
+            <p>
+              I believe innovation happens where theory meets application. I bring a mix of scientific curiosity,
+              engineering precision, and creative experimentation to every project, driven by the conviction that
+              emerging technologies like quantum computing and AI will redefine how we solve the world’s hardest
+              problems.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         EDUCATION SECTION
+         ========================================== -->
+    <section class="section" id="education">
+      <div class="container">
+        <h2 class="section-title">Education</h2>
+        <div class="education-grid">
+          <div class="timeline">
+            <!-- Columbia -->
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card glass-card">
+                <h3>Columbia University</h3>
+                <div class="timeline-meta">Master of Science in Computer Science (Quantum Computing Track) | Sep 2025 - May 2027</div>
+                <div class="coursework-title">Quantum Coursework:</div>
+                <ul class="course-list">
+                  <li>COMS 6998E: Quantum Error Correction</li>
+                  <li>EECS 6890E: Quantum Engineering</li>
+                  <li>PHYS 5084GR: Quantum Simulation & Computing Lab</li>
+                  <li>ELEN 4730E: Quantum Optimization & ML</li>
+                  <li>COMS 4281W: Intro to Quantum Computing</li>
+                </ul>
+                <div class="coursework-title">Other Selected Coursework:</div>
+                <ul class="course-list">
+                  <li>COMS 6997E: Machine Assisted Math</li>
+                  <li>COMS 4776E: Neural Networks & Deep Learning</li>
+                  <li>COMS 4762W: ML for Functional Genomics</li>
+                </ul>
+                <div class="coursework-title">Teaching Assistant:</div>
+                <ul class="course-list">
+                  <li>COMS 4281W: Intro to Quantum Computing</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- WashU -->
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card glass-card">
+                <h3>Washington University in St. Louis</h3>
+                <div class="timeline-meta">Bachelor of Science in Computer Science | Aug 2021 - May 2025</div>
+                <div class="coursework-title">Computer Science Coursework:</div>
+                <ul class="course-list">
+                  <li>CSE 587A: Algorithms for Biosequence Comparison</li>
+                  <li>CSE 517A: Machine Learning</li>
+                  <li>CSE 437S: Software Engineering Workshop</li>
+                  <li>CSE 434S: Reverse Engineering & Malware Analysis</li>
+                  <li>CSE 433S: Computer Security</li>
+                  <li>CSE 417T: Intro to Machine Learning</li>
+                  <li>CSE 412A: Intro to Artificial Intelligence</li>
+                  <li>CSE 347: Analysis of Algorithms</li>
+                  <li>CSE 332S: OOP Software Development</li>
+                  <li>CSE 330S: Creative Programming & Prototyping</li>
+                  <li>CSE 231S: Parallel & Concurrent Programming</li>
+                </ul>
+                <div class="coursework-title">Mathematics & Economics Coursework:</div>
+                <ul class="course-list">
+                  <li>ESE 326: Probability & Statistics for Engineering</li>
+                  <li>Math 310: Foundations for Higher Math</li>
+                  <li>Math 309: Matrix Algebra</li>
+                  <li>Econ 413W: Econometrics (Writing Intensive)</li>
+                  <li>Econ 4111: Optimization & Economic Theory</li>
+                  <li>Econ 467: Game Theory</li>
+                </ul>
+                <div class="coursework-title">Teaching Assistant:</div>
+                <ul class="course-list">
+                  <li>CSE 434S: Reverse Engineering and Malware Analysis</li>
+                  <li>CSE 231S: Introduction to Parallel and Concurrent Programming</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Danish Institute -->
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card glass-card">
+                <h3>Danish Institute for Study Abroad Copenhagen</h3>
+                <div class="timeline-meta">Study Abroad Semester | Jan 2024 - May 2024</div>
+                <div class="coursework-title">Coursework:</div>
+                <ul class="course-list">
+                  <li>Artificial Neural Networks and Deep Learning</li>
+                  <li>Artificial Intelligence</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Israel Summer Business Academy -->
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card glass-card">
+                <h3>Israel Summer Business Academy (WashU Olin)</h3>
+                <div class="timeline-meta">Summer Venture Program | Jun 2022 - Aug 2022</div>
+                <div class="coursework-title">Coursework:</div>
+                <ul class="course-list">
+                  <li>MGT 200: Venture Creation</li>
+                  <li>INTL 320: Business, Innovation & Entrepreneurship</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Menlo School -->
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card glass-card">
+                <h3>Menlo School</h3>
+                <div class="timeline-meta">High School Diploma | Aug 2017 - May 2021</div>
+                <div class="coursework-title">Highlights:</div>
+                <ul class="course-list">
+                  <li>4 Years of Computer Science Studies</li>
+                  <li>Score of 5 on AP Computer Science A</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="washu-photo-wrapper">
+            <div class="washu-photo">
+              <img src="assets/washu_campus.jpeg" alt="WashU Campus">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         RESEARCH SECTION
+         ========================================== -->
+    <section class="section" id="research">
+      <div class="container">
+        <h2 class="section-title">Research</h2>
+        <div class="cards-grid">
+          <!-- Cidon Systems Research Lab -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3 class="card-title">Cidon Systems Research Lab</h3>
+            <div class="card-subtitle">Graduate Student Researcher | Columbia | Sep 2025 - Present</div>
+            <p class="card-desc">
+              Collaborating with Dr. Asaf Cidon and Barracuda Networks to design machine-learning pipelines detecting
+              spam and phishing attacks. Integrating language-model embeddings with real-world email telemetry to
+              maximize detection precision and minimize false positive rates.
+            </p>
+          </div>
+
+          <!-- Quantum Algorithms reading group -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <h3 class="card-title">Quantum Reading Group</h3>
+            <div class="card-subtitle">Graduate Lead | Columbia | Sep 2025 - Present</div>
+            <p class="card-desc">
+              Leading technical deep-dives into Andrew Childs' quantum algorithms notes. Analyzing mathematical
+              frameworks for Hamiltonian simulation, amplitude amplification, QPE, and LCU. Conducting simulation
+              validation and coordinating talks with faculty and PhD researchers.
+            </p>
+          </div>
+
+          <!-- Desdr Open Insurance Toolkit -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M12 3v1.5M12 19.5V21M4.75 12H3M21 12h-1.75M18.364 5.636l-1.06 1.06M6.7 17.3l-1.06 1.06M18.364 18.364l-1.06-1.06M6.7 6.7l-1.06-1.06M12 8a4 4 0 100 8 4 4 0 000-8z" />
+              </svg>
+            </div>
+            <h3 class="card-title">Desdr Open Insurance Toolkit</h3>
+            <div class="card-subtitle">Graduate Student Researcher | Columbia | Sep 2025 - Dec 2025</div>
+            <p class="card-desc">
+              Developed an open-source insurance modeling toolkit with Dr. Eugene Wu. Processed field surveys into
+              actuarial and climate-risk features, designing data pipelines and models to estimate expected agricultural
+              losses in low-data developing regions.
+            </p>
+            <a href="https://columbia-desdr.github.io/" class="card-link" target="_blank">
+              View Project Website
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3zm-2 16H5V7h7V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v-2z" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- CRIS Lab -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L5.05 15.02a2 2 0 01-1.022-.547V3.535a2 2 0 011.022-.547l2.932-.587a6 6 0 013.86.517l.318.158a6 6 0 003.86.517l2.387-.477a2 2 0 011.022.547v11.893zM4 21h16" />
+              </svg>
+            </div>
+            <h3 class="card-title">CRIS Lab</h3>
+            <div class="card-subtitle">Graduate Student Researcher | Columbia | May 2025 - Dec 2025</div>
+            <p class="card-desc">
+              Researched hallucination-reduction techniques in generative protein modeling under Dr. Venkat
+              Venkatasubramanian. Built tools translating natural language pharmaceutical queries into structured,
+              graph-grounded molecular properties to validate AlphaFold structures.
+            </p>
+          </div>
+
+          <!-- Foster Care policy database -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+              </svg>
+            </div>
+            <h3 class="card-title">Foster Care Policy Database</h3>
+            <div class="card-subtitle">Undergraduate Researcher | WashU | Sep 2024 - Jun 2025</div>
+            <p class="card-desc">
+              Fine-tuned a LLaMA-3 model using Unsloth and Hugging Face to query complex multi-state foster care
+              regulations. Implemented a web-hosted interface leveraging Human-in-the-Loop reinforcement learning to
+              iteratively refine policy answers.
+            </p>
+            <a href="https://github.com/Jaspersands/fosterTuning" class="card-link" target="_blank">
+              GitHub Repository
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3zm-2 16H5V7h7V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v-2z" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Computer Vision & AI Lab -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </div>
+            <h3 class="card-title">Computer Vision &amp; AI Lab</h3>
+            <div class="card-subtitle">Undergraduate Researcher | WashU | Sep 2024 - Jun 2025</div>
+            <p class="card-desc">
+              Developed distributed high-throughput scraping pipelines under Dr. Umar Iqbal. Parsed and cleaned large
+              online forums data (billions of posts) to execute demographic and behavioral trend studies at population
+              scale.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         WORK EXPERIENCE SECTION
+         ========================================== -->
+    <section class="section" id="experience">
+      <div class="container">
+        <h2 class="section-title">Work Experience</h2>
+        <div class="cards-grid">
+          <!-- Smack Technologies -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3 class="card-title">Smack Technologies</h3>
+            <div class="card-subtitle">Software Engineer Intern | May 2026 - Present</div>
+            <p class="card-desc">
+              Developing physics simulations and training decision models to optimize core technology pipelines.
+              Implementing robust state transition mappings and simulation benchmarks to validate model policy actions.
+            </p>
+          </div>
+
+          <!-- Highnote -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 class="card-title">Highnote</h3>
+            <div class="card-subtitle">Cybersecurity Engineer Intern | May 2024 - Jul 2024</div>
+            <p class="card-desc">
+              Managed the SIEM ecosystem for card-issuing fintech platform. Unified distributed logs/telemetry from AWS,
+              GCP, and Datadog into a centralized Elasticsearch cluster supporting 1TB+ daily ingestion. Configured
+              custom agents, ingest pipelines, and 100+ high-fidelity behavior rules (including ML anomalies) to
+              strengthen transaction infrastructure security.
+            </p>
+          </div>
+
+          <!-- Mindtrip -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+            <h3 class="card-title">Mindtrip</h3>
+            <div class="card-subtitle">Software Engineer Intern | May 2023 - Jul 2023</div>
+            <p class="card-desc">
+              Built critical admin interfaces for a travel-tech startup leveraging large language models. Developed
+              internal secure query panels using JS (frontend) and Ruby on Rails (backend) via Retool. Streamlined data
+              verification, eliminated direct DB writes, and saved 250+ hours monthly in manual engineering
+              interventions.
+            </p>
+          </div>
+
+          <!-- Bugcrowd -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 class="card-title">Bugcrowd</h3>
+            <div class="card-subtitle">Associate Application Security Engineer | May 2020 - Jul 2020</div>
+            <p class="card-desc">
+              Managed end-to-end vulnerability triage, confirming and validating security submissions from global
+              researchers. Collaborated with major technology clients to prioritize critical vulnerabilities, coordinate
+              disclosure pathways, and advise on defensive mitigations.
+            </p>
+          </div>
+
+          <!-- Sparkiverse -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h3 class="card-title">Sparkiverse</h3>
+            <div class="card-subtitle">Technology &amp; Programming Instructor | Jan 2020 - Jul 2020</div>
+            <p class="card-desc">
+              Taught computer science fundamentals (logic gates, control flows) to elementary school students. Adapted
+              curriculum to a remote model during COVID-19 by deploying interactive learning spaces within zoom and
+              Minecraft servers to preserve engagement.
+            </p>
+          </div>
+
+          <!-- University Club -->
+          <div class="glass-card">
+            <div class="card-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="4" />
+                <path d="M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24m-9.9-4.24l-4.24 4.24m14.14-14.14l-4.24 4.24" />
+              </svg>
+            </div>
+            <h3 class="card-title">University Club of Palo Alto</h3>
+            <div class="card-subtitle">Lifeguard &amp; Swim Coach | Jun 2018 - Jan 2020</div>
+            <p class="card-desc">
+              Developed emergency-management and team communication skills. Maintained pool safety, coached swim
+              mechanics, and handled crisis situations calmly to safeguard members.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         RELEVANT PROJECTS SECTION
+         ========================================== -->
+    <section class="section" id="projects">
+      <div class="container">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+
+          <!-- WhatTheDuck -->
+          <div class="project-large-card glass-card">
+            <div class="project-content">
+              <h3>WhatTheDuck</h3>
+              <div class="project-meta">State Street × Classiq Challenge | iQuHacks 2026</div>
+              <div class="project-awards">
+                <svg viewBox="0 0 20 20">
+                  <path
+                    d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                </svg>
+                🏆 <strong>Overall Winner of iQuHACK 2026</strong> | NVIDIA Ecosystem Award | State Street Honorable
+                Mention
+              </div>
+              <p class="project-description">
+                Designed a classical Quasi-Monte Carlo baseline and contributed to a quantum Iterative Amplitude
+                Estimation (IQAE) approach for financial Value at Risk (VaR) estimation. Built and benchmarked the
+                GPU-accelerated state preparation, threshold oracle, and bisection search using CUDA-Q. Empirically
+                validated the O(1/ε) quantum speedup compared to O(1/ε²) classical scaling under identical loss bounds.
+              </p>
+              <div class="project-tags">
+                <span class="tag">CUDA-Q</span>
+                <span class="tag">Quantum Amplitude Estimation</span>
+                <span class="tag">Monte Carlo</span>
+                <span class="tag">C++</span>
+                <span class="tag">NVIDIA GPUs</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/ShayManor/WhatTheDuck" class="btn btn-primary" target="_blank">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                  </svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+            <div class="project-gallery">
+              <div class="gallery-img full-width"><img src="assets/project_1.jpeg"
+                  alt="iQuHacks fQAE simulation results"></div>
+            </div>
+          </div>
+
+          <!-- QTrim -->
+          <div class="project-large-card glass-card">
+            <div class="project-content">
+              <h3>QTrim (Quantum Multiverse Optimizer)</h3>
+              <div class="project-meta">Snapdragon Multiverse Hackathon 2026 | Runner-Up</div>
+              <p class="project-description">
+                Engineered an end-to-end Reinforcement Learning environment for hardware-aware quantum circuit
+                compilation. Defined the state representation, rewrites, and optimization objectives to minimize depth
+                and gate error, training offline agents to discover custom optimization trajectories. Connected the
+                engine to an API server and mobile client running on-device edge inference.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Reinforcement Learning</span>
+                <span class="tag">Quantum Compilers</span>
+                <span class="tag">On-Device AI</span>
+                <span class="tag">Python</span>
+                <span class="tag">Android Edge</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/leilaerhili/Qtrim" class="btn btn-primary" target="_blank">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                  </svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+            <div class="project-gallery">
+              <div class="gallery-img full-width"><img src="assets/project_2.jpeg"
+                  alt="Qualcomm Snapdragon Multiverse Hackathon Award"></div>
+            </div>
+          </div>
+
+          <!-- Practical LLM-Based Lossless Compression -->
+          <div class="project-large-card glass-card">
+            <div class="project-content">
+              <h3>LLM-Based Lossless Text Compression</h3>
+              <div class="project-meta">Systems Optimization Project</div>
+              <p class="project-description">
+                Investigated the practical throughput and memory bounds of text compression using autoregressive LLMs
+                and arithmetic coding. Achieved 5-16× average compression (up to 39×), outperforming zstd/gzip.
+                Optimized systems constraints through static KV-caching, CUDA graph capture, and segment-level batched
+                inference.
+              </p>
+              <div class="project-tags">
+                <span class="tag">LLMs</span>
+                <span class="tag">Arithmetic Coding</span>
+                <span class="tag">KV Caching</span>
+                <span class="tag">PyTorch</span>
+                <span class="tag">CUDA Graphs</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/Jaspersands/LLMcompression" class="btn btn-primary" target="_blank">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                  </svg>
+                  GitHub
+                </a>
+                <a href="assets/practical-llm-based-lossless-compression.pdf" class="btn btn-secondary" target="_blank">
+                  Paper PDF
+                </a>
+              </div>
+            </div>
+            <!-- No gallery images -->
+          </div>
+
+          <!-- HyperAMR -->
+          <div class="project-large-card glass-card">
+            <div class="project-content">
+              <h3>Multimodal Hyperbolic Embeddings (HyperAMR)</h3>
+              <div class="project-meta">Research Paper | Genomic Hierarchy Modeling</div>
+              <p class="project-description">
+                Introduced HyperAMR, a multimodal representation framework mapping metagenomic contigs, AMR annotations,
+                and taxonomic hierarchies into a shared hyperbolic space. Validated that hyperbolic geometries capture
+                parent-child biological lineages more accurately than Euclidean coordinates, significantly boosting AUPR
+                on rare resistance classes.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Hyperbolic Embeddings</span>
+                <span class="tag">Metagenomics</span>
+                <span class="tag">Antimicrobial Resistance</span>
+                <span class="tag">PyTorch</span>
+              </div>
+              <div class="project-links">
+                <a href="assets/practical-llm-based-lossless-compression.pdf" class="btn btn-primary" target="_blank">
+                  Read Research Paper
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ASLingo -->
+          <div class="project-large-card glass-card">
+            <div class="project-content">
+              <h3>ASLingo</h3>
+              <div class="project-meta">Software Engineering Workshop Project</div>
+              <p class="project-description">
+                Built a gamified American Sign Language learning application. Engineered the vision translation
+                subsystem, training a real-time gesture classification pipeline using Google MediaPipe and Scikit-Learn.
+                Integrated an LSTM sequence network to accurately recognize continuous signs over video frames.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Computer Vision</span>
+                <span class="tag">MediaPipe</span>
+                <span class="tag">LSTMs</span>
+                <span class="tag">Scikit-learn</span>
+                <span class="tag">WebSockets</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/Jaspersands/ASLingo" class="btn btn-primary" target="_blank">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                  </svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+            <div class="project-gallery" style="margin-top: 1.5rem;">
+              <div class="gallery-img"><img src="assets/screenshot_in_progress_1.png"
+                  alt="ASLingo Hand Sign Gesture Translation"></div>
+              <div class="gallery-img"><img src="assets/screenshot_in_progress_2.png"
+                  alt="ASLingo Gesture Recognition Training"></div>
+            </div>
+          </div>
+
+          <!-- Skeleton2Animal -->
+          <div class="project-large-card glass-card">
+            <div class="project-content">
+              <h3>Skeleton2Animal</h3>
+              <div class="project-meta">Computer Vision Study</div>
+              <p class="project-description">
+                Implemented a custom Reverse CycleGAN architecture generating structured images from sparse skeletal
+                inputs. Investigated training stability, custom structural loss formulations, and aggressive
+                data-augmentation strategies to counteract small dataset constraints.
+              </p>
+              <div class="project-tags">
+                <span class="tag">CycleGANs</span>
+                <span class="tag">Generative AI</span>
+                <span class="tag">Image Translation</span>
+                <span class="tag">PyTorch</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/Jaspersands/Subletify" class="btn btn-primary" target="_blank">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                  </svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+            <div class="project-gallery" style="margin-top: 1.5rem;">
+              <div class="gallery-img full-width"><img src="assets/screenshot_results.png"
+                  alt="Skeleton2Animal Translation Results"></div>
+            </div>
+          </div>
+
+          <!-- Qwordle! -->
+          <div class="project-large-card glass-card">
+            <div class="project-content">
+              <h3>Qwordle!</h3>
+              <div class="project-meta">Quantum Game Project</div>
+              <p class="project-description">
+                Developed a Wordle clone themed around quantum computing terminology. Run and play directly inside the
+                integrated layout or via the standalone web portal.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Web Games</span>
+                <span class="tag">Quantum Terminology</span>
+                <span class="tag">Vanilla JS</span>
+              </div>
+              <div class="project-links">
+                <a href="https://qwordle.jaspersands.com/" class="btn btn-primary" target="_blank">
+                  Play Standalone
+                </a>
+              </div>
+
+              <div class="project-iframe-container">
+                <iframe src="https://qwordle.jaspersands.com/" title="Qwordle"></iframe>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         OTHER EXPERIENCES / ACTIVITIES SECTION
+         ========================================== -->
+    <section class="section" id="other">
+      <div class="container">
+        <h2 class="section-title">Activities &amp; Hobbies</h2>
+        <div class="cards-grid">
+          <!-- Biking -->
+          <div class="glass-card">
+            <h3 class="card-title">Self-Supported Bike Touring</h3>
+            <p class="card-desc" style="margin-bottom: var(--spacing-xs)">
+              Passionate about fully self-contained bike tours carrying all camping gear, food, and supplies.
+            </p>
+            <ul
+              style="list-style-type: circle; padding-left: 1.25rem; font-size: 0.95rem; color: var(--color-text-secondary);">
+              <li>3,200 miles from Savannah, Georgia to Los Angeles, California (Summer 2019)</li>
+              <li>1,500 miles from Amsterdam, Netherlands to Barcelona, Spain (Summer 2018)</li>
+              <li>1,000 miles touring the Canadian and Montanan Rockies (Summer 2021)</li>
+              <li>400 miles from Jasper to Banff, Canada (Summer 2025)</li>
+              <li>2025 Death Ride: 115 miles, 14,000 ft of climbing in the Sierra Mountains</li>
+            </ul>
+            <!-- No photos for biking -->
+          </div>
+
+          <!-- Gymnastics -->
+          <div class="glass-card">
+            <h3 class="card-title">Gymnastics</h3>
+            <p class="card-desc" style="margin-bottom: var(--spacing-xs);">
+              Competitive gymnast for many years. Trained with Stanford Boys Gymnastics, then joined the WashU
+              Gymnastics Club leading practice sessions and competing in intercollegiate meets.
+            </p>
+            <div class="washu-photo" style="margin-top: 1rem;">
+              <img src="assets/biking.jpeg" alt="Gymnastics training"
+                style="height: 240px; object-fit: cover; width: 100%;">
+            </div>
+          </div>
+
+          <!-- Ironman -->
+          <div class="glass-card">
+            <h3 class="card-title">Endurance &amp; Triathlon</h3>
+            <ul
+              style="list-style-type: circle; padding-left: 1.25rem; font-size: 0.95rem; color: var(--color-text-secondary); margin-bottom: var(--spacing-xs)">
+              <li>2025 Oceanside Ironman 70.3 Finish Time: 5:18</li>
+              <li>2025 Lake Placid Ironman Training (Interrupted by stress fracture /:)</li>
+            </ul>
+            <div class="washu-photo">
+              <img src="assets/ironman.jpeg" alt="Ironman Finish" style="height: 180px;">
+            </div>
+          </div>
+
+          <!-- Columbia Racing -->
+          <div class="glass-card">
+            <h3 class="card-title">Columbia Autonomous Racing Club</h3>
+            <p class="card-desc">
+              Founding semester member. Coordinating sponsor outreach and translating hardware/software racing baselines
+              for local track testing.
+            </p>
+          </div>
+
+          <!-- WashU Votes -->
+          <div class="glass-card">
+            <h3 class="card-title">WashU Votes</h3>
+            <p class="card-desc" style="margin-bottom: 1rem;">
+              Promoted civic action and registration drives. Led legislator outreach at the Missouri State Capitol in
+              Jefferson City to advocate for voting accessibility.
+            </p>
+            <div class="washu-photo" style="margin-top: 0.5rem;">
+              <img src="assets/gymnastics.jpeg" alt="WashU Votes civic action"
+                style="height: 260px; object-fit: cover; width: 100%;">
+            </div>
+          </div>
+
+          <!-- Tutor Me -->
+          <div class="glass-card">
+            <h3 class="card-title">St. Louis Tutor Me Program</h3>
+            <p class="card-desc">
+              Volunteer math and literacy tutor. Supported K-12 students in local underserved districts to bridge
+              learning gaps.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SKILLS SECTION
+         ========================================== -->
+    <section class="section" id="skills">
+      <div class="container">
+        <h2 class="section-title">Skills &amp; Toolkit</h2>
+        <div class="skills-grid">
+
+          <!-- Column 1 -->
+          <div>
+            <!-- Quantum Computing -->
+            <div class="skills-category">
+              <h3>Quantum Computing &amp; Algorithms</h3>
+              <div class="skills-subcategory">
+                <h4>Algorithms &amp; Primitives</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">Hamiltonian Simulation</span>
+                  <span class="skill-pill">Quantum Phase Estimation (QPE)</span>
+                  <span class="skill-pill">Amplitude Amplification &amp; Estimation</span>
+                  <span class="skill-pill">Quantum Walks</span>
+                  <span class="skill-pill">Block Encoding</span>
+                  <span class="skill-pill">Linear Combination of Unitaries (LCU)</span>
+                </div>
+              </div>
+              <div class="skills-subcategory">
+                <h4>Variational &amp; Hybrid</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">VQE</span>
+                  <span class="skill-pill">QAOA</span>
+                  <span class="skill-pill">Hybrid Parameterized Circuits</span>
+                </div>
+              </div>
+              <div class="skills-subcategory">
+                <h4>Compilation &amp; Simulation</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">Circuit Optimization &amp; Transpilation</span>
+                  <span class="skill-pill">Statevector &amp; Density Matrix Simulation</span>
+                  <span class="skill-pill">Noise Modeling &amp; Mitigation</span>
+                  <span class="skill-pill">NISQ Performance Tradeoffs</span>
+                  <span class="skill-pill">Quantum Error Correction (QEC)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Languages -->
+            <div class="skills-category">
+              <h3>Languages</h3>
+              <div class="skills-list">
+                <span class="skill-pill">Python (Quantum, ML, Scientific)</span>
+                <span class="skill-pill">C++ (Performance Systems)</span>
+                <span class="skill-pill">C</span>
+                <span class="skill-pill">Go</span>
+                <span class="skill-pill">Java</span>
+                <span class="skill-pill">JavaScript / TypeScript</span>
+                <span class="skill-pill">MATLAB</span>
+                <span class="skill-pill">x86 &amp; ARM Assembly</span>
+                <span class="skill-pill">French :)</span>
+              </div>
+            </div>
+
+            <!-- Frameworks -->
+            <div class="skills-category">
+              <h3>Libraries &amp; Frameworks</h3>
+              <div class="skills-subcategory">
+                <h4>Quantum &amp; Math</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">Qiskit</span>
+                  <span class="skill-pill">Cirq</span>
+                  <span class="skill-pill">PennyLane</span>
+                  <span class="skill-pill">NumPy</span>
+                  <span class="skill-pill">SciPy</span>
+                  <span class="skill-pill">Pandas</span>
+                  <span class="skill-pill">NetworkX</span>
+                  <span class="skill-pill">Matplotlib</span>
+                </div>
+              </div>
+              <div class="skills-subcategory">
+                <h4>Machine Learning &amp; Compute</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">PyTorch</span>
+                  <span class="skill-pill">TensorFlow</span>
+                  <span class="skill-pill">Keras</span>
+                  <span class="skill-pill">Scikit-learn</span>
+                  <span class="skill-pill">Hugging Face</span>
+                  <span class="skill-pill">CUDA</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2 -->
+          <div>
+            <!-- Mathematics -->
+            <div class="skills-category">
+              <h3>Mathematics &amp; Theory</h3>
+              <div class="skills-subcategory">
+                <h4>Foundations</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">Linear Algebra (Eigendecomposition, Matrix Exp)</span>
+                  <span class="skill-pill">Spectral Graph Theory</span>
+                  <span class="skill-pill">Tensor Methods &amp; Contraction</span>
+                  <span class="skill-pill">Probability Theory</span>
+                </div>
+              </div>
+              <div class="skills-subcategory">
+                <h4>Optimization &amp; Complexity</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">Gradient &amp; Stochastic Optimization</span>
+                  <span class="skill-pill">Constrained Methods</span>
+                  <span class="skill-pill">Quantum Complexity (BQP, QMA)</span>
+                  <span class="skill-pill">Oracle / Query Complexity</span>
+                  <span class="skill-pill">Asymptotic Analysis</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Systems & Platforms -->
+            <div class="skills-category">
+              <h3>Tooling, Systems &amp; Cloud</h3>
+              <div class="skills-list">
+                <span class="skill-pill">Linux / Unix</span>
+                <span class="skill-pill">Git / GitHub</span>
+                <span class="skill-pill">Docker</span>
+                <span class="skill-pill">LaTeX</span>
+                <span class="skill-pill">qBraid</span>
+                <span class="skill-pill">AWS (EC2, S3)</span>
+                <span class="skill-pill">GCP</span>
+                <span class="skill-pill">Azure</span>
+                <span class="skill-pill">Datadog</span>
+                <span class="skill-pill">Elasticsearch</span>
+              </div>
+            </div>
+
+            <!-- Databases & Web -->
+            <div class="skills-category">
+              <h3>Web &amp; Databases</h3>
+              <div class="skills-subcategory">
+                <h4>Databases</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">PostgreSQL</span>
+                  <span class="skill-pill">MySQL</span>
+                  <span class="skill-pill">MongoDB</span>
+                  <span class="skill-pill">Supabase</span>
+                </div>
+              </div>
+              <div class="skills-subcategory">
+                <h4>App Frameworks</h4>
+                <div class="skills-list">
+                  <span class="skill-pill">Next.js / React</span>
+                  <span class="skill-pill">Node.js / Express</span>
+                  <span class="skill-pill">Django</span>
+                  <span class="skill-pill">Ruby on Rails</span>
+                  <span class="skill-pill">AngularJS</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Non-Technical -->
+            <div class="skills-category">
+              <h3>Non-Technical Toolkit</h3>
+              <div class="skills-list">
+                <span class="skill-pill">Leadership</span>
+                <span class="skill-pill">Technical Writing</span>
+                <span class="skill-pill">Entrepreneurship</span>
+                <span class="skill-pill">Mentorship</span>
+                <span class="skill-pill">Cross-Disciplinary Collaboration</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         CONTACT SECTION
+         ========================================== -->
+    <section class="section" id="contact">
+      <div class="container">
+        <h2 class="section-title">Let's Chat</h2>
+        <div class="contact-grid">
+
+          <div class="contact-info">
+            <h3>Get In Touch</h3>
+            <p>
+              Have a question about my research, quantum algorithms, or want to collaborate on a project? Drop me a
+              message! You can also ask me about the Minnesota Vikings, Lego builds, Harry Potter, or Formula 1.
+            </p>
+            <div class="contact-details">
+              <div class="contact-item">
+                <div class="contact-icon-wrapper">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <a href="mailto:jaspersands02@gmail.com">jaspersands02@gmail.com</a>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon-wrapper">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <a href="mailto:js6908@columbia.edu">js6908@columbia.edu</a>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon-wrapper">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                </div>
+                <div>
+                  <span>+1 (650) 924 8429</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-form-card glass-card">
+            <!-- Formspree Endpoint (change 'your_formspree_id' to your actual Formspree ID to enable static mail forwarding) -->
+            <form action="https://formspree.io/f/xvgopkny" method="POST" id="contact-form">
+              <div class="form-group">
+                <label for="form-name" class="form-label">Name</label>
+                <input type="text" name="name" id="form-name" class="form-input" placeholder="Your Name" required>
+              </div>
+              <div class="form-group">
+                <label for="form-email" class="form-label">Email</label>
+                <input type="email" name="_replyto" id="form-email" class="form-input"
+                  placeholder="your.email@example.com" required>
+              </div>
+              <div class="form-group">
+                <label for="form-message" class="form-label">Message</label>
+                <textarea name="message" id="form-message" class="form-textarea"
+                  placeholder="Write your message here..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send
+                Message</button>
+              <div id="form-status" class="form-status"></div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       FOOTER SECTION
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-socials">
+        <a href="https://www.linkedin.com/in/jaspersands" class="social-link" target="_blank" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+          </svg>
+        </a>
+        <a href="https://github.com/Jaspersands" class="social-link" target="_blank" aria-label="GitHub">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+        </a>
+        <a href="mailto:jaspersands02@gmail.com" class="social-link" aria-label="Email">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+          </svg>
+        </a>
+      </div>
+      <p class="footer-credits">&copy; 2026 Jasper Sands. Rebuilt as a high-performance static website.</p>
+    </div>
+  </footer>
+
+  <!-- JS Logic Script -->
+  <script src="script.js"></script>
+</body>
+
+</html>
