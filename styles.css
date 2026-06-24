@@ -360,10 +360,11 @@ img:hover {
    HERO SECTION
    ========================================== */
 .hero {
-  min-height: 90vh;
+  min-height: auto;
   display: flex;
   align-items: center;
-  padding-top: 6rem;
+  padding-top: 8.5rem;
+  padding-bottom: 4.5rem;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -437,6 +438,10 @@ img:hover {
 /* ==========================================
    ABOUT ME SECTION
    ========================================== */
+#about {
+  padding-top: 4.5rem;
+}
+
 .about-grid {
   max-width: 800px;
 }
