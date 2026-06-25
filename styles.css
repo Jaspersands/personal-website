@@ -605,13 +605,7 @@ img:hover {
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-lg);
   align-items: flex-start;
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: var(--spacing-lg);
-}
-
-.project-large-card:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+  padding: var(--spacing-lg);
 }
 
 .project-content h3 {
