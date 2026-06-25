@@ -538,6 +538,16 @@ img:hover {
   object-fit: cover;
 }
 
+.washu-photo-wrapper {
+  margin-top: 0;
+}
+
+@media (min-width: 993px) {
+  .washu-photo-wrapper {
+    margin-top: 30rem;
+  }
+}
+
 /* ==========================================
    RESEARCH & WORK EXPERIENCE GRID
    ========================================== */
