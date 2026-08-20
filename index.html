@@ -279,79 +279,71 @@
             </div>
             <div class="demo">
               <div class="demo-head">
-                <span class="t">Threshold · Union-Find</span>
-                <span class="t">30k shots/pt</span>
+                <span class="t">Threshold · exact MWPM</span>
+                <span class="t">20k shots/pt</span>
               </div>
               <div class="demo-body">
                 <svg viewBox="0 0 300 190">
-<rect class="thrband" x="65.0" y="12" width="25.0" height="148"/>
-                <line class="gridline" x1="40" y1="160.0" x2="290" y2="160.0" stroke-width="1"/>
-                <text class="tick" x="35" y="163.0" text-anchor="end">1%</text>
-                <line class="gridline" x1="40" y1="124.7" x2="290" y2="124.7" stroke-width="1"/>
-                <text class="tick" x="35" y="127.7" text-anchor="end">3%</text>
-                <line class="gridline" x1="40" y1="86.0" x2="290" y2="86.0" stroke-width="1"/>
-                <text class="tick" x="35" y="89.0" text-anchor="end">10%</text>
-                <line class="gridline" x1="40" y1="50.7" x2="290" y2="50.7" stroke-width="1"/>
-                <text class="tick" x="35" y="53.7" text-anchor="end">30%</text>
-                <line class="gridline" x1="40" y1="12.0" x2="290" y2="12.0" stroke-width="1"/>
-                <text class="tick" x="35" y="15.0" text-anchor="end">100%</text>
-                <line class="gridline" x1="40.0" y1="12" x2="40.0" y2="160" stroke-width="1"/>
-                <text class="tick" x="40.0" y="171" text-anchor="middle">2%</text>
-                <line class="gridline" x1="90.0" y1="12" x2="90.0" y2="160" stroke-width="1"/>
-                <text class="tick" x="90.0" y="171" text-anchor="middle">3%</text>
-                <line class="gridline" x1="140.0" y1="12" x2="140.0" y2="160" stroke-width="1"/>
-                <text class="tick" x="140.0" y="171" text-anchor="middle">4%</text>
-                <line class="gridline" x1="190.0" y1="12" x2="190.0" y2="160" stroke-width="1"/>
-                <text class="tick" x="190.0" y="171" text-anchor="middle">5%</text>
-                <line class="gridline" x1="240.0" y1="12" x2="240.0" y2="160" stroke-width="1"/>
-                <text class="tick" x="240.0" y="171" text-anchor="middle">6%</text>
-                <line class="gridline" x1="290.0" y1="12" x2="290.0" y2="160" stroke-width="1"/>
-                <text class="tick" x="290.0" y="171" text-anchor="middle">7%</text>
-                <line class="axis" x1="40" y1="12" x2="40" y2="160" stroke-width="1"/>
-                <line class="axis" x1="40" y1="160" x2="290" y2="160" stroke-width="1"/>
-                <path class="s-d3" d="M 40.0 112.6 L 65.0 101.6 L 90.0 90.7 L 115.0 82.4 L 140.0 75.8 L 165.0 70.0 L 190.0 64.8 L 240.0 56.2 L 290.0 49.9" fill="none" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-                <circle class="s-d3-m" cx="40.0" cy="112.6" r="2"/>
-                <circle class="s-d3-m" cx="65.0" cy="101.6" r="2"/>
-                <circle class="s-d3-m" cx="90.0" cy="90.7" r="2"/>
-                <circle class="s-d3-m" cx="115.0" cy="82.4" r="2"/>
-                <circle class="s-d3-m" cx="140.0" cy="75.8" r="2"/>
-                <circle class="s-d3-m" cx="165.0" cy="70.0" r="2"/>
-                <circle class="s-d3-m" cx="190.0" cy="64.8" r="2"/>
-                <circle class="s-d3-m" cx="240.0" cy="56.2" r="2"/>
-                <circle class="s-d3-m" cx="290.0" cy="49.9" r="2"/>
-                <path class="s-d5" d="M 40.0 119.6 L 65.0 100.6 L 90.0 84.9 L 115.0 74.9 L 140.0 63.9 L 165.0 56.8 L 190.0 50.6 L 240.0 41.0 L 290.0 34.5" fill="none" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-                <circle class="s-d5-m" cx="40.0" cy="119.6" r="2"/>
-                <circle class="s-d5-m" cx="65.0" cy="100.6" r="2"/>
-                <circle class="s-d5-m" cx="90.0" cy="84.9" r="2"/>
-                <circle class="s-d5-m" cx="115.0" cy="74.9" r="2"/>
-                <circle class="s-d5-m" cx="140.0" cy="63.9" r="2"/>
-                <circle class="s-d5-m" cx="165.0" cy="56.8" r="2"/>
-                <circle class="s-d5-m" cx="190.0" cy="50.6" r="2"/>
-                <circle class="s-d5-m" cx="240.0" cy="41.0" r="2"/>
-                <circle class="s-d5-m" cx="290.0" cy="34.5" r="2"/>
-                <path class="s-d7" d="M 40.0 134.1 L 65.0 107.2 L 90.0 87.0 L 115.0 70.6 L 140.0 58.7 L 165.0 49.2 L 190.0 42.3 L 240.0 32.4 L 290.0 27.0" fill="none" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-                <circle class="s-d7-m" cx="40.0" cy="134.1" r="2"/>
-                <circle class="s-d7-m" cx="65.0" cy="107.2" r="2"/>
-                <circle class="s-d7-m" cx="90.0" cy="87.0" r="2"/>
-                <circle class="s-d7-m" cx="115.0" cy="70.6" r="2"/>
-                <circle class="s-d7-m" cx="140.0" cy="58.7" r="2"/>
-                <circle class="s-d7-m" cx="165.0" cy="49.2" r="2"/>
-                <circle class="s-d7-m" cx="190.0" cy="42.3" r="2"/>
-                <circle class="s-d7-m" cx="240.0" cy="32.4" r="2"/>
-                <circle class="s-d7-m" cx="290.0" cy="27.0" r="2"/>
-                <text class="lbl" x="165" y="186" text-anchor="middle">physical error rate p</text>
-                <text class="lbl" x="9" y="86" text-anchor="middle" transform="rotate(-90 9 86)">logical error rate</text>
-                <line class="s-d3" x1="48" y1="20" x2="60" y2="20" stroke-width="1.6"/>
-                <text class="lbl" x="64" y="23">d = 3</text>
-                <line class="s-d5" x1="48" y1="30" x2="60" y2="30" stroke-width="1.6"/>
-                <text class="lbl" x="64" y="33">d = 5</text>
-                <line class="s-d7" x1="48" y1="40" x2="60" y2="40" stroke-width="1.6"/>
-                <text class="lbl" x="64" y="43">d = 7</text>
-</svg>
+                  <rect class="thrband" x="135.8" y="12" width="20.8" height="148"/>
+                  <line class="gridline" x1="40" y1="160.0" x2="290" y2="160.0" stroke-width="1"/>
+                  <text class="tick" x="35" y="163.0" text-anchor="end">1%</text>
+                  <line class="gridline" x1="40" y1="118.4" x2="290" y2="118.4" stroke-width="1"/>
+                  <text class="tick" x="35" y="121.4" text-anchor="end">3%</text>
+                  <line class="gridline" x1="40" y1="72.9" x2="290" y2="72.9" stroke-width="1"/>
+                  <text class="tick" x="35" y="75.9" text-anchor="end">10%</text>
+                  <line class="gridline" x1="40" y1="31.3" x2="290" y2="31.3" stroke-width="1"/>
+                  <text class="tick" x="35" y="34.3" text-anchor="end">30%</text>
+                  <line class="gridline" x1="40.0" y1="12" x2="40.0" y2="160" stroke-width="1"/>
+                  <text class="tick" x="40.0" y="171" text-anchor="middle">2%</text>
+                  <line class="gridline" x1="123.3" y1="12" x2="123.3" y2="160" stroke-width="1"/>
+                  <text class="tick" x="123.3" y="171" text-anchor="middle">3%</text>
+                  <line class="gridline" x1="206.7" y1="12" x2="206.7" y2="160" stroke-width="1"/>
+                  <text class="tick" x="206.7" y="171" text-anchor="middle">4%</text>
+                  <line class="gridline" x1="290.0" y1="12" x2="290.0" y2="160" stroke-width="1"/>
+                  <text class="tick" x="290.0" y="171" text-anchor="middle">5%</text>
+                  <line class="axis" x1="40" y1="12" x2="40" y2="160" stroke-width="1"/>
+                  <line class="axis" x1="40" y1="160" x2="290" y2="160" stroke-width="1"/>
+                  <path class="s-d3" d="M 40.0 108.8 L 81.7 92.2 L 106.7 85.2 L 123.3 79.3 L 148.3 74.4 L 173.3 68.4 L 206.7 63.5 L 290.0 48.8" fill="none" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+                  <circle class="s-d3-m" cx="40.0" cy="108.8" r="2"/>
+                  <circle class="s-d3-m" cx="81.7" cy="92.2" r="2"/>
+                  <circle class="s-d3-m" cx="106.7" cy="85.2" r="2"/>
+                  <circle class="s-d3-m" cx="123.3" cy="79.3" r="2"/>
+                  <circle class="s-d3-m" cx="148.3" cy="74.4" r="2"/>
+                  <circle class="s-d3-m" cx="173.3" cy="68.4" r="2"/>
+                  <circle class="s-d3-m" cx="206.7" cy="63.5" r="2"/>
+                  <circle class="s-d3-m" cx="290.0" cy="48.8" r="2"/>
+                  <path class="s-d5" d="M 40.0 119.1 L 81.7 98.6 L 106.7 88.1 L 123.3 79.7 L 148.3 71.2 L 173.3 65.0 L 206.7 53.8 L 290.0 37.0" fill="none" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+                  <circle class="s-d5-m" cx="40.0" cy="119.1" r="2"/>
+                  <circle class="s-d5-m" cx="81.7" cy="98.6" r="2"/>
+                  <circle class="s-d5-m" cx="106.7" cy="88.1" r="2"/>
+                  <circle class="s-d5-m" cx="123.3" cy="79.7" r="2"/>
+                  <circle class="s-d5-m" cx="148.3" cy="71.2" r="2"/>
+                  <circle class="s-d5-m" cx="173.3" cy="65.0" r="2"/>
+                  <circle class="s-d5-m" cx="206.7" cy="53.8" r="2"/>
+                  <circle class="s-d5-m" cx="290.0" cy="37.0" r="2"/>
+                  <path class="s-d7" d="M 40.0 140.8 L 81.7 112.2 L 106.7 96.3 L 123.3 86.0 L 148.3 73.9 L 173.3 62.6 L 206.7 50.8 L 290.0 29.2" fill="none" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+                  <circle class="s-d7-m" cx="40.0" cy="140.8" r="2"/>
+                  <circle class="s-d7-m" cx="81.7" cy="112.2" r="2"/>
+                  <circle class="s-d7-m" cx="106.7" cy="96.3" r="2"/>
+                  <circle class="s-d7-m" cx="123.3" cy="86.0" r="2"/>
+                  <circle class="s-d7-m" cx="148.3" cy="73.9" r="2"/>
+                  <circle class="s-d7-m" cx="173.3" cy="62.6" r="2"/>
+                  <circle class="s-d7-m" cx="206.7" cy="50.8" r="2"/>
+                  <circle class="s-d7-m" cx="290.0" cy="29.2" r="2"/>
+                  <text class="lbl" x="165" y="186" text-anchor="middle">physical error rate p</text>
+                  <text class="lbl" x="9" y="86" text-anchor="middle" transform="rotate(-90 9 86)">logical error rate</text>
+                  <line class="s-d3" x1="48" y1="20" x2="60" y2="20" stroke-width="1.6"/>
+                  <text class="lbl" x="64" y="23">d = 3</text>
+                  <line class="s-d5" x1="48" y1="30" x2="60" y2="30" stroke-width="1.6"/>
+                  <text class="lbl" x="64" y="33">d = 5</text>
+                  <line class="s-d7" x1="48" y1="40" x2="60" y2="40" stroke-width="1.6"/>
+                  <text class="lbl" x="64" y="43">d = 7</text>
+                </svg>
                 <p class="hint">
-                  Phenomenological noise, T = d rounds, measured on the simulator itself. Below about 2.5%
-                  a bigger code wins; above it the ordering flips and a bigger code just gives noise more
-                  places to land. The shaded band is where the curves cross.
+                  Phenomenological noise, T = d rounds, exact MWPM, measured on the simulator itself.
+                  The curves cross at about 3.3%: below it a bigger code wins, above it a bigger code just
+                  gives noise more places to land. Union-Find on the same sweep thresholds at 2.7%, and the
+                  code-capacity threshold is 14%.
                 </p>
               </div>
             </div>
