@@ -177,6 +177,13 @@ img { display: block; max-width: 100%; }
 .m-a { fill: var(--fg-3); }
 .m-b { fill: var(--accent); }
 .critband { fill: var(--accent); fill-opacity: .09; }
+.thrband { fill: var(--accent); fill-opacity: .10; }
+.s-d3 { stroke: var(--fg-3); }
+.s-d5 { stroke: var(--x); }
+.s-d7 { stroke: var(--accent); }
+.s-d3-m { fill: var(--fg-3); }
+.s-d5-m { fill: var(--x); }
+.s-d7-m { fill: var(--accent); }
 .bar { fill: var(--accent); fill-opacity: .75; transition: y .35s cubic-bezier(.4,0,.2,1), height .35s cubic-bezier(.4,0,.2,1); }
 
 /* ---------------- Sections ---------------- */
