@@ -190,76 +190,6 @@
 
           <article class="piece rv">
             <div class="piece-body">
-              <h3>Noise-Aware Adiabatic Simulation</h3>
-              <div class="where">IBM Heron hardware · transverse-field Ising model</div>
-              <p>
-                Digitized adiabatic ground state preparation for the 1D transverse-field Ising model. I used the Heron
-                processor's native fractional RZZ gates, which cut the logical-to-physical translation error
-                roughly in half, plus a palindromic Trotter step for second-order accuracy. The energy gap closes
-                near the critical point, so a linear sweep moves too quickly through the part that matters.
-                Flattening the schedule around s꜀ slows it down there instead.
-              </p>
-              <div class="tags">
-                <span class="tag">IBM Heron</span><span class="tag">Trotter–Suzuki</span>
-                <span class="tag">Counterdiabatic driving</span><span class="tag">Qiskit</span>
-              </div>
-              <div class="inline-links"><a href="https://github.com/Jaspersands/qsimfinal">GitHub</a></div>
-            </div>
-            <div class="demo">
-              <div class="demo-head"><span class="t">Anneal schedule s(t)</span><span class="t">s꜀ = 0.5</span></div>
-              <div class="demo-body">
-                <svg id="sweep" viewBox="0 0 300 190" role="img" aria-label="Linear versus flattened anneal schedule through the critical point"></svg>
-                <div class="ctl">
-                  <label for="swk">flatten</label>
-                  <input type="range" id="swk" min="10" max="45" value="25" aria-label="Flattening exponent">
-                  <span class="val" id="swkv">2.5</span>
-                </div>
-                <div class="readout" aria-live="polite">
-                  <span>near s꜀ linear <b id="sw-a">·</b></span>
-                  <span>flattened <b id="sw-b">·</b></span>
-                </div>
-                <p class="hint">Share of the total anneal time spent within 0.05 of the critical point.</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="piece rv">
-            <div class="piece-body">
-              <h3>Entanglement &amp; Matrix Product States</h3>
-              <div class="where">Many-body systems · theoretical study</div>
-              <p>
-                A study of how bipartite entanglement structure controls MPS compression. I wrote a sequential SVD
-                wavefunction decomposition in Python and measured Schmidt spectra, entanglement entropy at every
-                cut, and fidelity under truncation. A product state needs bond dimension 1 and a Haar-random
-                state needs exponentially many, so the useful cases fall somewhere between the two.
-              </p>
-              <div class="tags">
-                <span class="tag">Tensor networks</span><span class="tag">Schmidt decomposition</span>
-                <span class="tag">SVD compression</span>
-              </div>
-              <div class="inline-links"><a href="assets/mps_presentation.pdf">Slides</a></div>
-            </div>
-            <div class="demo">
-              <div class="demo-head"><span class="t">Entropy across cuts</span><span class="t">n = 12</span></div>
-              <div class="demo-body">
-                <svg id="ent" viewBox="0 0 300 190" role="img" aria-label="Entanglement entropy across every bipartition of a 12-qubit chain"></svg>
-                <div class="ctl" id="ent-ctl" role="group" aria-label="State family">
-                  <button type="button" data-s="product">Product</button>
-                  <button type="button" data-s="ghz">GHZ</button>
-                  <button type="button" class="on" data-s="ising">Ising</button>
-                  <button type="button" data-s="haar">Haar</button>
-                </div>
-                <div class="readout" aria-live="polite">
-                  <span>max S <b id="ent-max">·</b> bits</span>
-                  <span>bond dim χ ≈ <b id="ent-chi">·</b></span>
-                </div>
-                <p class="hint">How the entropy scales sets the cost. Area law scaling stays cheap to simulate, volume law scaling does not.</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="piece rv">
-            <div class="piece-body">
               <h3>WASM QEC Simulator</h3>
               <div class="where">Rust → WebAssembly · surface code decoding in the browser</div>
               <p>
@@ -283,7 +213,8 @@
                 <span class="t">20k shots/pt</span>
               </div>
               <div class="demo-body">
-                <svg viewBox="0 0 300 190">
+                <svg viewBox="0 0 300 190" role="img"
+                    aria-label="Logical error rate against physical error rate for distance 3, 5 and 7 rotated surface codes. The curves cross near 3.2 percent.">
                   <rect class="thrband" x="135.8" y="12" width="20.8" height="148"/>
                   <line class="gridline" x1="40" y1="160.0" x2="290" y2="160.0" stroke-width="1"/>
                   <text class="tick" x="35" y="163.0" text-anchor="end">1%</text>
@@ -351,6 +282,40 @@
 
           <article class="piece rv">
             <div class="piece-body">
+              <h3>Noise-Aware Adiabatic Simulation</h3>
+              <div class="where">IBM Heron hardware · transverse-field Ising model</div>
+              <p>
+                Digitized adiabatic ground state preparation for the 1D transverse-field Ising model. I used the Heron
+                processor's native fractional RZZ gates, which cut the logical-to-physical translation error
+                roughly in half, plus a palindromic Trotter step for second-order accuracy. The energy gap closes
+                near the critical point, so a linear sweep moves too quickly through the part that matters.
+                Flattening the schedule around s꜀ slows it down there instead.
+              </p>
+              <div class="tags">
+                <span class="tag">IBM Heron</span><span class="tag">Trotter–Suzuki</span>
+                <span class="tag">Counterdiabatic driving</span><span class="tag">Qiskit</span>
+              </div>
+            </div>
+            <div class="demo">
+              <div class="demo-head"><span class="t">Anneal schedule s(t)</span><span class="t">s꜀ = 0.5</span></div>
+              <div class="demo-body">
+                <svg id="sweep" viewBox="0 0 300 190" role="img" aria-label="Linear versus flattened anneal schedule through the critical point"></svg>
+                <div class="ctl">
+                  <label for="swk">flatten</label>
+                  <input type="range" id="swk" min="10" max="45" value="25" aria-label="Flattening exponent">
+                  <span class="val" id="swkv">2.5</span>
+                </div>
+                <div class="readout" aria-live="polite">
+                  <span>near s꜀ linear <b id="sw-a">·</b></span>
+                  <span>flattened <b id="sw-b">·</b></span>
+                </div>
+                <p class="hint">Share of the total anneal time spent within 0.05 of the critical point.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="piece rv">
+            <div class="piece-body">
               <h3>Q-Search</h3>
               <div class="where">Multi-agent algorithm discovery engine</div>
               <p>
@@ -376,6 +341,40 @@
             </figure>
           </article>
 
+          <article class="piece rv">
+            <div class="piece-body">
+              <h3>Entanglement &amp; Matrix Product States</h3>
+              <div class="where">Many-body systems · theoretical study</div>
+              <p>
+                A study of how bipartite entanglement structure controls MPS compression. I wrote a sequential SVD
+                wavefunction decomposition in Python and measured Schmidt spectra, entanglement entropy at every
+                cut, and fidelity under truncation. A product state needs bond dimension 1 and a Haar-random
+                state needs exponentially many, so the useful cases fall somewhere between the two.
+              </p>
+              <div class="tags">
+                <span class="tag">Tensor networks</span><span class="tag">Schmidt decomposition</span>
+                <span class="tag">SVD compression</span>
+              </div>
+              <div class="inline-links"><a href="assets/mps_presentation.pdf">Slides</a></div>
+            </div>
+            <div class="demo">
+              <div class="demo-head"><span class="t">Entropy across cuts</span><span class="t">n = 12</span></div>
+              <div class="demo-body">
+                <svg id="ent" viewBox="0 0 300 190" role="img" aria-label="Entanglement entropy across every bipartition of a 12-qubit chain"></svg>
+                <div class="ctl" id="ent-ctl" role="group" aria-label="State family">
+                  <button type="button" data-s="product">Product</button>
+                  <button type="button" data-s="ghz">GHZ</button>
+                  <button type="button" class="on" data-s="ising">Ising</button>
+                  <button type="button" data-s="haar">Haar</button>
+                </div>
+                <div class="readout" aria-live="polite">
+                  <span>max S <b id="ent-max">·</b> bits</span>
+                  <span>bond dim χ ≈ <b id="ent-chi">·</b></span>
+                </div>
+                <p class="hint">How the entropy scales sets the cost. Area law scaling stays cheap to simulate, volume law scaling does not.</p>
+              </div>
+            </div>
+          </article>
 
           <article class="piece nomedia rv">
             <div class="piece-body">
@@ -397,8 +396,6 @@
               </div>
             </div>
           </article>
-
-
         </div>
 
         <p class="also rv">
@@ -478,7 +475,7 @@
       <div class="wrap">
         <div class="shead rv"><h2>Experience</h2><span class="idx">04</span></div>
         <div class="tl rv">
-          <div class="tl-item now">
+          <div class="tl-item">
             <h3>Smack Technologies · Software Engineer Intern</h3>
             <div class="where">May – Aug 2026</div>
             <p>
@@ -570,18 +567,18 @@
         <div class="shead rv"><h2>Skills</h2><span class="idx">06</span></div>
         <div class="skills">
           <div class="rv">
-            <h4>Quantum</h4>
+            <h3>Quantum</h3>
             <p>
               Qiskit, Cirq, PennyLane, CUDA-Q · Hamiltonian simulation, phase estimation, amplitude
               amplification and estimation, QSVT and block encoding, LCU · surface codes and MWPM decoding ·
               VQE, QAOA · noise modeling and transpilation
             </p>
           </div>
-          <div class="rv"><h4>Machine learning</h4><p>PyTorch, TensorFlow, scikit-learn, Hugging Face, CUDA</p></div>
-          <div class="rv"><h4>Languages</h4><p>Python, C++, Rust, C, Go, Java, TypeScript, MATLAB</p></div>
-          <div class="rv"><h4>Systems &amp; tools</h4><p>Linux, Git, Docker, AWS, GCP, Elasticsearch, PostgreSQL, LaTeX</p></div>
+          <div class="rv"><h3>Machine learning</h3><p>PyTorch, TensorFlow, scikit-learn, Hugging Face, CUDA</p></div>
+          <div class="rv"><h3>Languages</h3><p>Python, C++, Rust, C, Go, Java, TypeScript, MATLAB</p></div>
+          <div class="rv"><h3>Systems &amp; tools</h3><p>Linux, Git, Docker, AWS, GCP, Elasticsearch, PostgreSQL, LaTeX</p></div>
           <div class="rv">
-            <h4>Mathematics</h4>
+            <h3>Mathematics</h3>
             <p>
               Linear algebra, spectral graph theory, tensor networks, probability, convex and stochastic
               optimization, quantum complexity (BQP, QMA), query complexity
