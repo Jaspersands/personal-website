@@ -119,7 +119,7 @@ const doc = new Document({
         spacing: { before: 60, ...LINE },
         children: [run(
           'Quantum algorithms, error correction, and machine learning for qubit control. ' +
-          'MS at Columbia, quantum computing track. Thesis at Diraq and UNSW Sydney on ' +
+          'MS in computer science at Columbia. Thesis at Diraq and UNSW Sydney on ' +
           'automating silicon spin qubit measurement.'
         )],
       }),
@@ -136,8 +136,8 @@ const doc = new Document({
         'Sep 2026 – May 2027, co-supervised by Dr. Nard Dumoulin Stuyck and Dr. Henry Yuen.'
       )]),
       note([b('Coursework: '), run('Quantum Error Correction'), DOT(), run('Quantum Engineering'),
-            DOT(), run('Quantum Simulation & Computing Lab'), DOT(), run('Quantum Optimization & ML. '), b('TA: '),
-            run('Intro to Quantum Computing.')]),
+            DOT(), run('Quantum Simulation & Computing Lab'), DOT(), run('Quantum Optimization & ML.')]),
+      note([b('TA: '), run('Introduction to Quantum Computing.')]),
       entryLine(
         [b('Washington University in St. Louis'), run(', BS in Computer Science and Economics'),
          DOT(), run('GPA 3.81/4.0')],
@@ -174,25 +174,25 @@ const doc = new Document({
          DOT(), i('Qiskit')],
         'IBM Heron hardware'
       ),
-      note([run(
+      bullet([run(
         "Digitized adiabatic ground-state preparation on Heron's native fractional RZZ gates, roughly " +
         'halving logical-to-physical translation error, with palindromic Trotter steps and a schedule ' +
         'flattened where the gap closes.'
       )]),
       entryLine(
         [b('Q-Search'), run(': multi-agent quantum algorithm discovery engine'),
-         DOT(), i('Gemini, stabilizer simulation')],
+         DOT(), i('LLM agents, circuit synthesis')],
         'qsearch.jaspersands.com'
       ),
-      note([run(
-        'Agents propose problems, design circuits, verify them by stabilizer and oracle simulation, ' +
-        'and fit complexity scaling across 795 runs.'
+      bullet([run(
+        'Agents propose problems, design circuits, verify them by simulation, and fit complexity ' +
+        'scaling across 795 runs.'
       )]),
       entryLine(
         [b('LLM-Based Lossless Text Compression'), DOT(), i('PyTorch, CUDA')],
         'Systems optimization'
       ),
-      note([run(
+      bullet([run(
         'Arithmetic coding on autoregressive LLM predictions: 5–16× average and 39× ' +
         'best-case compression, beating zstd and gzip; static KV caching and CUDA graphs for throughput.'
       )]),
@@ -227,9 +227,9 @@ const doc = new Document({
         'with human-in-the-loop feedback.'
       )]),
       note([b('Also: '), b('Desdr Open Insurance Toolkit'), run(
-        ', Columbia (Dr. Eugene Wu, Sep–Dec 2025): SMS survey data into actuarial and ' +
-        'climate-risk features for agricultural loss estimation. '), b('Computer Vision & AI Lab'),
-        run(', WashU (Dr. Umar Iqbal, Sep 2024–Jun 2025): distributed pipelines parsing ' +
+        ', Columbia (Dr. Eugene Wu, Sep–Dec 2025): survey data into actuarial and ' +
+        'climate-risk features. '), b('Computer Vision & AI Lab'),
+        run(', WashU (Dr. Umar Iqbal, Sep 2024–Jun 2025): pipelines parsing ' +
             'billions of forum posts.')], 42),
 
       // ---------- experience ----------
@@ -268,9 +268,10 @@ const doc = new Document({
       // ---------- skills ----------
       heading('Skills'),
       skill('Quantum:',
-        'Qiskit, Cirq, PennyLane, CUDA-Q · Hamiltonian simulation, phase estimation, amplitude ' +
-        'amplification and estimation, QSVT and block encoding, LCU · surface codes, MWPM and ' +
-        'Union-Find decoding · VQE, QAOA · noise modeling and transpilation'),
+        'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP · Hamiltonian simulation, ' +
+        'phase estimation, amplitude amplification and estimation, QSVT and block encoding, LCU · ' +
+        'surface codes, MWPM and Union-Find decoding · VQE, QAOA · randomized benchmarking, ' +
+        'tomography, noise modeling, transpilation'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
