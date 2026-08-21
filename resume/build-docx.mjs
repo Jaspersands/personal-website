@@ -119,7 +119,7 @@ const doc = new Document({
         spacing: { before: 60, ...LINE },
         children: [run(
           'Quantum algorithms, error correction, and machine learning for qubit control. ' +
-          'MS at Columbia, quantum computing track — thesis at Diraq and UNSW Sydney on ' +
+          'MS at Columbia, quantum computing track. Thesis at Diraq and UNSW Sydney on ' +
           'automating silicon spin qubit measurement.'
         )],
       }),
@@ -127,16 +127,16 @@ const doc = new Document({
       // ---------- education ----------
       heading('Education'),
       entryLine(
-        [b('Columbia University'), run(', MS in Computer Science — Quantum Computing Track'),
-         DOT(), run('GPA 3.91/4.0')],
+        [b('Columbia University'), run(', MS in Computer Science, Quantum Computing Track'),
+         DOT(), run('GPA 3.95/4.0')],
         'Sep 2025 – May 2027', 42
       ),
       note([b('Thesis: '), run(
-        'automating silicon spin qubit measurement with machine learning — Diraq and UNSW Sydney, ' +
-        'Sep 2026 – May 2027, co-supervised by Dr. Nard Dumoulin Stuyck and Prof. Henry Yuen.'
+        'automating silicon spin qubit measurement with machine learning. Diraq and UNSW Sydney, ' +
+        'Sep 2026 – May 2027, co-supervised by Dr. Nard Dumoulin Stuyck and Dr. Henry Yuen.'
       )]),
       note([b('Coursework: '), run('Quantum Error Correction'), DOT(), run('Quantum Engineering'),
-            DOT(), run('Quantum Simulation & Computing Lab. '), b('TA: '),
+            DOT(), run('Quantum Simulation & Computing Lab'), DOT(), run('Quantum Optimization & ML. '), b('TA: '),
             run('Intro to Quantum Computing.')]),
       entryLine(
         [b('Washington University in St. Louis'), run(', BS in Computer Science and Economics'),
@@ -150,9 +150,9 @@ const doc = new Document({
       // ---------- projects ----------
       heading('Selected Projects'),
       entryLine(
-        [b('WhatTheDuck'), run(' — quantum amplitude estimation for financial Value at Risk'),
+        [b('WhatTheDuck'), run(': quantum amplitude estimation for financial Value at Risk'),
          DOT(), i('CUDA-Q, C++')],
-        'iQuHACK 2026 — Overall Winner', 42
+        'Overall Winner, iQuHACK 2026', 42
       ),
       bullet([run(
         'Wrote the GPU-accelerated state preparation, threshold oracle, and bisection search behind ' +
@@ -160,7 +160,7 @@ const doc = new Document({
         'against an O(1/ε²) quasi-Monte Carlo baseline.'
       )]),
       entryLine(
-        [b('WASM QEC Simulator'), run(' — surface-code decoding in the browser'),
+        [b('WASM QEC Simulator'), run(': surface-code decoding in the browser'),
          DOT(), i('Rust, WebAssembly')],
         'qcompiler.jaspersands.com'
       ),
@@ -170,7 +170,7 @@ const doc = new Document({
         'shots/point puts the phenomenological threshold at 3.2%.'
       )]),
       entryLine(
-        [b('Noise-Aware Adiabatic Simulation'), run(' — transverse-field Ising model'),
+        [b('Noise-Aware Adiabatic Simulation'), run(': transverse-field Ising model'),
          DOT(), i('Qiskit')],
         'IBM Heron hardware'
       ),
@@ -180,8 +180,8 @@ const doc = new Document({
         'flattened where the gap closes.'
       )]),
       entryLine(
-        [b('Q-Search'), run(' — multi-agent quantum algorithm discovery engine'),
-         DOT(), i('Python, Gemini')],
+        [b('Q-Search'), run(': multi-agent quantum algorithm discovery engine'),
+         DOT(), i('Gemini, stabilizer simulation')],
         'qsearch.jaspersands.com'
       ),
       note([run(
@@ -227,9 +227,9 @@ const doc = new Document({
         'with human-in-the-loop feedback.'
       )]),
       note([b('Also: '), b('Desdr Open Insurance Toolkit'), run(
-        ', Columbia (Dr. Eugene Wu, Sep–Dec 2025) — SMS survey data into actuarial and ' +
+        ', Columbia (Dr. Eugene Wu, Sep–Dec 2025): SMS survey data into actuarial and ' +
         'climate-risk features for agricultural loss estimation. '), b('Computer Vision & AI Lab'),
-        run(', WashU (Dr. Umar Iqbal, Sep 2024–Jun 2025) — distributed pipelines parsing ' +
+        run(', WashU (Dr. Umar Iqbal, Sep 2024–Jun 2025): distributed pipelines parsing ' +
             'billions of forum posts.')], 42),
 
       // ---------- experience ----------
@@ -251,18 +251,19 @@ const doc = new Document({
         'roughly 250 engineering hours a month.'
       )]),
       note([b('Earlier: '), b('Bugcrowd'), run(
-        ', Associate Application Security Engineer (May–Jul 2020) — vulnerability triage and ' +
+        ', Associate Application Security Engineer (May–Jul 2020): vulnerability triage and ' +
         'client disclosure work.')], 42),
 
       // ---------- honors ----------
       heading('Honors & Leadership'),
       bullet([b('Overall Winner'), run(' and '), b('NVIDIA Ecosystem Award'), run(', MIT iQuHACK 2026'),
-              DOT(), run('Qualified, NYUAD Quantum Hackathon for Social Good 2026'), DOT(),
-              b('Audience Favorite'), run(', Hamoniqs Quantum Design Hackathon 2026'), DOT(),
+              DOT(), run('Qualified, NYU Abu Dhabi Quantum Hackathon for Social Good 2027'), DOT(),
+              b('Audience Favorite'), run(', Harmoniqs Quantum Design Hackathon 2026'), DOT(),
               b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse Hackathon 2026')]),
       bullet([b('Graduate Lead'), run(
-        ', Columbia Quantum Algorithms Reading Group (Sep 2025–Jun 2026) — weekly sessions ' +
-        'on Hamiltonian simulation and LCU.')]),
+        ', Columbia Quantum Algorithms Reading Group (Sep 2025–Jun 2026): ran weekly sessions ' +
+        "covering all 33 chapters of Andrew Childs' quantum algorithms lecture notes, each with " +
+        'simulation checks.')]),
 
       // ---------- skills ----------
       heading('Skills'),
@@ -270,13 +271,13 @@ const doc = new Document({
         'Qiskit, Cirq, PennyLane, CUDA-Q · Hamiltonian simulation, phase estimation, amplitude ' +
         'amplification and estimation, QSVT and block encoding, LCU · surface codes, MWPM and ' +
         'Union-Find decoding · VQE, QAOA · noise modeling and transpilation'),
-      skill('Languages:', 'Python, C++, Rust, C, Go, Java, TypeScript, MATLAB'),
+      skill('Languages:', 'Python, C++, Rust, C, MATLAB'),
       skill('ML & systems:',
-        'PyTorch, TensorFlow, scikit-learn, Hugging Face, CUDA · Linux, Git, Docker, WebAssembly, ' +
+        'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
         'AWS, GCP, Elasticsearch, LaTeX'),
       skill('Mathematics:',
-        'Linear algebra, spectral graph theory, tensor networks, probability, optimization, quantum ' +
-        'complexity (BQP, QMA)'),
+        'Linear algebra, tensor networks, probability, convex optimization, quantum ' +
+        'complexity (BQP, QMA), query complexity'),
     ],
   }],
 });
