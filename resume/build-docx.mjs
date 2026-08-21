@@ -192,8 +192,8 @@ const doc = new Document({
         'Systems optimization'
       ),
       bullet([run(
-        'Arithmetic coding on autoregressive LLM predictions: 5–16× average and 39× ' +
-        'best-case compression, beating zstd and gzip; static KV caching and CUDA graphs for throughput.'
+        'Arithmetic coding on LLM predictions: 5–16× average, 39× best case, beating zstd and ' +
+        'gzip; static KV caching and CUDA graphs.'
       )]),
 
       // ---------- research ----------
@@ -255,9 +255,9 @@ const doc = new Document({
       // ---------- honors ----------
       heading('Honors & Leadership'),
       bullet([b('Overall Winner'), run(' and '), b('NVIDIA Ecosystem Award'), run(', MIT iQuHACK 2026'),
-              DOT(), run('Qualified, NYU Abu Dhabi Quantum Hackathon for Social Good 2027'), DOT(),
-              b('Audience Favorite'), run(', Harmoniqs Quantum Design Hackathon 2026'), DOT(),
-              b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse Hackathon 2026')]),
+              DOT(), b('Audience Favorite'), run(', Harmoniqs Quantum Design 2026'), DOT(),
+              b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse 2026'), DOT(),
+              run('Qualified, NYU Abu Dhabi Quantum Hackathon for Social Good 2027')]),
       bullet([b('Graduate Lead'), run(
         ', Columbia Quantum Algorithms Reading Group (Sep 2025–Jun 2026): ran weekly sessions ' +
         "covering all 33 chapters of Andrew Childs' quantum algorithms lecture notes, each with " +
