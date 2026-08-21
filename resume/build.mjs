@@ -16,7 +16,7 @@ const out = resolve(here, '..', 'assets', 'jaspersands_resume.pdf');
 
 // Page geometry. measure.mjs mirrors these — keep them in sync.
 export const DPI = 96;
-export const MARGIN = { top: 0.45, bottom: 0.38, left: 0.55, right: 0.55 }; // inches
+export const MARGIN = { top: 0.45, bottom: 0.38, left: 0.5, right: 0.5 }; // inches
 export const CONTENT_W = (8.5 - MARGIN.left - MARGIN.right) * DPI;
 export const CONTENT_H = (11 - MARGIN.top - MARGIN.bottom) * DPI;
 

@@ -27,13 +27,13 @@ const here = dirname(fileURLToPath(import.meta.url));
 const out = resolve(here, 'jaspersands_resume.docx');
 
 // ---- geometry, mirroring resume.html -------------------------------------
-const MARGIN = { top: 0.45, bottom: 0.38, left: 0.55, right: 0.55 };
+const MARGIN = { top: 0.45, bottom: 0.38, left: 0.5, right: 0.5 };
 const CONTENT_W = convertInchesToTwip(8.5 - MARGIN.left - MARGIN.right);
 const RIGHT_TAB = [{ type: TabStopType.RIGHT, position: CONTENT_W }];
 
 const FONT = 'Times New Roman';
-const BODY = 18;   // half-points -> 9pt
-const LINE = { line: 215, lineRule: 'exact' };   // 10.75pt, matching the HTML
+const BODY = 19;   // half-points -> 9.5pt (Word has no 9.4)
+const LINE = { line: 221, lineRule: 'exact' };   // 11.05pt, matching the HTML
 
 const run = (text, opts = {}) => new TextRun({ text, font: FONT, size: BODY, ...opts });
 const b = (text) => run(text, { bold: true });
@@ -62,7 +62,7 @@ const heading = (text) =>
   new Paragraph({
     spacing: { before: 100, after: 16, ...LINE },
     border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 1 } },
-    children: [run(text.toUpperCase(), { bold: true, size: 17, characterSpacing: 16 })],
+    children: [run(text.toUpperCase(), { bold: true, size: 18, characterSpacing: 16 })],
   });
 
 const skill = (label, value) =>
@@ -111,7 +111,7 @@ const doc = new Document({
         children: [run(
           'Palo Alto, CA | (650) 924-8429 | jaspersands02@gmail.com | js6908@columbia.edu | ' +
           'jaspersands.com | github.com/Jaspersands | linkedin.com/in/jaspersands',
-          { size: 16 }
+          { size: 17 }
         )],
       }),
       new Paragraph({
@@ -227,9 +227,7 @@ const doc = new Document({
       )]),
       note([b('Also: '), b('Desdr Open Insurance Toolkit'), run(
         ', Columbia (Dr. Eugene Wu, Sep–Dec 2025): survey data into actuarial and ' +
-        'climate-risk features. '), b('Computer Vision & AI Lab'),
-        run(', WashU (Dr. Umar Iqbal, Sep 2024–Jun 2025): pipelines parsing ' +
-            'billions of forum posts.')], 42),
+        'climate-risk features.')], 42),
 
       // ---------- experience ----------
       heading('Experience'),
@@ -253,9 +251,6 @@ const doc = new Document({
         'Built internal admin and secure-query tooling in JavaScript and Rails via Retool, saving ' +
         'roughly 250 engineering hours a month.'
       )]),
-      note([b('Earlier: '), b('Bugcrowd'), run(
-        ', Associate Application Security Engineer (May–Jul 2020): vulnerability triage and ' +
-        'client disclosure work.')], 42),
 
       // ---------- honors ----------
       heading('Honors & Leadership'),
