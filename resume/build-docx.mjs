@@ -155,9 +155,12 @@ const doc = new Document({
         'Overall Winner, iQuHACK 2026', 42
       ),
       bullet([run(
-        'Wrote the GPU-accelerated state preparation, threshold oracle, and bisection search behind ' +
-        'Iterative Quantum Amplitude Estimation; measured query scaling matched the O(1/ε) bound ' +
-        'against an O(1/ε²) quasi-Monte Carlo baseline.'
+        'Wrote the GPU-accelerated state preparation, threshold oracle, and bisection search driving ' +
+        'Iterative Quantum Amplitude Estimation.'
+      )]),
+      bullet([run(
+        'Measured query scaling matched the O(1/ε) bound against an O(1/ε²) quasi-Monte Carlo ' +
+        'classical baseline.'
       )]),
       entryLine(
         [b('WASM QEC Simulator'), run(': surface-code decoding in the browser'),
@@ -166,27 +169,24 @@ const doc = new Document({
       ),
       bullet([run(
         'Symplectic stabilizer simulator for rotated and XZZX surface codes, with exact MWPM and ' +
-        'Union-Find decoding running client-side; finite-size scaling over d = 3, 5, 7 at 20k ' +
-        'shots/point puts the phenomenological threshold at 3.2%.'
+        'Union-Find decoding running client-side.'
       )]),
-      entryLine(
-        [b('Noise-Aware Adiabatic Simulation'), run(': transverse-field Ising model'),
-         DOT(), i('Qiskit')],
-        'IBM Heron hardware'
-      ),
       bullet([run(
-        "Digitized adiabatic ground-state preparation on Heron's native fractional RZZ gates, roughly " +
-        'halving logical-to-physical translation error, with palindromic Trotter steps and a schedule ' +
-        'flattened where the gap closes.'
+        'Finite-size scaling over d = 3, 5, 7 at 20k shots/point puts the phenomenological ' +
+        'threshold at 3.2%.'
       )]),
       entryLine(
-        [b('Q-Search'), run(': multi-agent quantum algorithm discovery engine'),
-         DOT(), i('LLM agents, circuit synthesis')],
+        [b('Q-Search'), run(': proof-gated quantum algorithm research and verification engine')],
         'qsearch.jaspersands.com'
       ),
       bullet([run(
-        'Agents propose problems, design circuits, verify them by simulation, and fit complexity ' +
-        'scaling across 795 runs.'
+        'Automated search for structural quantum advantage on non-abelian hidden subgroup, dihedral ' +
+        'coset, and linear code equivalence problems, pairing GPT theoretical reasoning with Gemini ' +
+        'agentic engineering.'
+      )]),
+      bullet([run(
+        'Formal proof gates test every proposed mechanism against 1,200+ classical baselines; 800+ ' +
+        'negative results are permanently indexed across 720+ theorem modules.'
       )]),
       entryLine(
         [b('LLM-Based Lossless Text Compression'), DOT(), i('PyTorch, CUDA')],
@@ -268,11 +268,12 @@ const doc = new Document({
       // ---------- skills ----------
       heading('Skills'),
       skill('Quantum:',
-        'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP · Hamiltonian simulation, ' +
+        'Qiskit and Qiskit Runtime (IBM Heron hardware), CUDA-Q, Stim, PyMatching, QuTiP · ' +
+        'Hamiltonian simulation, ' +
         'phase estimation, amplitude amplification and estimation, QSVT and block encoding, LCU · ' +
         'surface codes, MWPM and Union-Find decoding · VQE, QAOA · randomized benchmarking, ' +
         'tomography, noise modeling, transpilation'),
-      skill('Languages:', 'Python, C++, Rust, C, MATLAB'),
+      skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
         'AWS, GCP, Elasticsearch, LaTeX'),
