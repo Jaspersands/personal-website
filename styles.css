@@ -178,6 +178,20 @@ img { display: block; max-width: 100%; }
 .m-b { fill: var(--accent); }
 .critband { fill: var(--accent); fill-opacity: .09; }
 .thrband { fill: var(--accent); fill-opacity: .10; }
+
+/* --- Q-Search proof-gate pipeline --- */
+.qs-stage { fill: none; stroke: var(--rule); }
+.qs-stage.gate { stroke: var(--accent); }
+.qs-sink { fill: var(--bg-2); stroke: var(--rule); }
+.qs-flow { stroke: var(--fg-3); fill: none; }
+.qs-rej { stroke: var(--accent); fill: none; stroke-dasharray: 2.5 2.5; }
+.qs-cap { font-family: var(--mono); font-size: 6.5px; letter-spacing: .1em; fill: var(--fg-3); }
+.qs-cap.on { fill: var(--accent); }
+.qs-name { font-family: var(--sans); font-size: 9px; font-weight: 500; fill: var(--fg); }
+.qs-sub { font-family: var(--sans); font-size: 7.5px; fill: var(--fg-2); }
+.qs-num { font-family: var(--mono); font-size: 9px; fill: var(--fg); }
+.qs-arrowhead { fill: var(--fg-3); }
+.qs-rejhead { fill: var(--accent); }
 .s-d3 { stroke: var(--fg-3); }
 .s-d5 { stroke: var(--x); }
 .s-d7 { stroke: var(--accent); }

@@ -336,12 +336,65 @@
                 <a href="https://qsearch.jaspersands.com/">Live engine</a>
               </div>
             </div>
-            <figure class="frame">
-              <img src="assets/web/qsearch_panel.png"
-                alt="Q-Search run log listing discovered algorithms with their measured speedups"
-                loading="lazy">
-              <figcaption>Discovered algorithms after 795 search runs</figcaption>
-            </figure>
+            <div class="demo">
+              <div class="demo-head">
+                <span class="t">Proof-gate pipeline</span>
+                <span class="t">720+ theorem modules</span>
+              </div>
+              <div class="demo-body">
+                <svg viewBox="0 0 300 208" role="img"
+                    aria-label="A candidate mechanism is proposed by GPT, built out by Gemini agents, then must clear a formal proof gate and beat 1,200 or more classical baselines. Anything that fails either gate is written to a permanent index of over 800 negative results.">
+                  <defs>
+                    <marker id="qs-a" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+                      <path class="qs-arrowhead" d="M0 0 L6 3 L0 6 Z"/>
+                    </marker>
+                    <marker id="qs-r" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+                      <path class="qs-rejhead" d="M0 0 L6 3 L0 6 Z"/>
+                    </marker>
+                  </defs>
+
+                  <rect class="qs-stage" x="4" y="6" width="170" height="30"/>
+                  <text class="qs-cap" x="12" y="18">PROPOSE</text>
+                  <text class="qs-sub" x="12" y="30">GPT, theoretical reasoning</text>
+
+                  <path class="qs-flow" d="M89 36 L89 48" marker-end="url(#qs-a)"/>
+
+                  <rect class="qs-stage" x="4" y="52" width="170" height="30"/>
+                  <text class="qs-cap" x="12" y="64">CONSTRUCT</text>
+                  <text class="qs-sub" x="12" y="76">Gemini, agentic engineering</text>
+
+                  <path class="qs-flow" d="M89 82 L89 94" marker-end="url(#qs-a)"/>
+
+                  <rect class="qs-stage gate" x="4" y="98" width="170" height="30"/>
+                  <text class="qs-cap on" x="12" y="110">PROOF GATE</text>
+                  <text class="qs-sub" x="12" y="122">formal verification</text>
+
+                  <path class="qs-flow" d="M89 128 L89 140" marker-end="url(#qs-a)"/>
+
+                  <rect class="qs-stage gate" x="4" y="144" width="170" height="30"/>
+                  <text class="qs-cap on" x="12" y="156">BENCHMARK</text>
+                  <text class="qs-sub" x="12" y="168">1,200+ classical baselines</text>
+
+                  <path class="qs-flow" d="M89 174 L89 190" marker-end="url(#qs-a)"/>
+                  <text class="qs-cap" x="89" y="196" text-anchor="middle">STRUCTURAL ADVANTAGE</text>
+
+                  <path class="qs-rej" d="M174 113 L204 113" marker-end="url(#qs-r)"/>
+                  <path class="qs-rej" d="M174 159 L204 159" marker-end="url(#qs-r)"/>
+
+                  <rect class="qs-sink" x="208" y="98" width="88" height="76"/>
+                  <text class="qs-cap" x="216" y="114">INDEXED</text>
+                  <text class="qs-num" x="216" y="134">800+</text>
+                  <text class="qs-sub" x="216" y="147">negative results,</text>
+                  <text class="qs-sub" x="216" y="159">never re-proposed</text>
+                </svg>
+                <p class="hint">
+                  Candidate mechanisms for <span class="kz">non-abelian HSP</span>, dihedral cosets and linear
+                  code equivalence have to clear a formal proof gate and then beat the classical baselines.
+                  Failures are not discarded: they are written to a permanent index, which is what stops the
+                  engine from re-proposing the same dead end.
+                </p>
+              </div>
+            </div>
           </article>
 
           <article class="piece rv">
