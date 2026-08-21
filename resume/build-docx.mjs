@@ -235,13 +235,12 @@ const doc = new Document({
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
       bullet([run(
-        'Built the high-fidelity combat and ISR simulation core: closed-form line-of-sight and radar ' +
-        'horizon, energy-maneuverability flyout, subsystem damage, datalink fusion, and ECI-to-ECEF ' +
-        'satellite access.'
+        'Built a high-fidelity physics and sensor simulation core: closed-form line-of-sight and ' +
+        'horizon geometry, energy-maneuverability flyout, and ECI-to-ECEF coordinate transforms.'
       )]),
       bullet([run(
-        'Synced weapon and platform envelopes from a 156k-node knowledge graph into the simulator, ' +
-        'behind a GraphRAG-judged ingestion pipeline.'
+        'Synced platform capability data from a knowledge graph into the simulator via a ' +
+        'retrieval-judged, human-approved pipeline.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
@@ -272,9 +271,9 @@ const doc = new Document({
       // ---------- skills ----------
       heading('Skills'),
       skill('Quantum:',
-        'Qiskit and Qiskit Runtime (IBM Heron hardware), CUDA-Q, Stim, PyMatching, QuTiP · ' +
-        'Hamiltonian simulation, phase estimation, amplitude estimation, QSVT, LCU · ' +
-        'surface codes, MWPM and Union-Find decoding · randomized benchmarking, tomography'),
+        'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP · Hamiltonian simulation, ' +
+        'phase and amplitude estimation, QSVT, LCU, VQE, QAOA · surface codes, MWPM and Union-Find ' +
+        'decoding · randomized benchmarking, tomography'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
