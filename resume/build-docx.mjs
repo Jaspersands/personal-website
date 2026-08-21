@@ -180,13 +180,12 @@ const doc = new Document({
         'qsearch.jaspersands.com'
       ),
       bullet([run(
-        'Automated search for structural quantum advantage on non-abelian hidden subgroup, dihedral ' +
-        'coset, and linear code equivalence problems, pairing GPT theoretical reasoning with Gemini ' +
-        'agentic engineering.'
+        'Automated search for structural quantum advantage on non-abelian HSP, dihedral coset, and ' +
+        'linear code equivalence problems.'
       )]),
       bullet([run(
-        'Formal proof gates test every proposed mechanism against 1,200+ classical baselines; 800+ ' +
-        'negative results are permanently indexed across 720+ theorem modules.'
+        'Formal proof gates test each mechanism against 1,200+ classical baselines across 720+ ' +
+        'theorem modules, indexing negative results.'
       )]),
       entryLine(
         [b('LLM-Based Lossless Text Compression'), DOT(), i('PyTorch, CUDA')],
