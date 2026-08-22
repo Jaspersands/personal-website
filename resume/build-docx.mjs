@@ -32,8 +32,8 @@ const CONTENT_W = convertInchesToTwip(8.5 - MARGIN.left - MARGIN.right);
 const RIGHT_TAB = [{ type: TabStopType.RIGHT, position: CONTENT_W }];
 
 const FONT = 'Times New Roman';
-const BODY = 19;   // half-points -> 9.5pt (Word has no 9.4)
-const LINE = { line: 221, lineRule: 'exact' };   // 11.05pt, matching the HTML
+const BODY = 20;   // half-points -> 10pt
+const LINE = { line: 235, lineRule: 'exact' };   // 11.75pt, matching the HTML
 
 const run = (text, opts = {}) => new TextRun({ text, font: FONT, size: BODY, ...opts });
 const b = (text) => run(text, { bold: true });
@@ -62,7 +62,7 @@ const heading = (text) =>
   new Paragraph({
     spacing: { before: 100, after: 16, ...LINE },
     border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 1 } },
-    children: [run(text.toUpperCase(), { bold: true, size: 18, characterSpacing: 16 })],
+    children: [run(text.toUpperCase(), { bold: true, size: 19, characterSpacing: 16 })],
   });
 
 const skill = (label, value) =>
@@ -102,16 +102,16 @@ const doc = new Document({
       // ---------- header ----------
       new Paragraph({
         alignment: AlignmentType.CENTER,
-        spacing: { after: 30, line: 380, lineRule: 'exact' },
-        children: [run('Jasper Sands', { bold: true, size: 36, characterSpacing: 10 })],
+        spacing: { after: 30, line: 400, lineRule: 'exact' },
+        children: [run('Jasper Sands', { bold: true, size: 38, characterSpacing: 10 })],
       }),
       new Paragraph({
         alignment: AlignmentType.CENTER,
-        spacing: { line: 200, lineRule: 'exact' },
+        spacing: { line: 210, lineRule: 'exact' },
         children: [run(
-          'Palo Alto, CA | (650) 924-8429 | jaspersands02@gmail.com | js6908@columbia.edu | ' +
+          'Palo Alto, CA | (650) 924-8429 | jaspersands02@gmail.com | ' +
           'jaspersands.com | github.com/Jaspersands | linkedin.com/in/jaspersands',
-          { size: 17 }
+          { size: 18 }
         )],
       }),
       new Paragraph({
@@ -143,9 +143,6 @@ const doc = new Document({
          DOT(), run('GPA 3.81/4.0')],
         'Aug 2021 – May 2025'
       ),
-      note([b('Coursework: '), run('Machine Learning'), DOT(), run('Analysis of Algorithms'),
-            DOT(), run('Computer Security. '), b('TA: '),
-            run('Malware Analysis; Parallel Programming.')]),
 
       // ---------- projects ----------
       heading('Selected Projects'),
@@ -155,7 +152,7 @@ const doc = new Document({
         'Overall Winner, iQuHACK 2026', 42
       ),
       bullet([run(
-        'Wrote the GPU-accelerated state preparation, threshold oracle, and bisection search driving ' +
+        'Wrote the GPU-accelerated state prep, threshold oracle, and bisection search driving ' +
         'Iterative Quantum Amplitude Estimation.'
       )]),
       bullet([run(
@@ -169,7 +166,7 @@ const doc = new Document({
       ),
       bullet([run(
         'Symplectic stabilizer simulator for rotated and XZZX surface codes, with exact MWPM and ' +
-        'Union-Find decoding running client-side.'
+        'Union-Find decoding client-side.'
       )]),
       bullet([run(
         'Finite-size scaling over d = 3, 5, 7 at 20k shots/point puts the phenomenological ' +
@@ -213,8 +210,8 @@ const doc = new Document({
         'May – Dec 2025'
       ),
       bullet([run(
-        'Reduced hallucination in generative protein modeling under Dr. Venkat Venkatasubramanian by ' +
-        'grounding outputs in molecular graph data.'
+        'Reduced hallucination in generative protein modeling under Dr. Venkat Venkatasubramanian, ' +
+        'grounded in molecular graph data.'
       )]),
       entryLine(
         [b('Foster Care Policy Database'), run(', Washington University in St. Louis'),
@@ -222,32 +219,24 @@ const doc = new Document({
         'Sep 2024 – Jun 2025'
       ),
       bullet([run(
-        'Fine-tuned LLaMA-3 with Unsloth and Hugging Face for QA over 50k foster-care policy documents, ' +
+        'Fine-tuned LLaMA-3 with Hugging Face for QA over 50k foster-care policy documents, ' +
         'with human-in-the-loop feedback.'
       )]),
-      note([b('Also: '), b('Desdr Open Insurance Toolkit'), run(
-        ', Columbia (Dr. Eugene Wu, Sep–Dec 2025): survey data into actuarial and ' +
-        'climate-risk features.')], 42),
 
       // ---------- experience ----------
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
       bullet([run(
-        'Built a high-fidelity physics and sensor simulation core: closed-form line-of-sight and ' +
-        'horizon geometry, energy-maneuverability flyout, and ECI-to-ECEF coordinate transforms.'
+        'Built the physics and sensor simulation core, and the knowledge-graph sync feeding its ' +
+        'platform capability data.'
       )]),
       bullet([run(
-        'Measured the core against independent references rather than its own tests: across 4,371 ' +
-        'geodesic pairs the spherical-Earth model differs from WGS-84 by at most 13 km (0.55%), ' +
-        'enough to flip a call only inside a narrow band no live case falls in.'
+        'Measured it against independent references: 4,371 geodesic pairs put the spherical-Earth ' +
+        'model within 13 km (0.55%) of WGS-84.'
       )]),
       bullet([run(
-        'Report regenerates from one source file by a single command; the suite fails until it is ' +
-        're-run after a physics change.'
-      )]),
-      bullet([run(
-        'Synced platform capability data from a knowledge graph into the simulator via a ' +
-        'retrieval-judged, human-approved pipeline.'
+        'Disagreement is confined to a band no live case falls in; the report regenerates by one ' +
+        'command and fails CI until re-run.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
@@ -255,18 +244,13 @@ const doc = new Document({
         'and Datadog telemetry into one Elasticsearch cluster ingesting over 1 TB/day, and wrote 100+ ' +
         'rule-based and ML anomaly detections.'
       )]),
-      entryLine([b('Mindtrip'), DOT(), i('Software Engineer Intern')], 'May – Jul 2023'),
-      bullet([run(
-        'Built internal admin and secure-query tooling in JavaScript and Rails via Retool, saving ' +
-        'roughly 250 engineering hours a month.'
-      )]),
 
       // ---------- honors ----------
       heading('Honors & Leadership'),
       bullet([b('Overall Winner'), run(' and '), b('NVIDIA Ecosystem Award'), run(', MIT iQuHACK 2026'),
               DOT(), b('Audience Favorite'), run(', Harmoniqs Quantum Design 2026'), DOT(),
               b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse 2026'), DOT(),
-              run('Qualified, NYU Abu Dhabi Quantum Hackathon for Social Good 2027')]),
+              run('Qualified, NYU Abu Dhabi Hackathon for Social Good 2027')]),
       bullet([b('Graduate Lead'), run(
         ', Columbia Quantum Algorithms Reading Group: weekly sessions through all 33 chapters ' +
         "of Andrew Childs' notes.")]),
@@ -276,14 +260,11 @@ const doc = new Document({
       skill('Quantum:',
         'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP · Hamiltonian simulation, ' +
         'phase and amplitude estimation, QSVT, LCU, VQE, QAOA · surface codes, MWPM and Union-Find ' +
-        'decoding · randomized benchmarking, tomography'),
+        'decoding · randomized benchmarking, tomography · quantum complexity (BQP, QMA), query complexity'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
         'AWS, GCP, Elasticsearch, LaTeX'),
-      skill('Mathematics:',
-        'Linear algebra, tensor networks, probability, convex optimization, quantum ' +
-        'complexity (BQP, QMA), query complexity'),
     ],
   }],
 });
