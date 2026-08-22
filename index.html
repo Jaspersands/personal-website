@@ -535,10 +535,11 @@
             <h3>Smack Technologies · Software Engineer Intern</h3>
             <div class="where">May – Aug 2026</div>
             <p>
-              I built the physics and sensor simulation core: closed-form line-of-sight and horizon geometry,
-              energy-maneuverability flyout, and ECI-to-ECEF coordinate transforms. I also wired platform
-              capability data out of a knowledge graph and into the simulator, through a retrieval-judged
-              pipeline with a human approving every write.
+              Four strands, which converged by the end. I built physics and sensor simulation for the core
+              pipelines, including a fix for lossy unit round-trips that had been quietly costing 60% of
+              platform speed per run. I built the ingestion path from the knowledge graph into the simulator:
+              retrieval-judged proposals, semantic dedup, and a human approving every write. I ran head-to-head
+              benchmarks across open-weight language models. And I measured the simulator itself.
             </p>
             <p>
               The last stretch has been measuring that core instead of extending it. The existing tests say the

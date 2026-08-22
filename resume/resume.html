@@ -49,7 +49,7 @@
     border-bottom: 0.8pt solid #000;
   }
 
-  .entry { margin-top: 2.7pt; }
+  .entry { margin-top: 2.4pt; }
   .entry:first-of-type { margin-top: 2.1pt; }
 
   .line { display: flex; align-items: baseline; gap: 8pt; }
@@ -64,7 +64,7 @@
 
   /* ---------- bullets ---------- */
   ul { margin: 0.8pt 0 0; padding: 0; list-style: none; }
-  li { position: relative; padding-left: 9pt; margin-top: 0.6pt; }
+  li { position: relative; padding-left: 9pt; margin-top: 0.4pt; }
   li::before { content: "\2022"; position: absolute; left: 1pt; top: -0.3pt; }
 
   /* ---------- skills ---------- */
@@ -97,8 +97,8 @@
     <div class="l"><span class="org">Columbia University</span>, MS in Computer Science, Quantum Computing Track<span class="dot">&middot;</span>GPA 3.95/4.0</div>
     <div class="r">Sep 2025 &ndash; May 2027</div>
   </div>
-  <div class="note"><b>Thesis:</b> automating silicon spin qubit measurement with machine learning. Diraq and UNSW Sydney, Sep 2026 &ndash; May 2027, co-supervised by Dr. Nard Dumoulin Stuyck and Dr. Henry Yuen.</div>
-  <div class="note"><b>Coursework:</b> Quantum Error Correction<span class="dot">&middot;</span>Quantum Engineering<span class="dot">&middot;</span>Quantum Simulation &amp; Computing Lab<span class="dot">&middot;</span>Quantum Optimization &amp; ML.</div>
+  <div class="note"><b>Thesis:</b> Automating silicon spin qubit measurement with machine learning. Diraq and UNSW Sydney, Sep 2026 &ndash; May 2027, co-supervised by Dr. Nard Dumoulin Stuyck and Dr. Henry Yuen.</div>
+  <div class="note"><b>Quantum coursework:</b> Error Correction<span class="dot">&middot;</span>Engineering<span class="dot">&middot;</span>Simulation &amp; Computing Lab<span class="dot">&middot;</span>Optimization &amp; ML.</div>
   <div class="note"><b>TA:</b> Introduction to Quantum Computing.</div>
 </div>
 
@@ -107,6 +107,7 @@
     <div class="l"><span class="org">Washington University in St. Louis</span>, BS in Computer Science and Economics<span class="dot">&middot;</span>GPA 3.81/4.0</div>
     <div class="r">Aug 2021 &ndash; May 2025</div>
   </div>
+  <div class="note"><b>Coursework:</b> Machine Learning<span class="dot">&middot;</span>Analysis of Algorithms<span class="dot">&middot;</span>Computer Security. <b>TA:</b> Malware Analysis; Parallel Programming.</div>
 </div>
 
 <h2>Selected Projects</h2>
@@ -194,9 +195,9 @@
     <div class="r">May &ndash; Aug 2026</div>
   </div>
   <ul>
-    <li>Built the physics and sensor simulation core, and the knowledge-graph sync feeding its platform capability data.</li>
-    <li>Measured it against independent references: 4,371 geodesic pairs put the spherical-Earth model within 13 km (0.55%) of WGS-84.</li>
-    <li>Disagreement is confined to a band no live case falls in; the report regenerates by one command and fails CI until re-run.</li>
+    <li>Built physics and sensor simulation for the core pipelines; fixed lossy unit round-trips costing 60% of platform speed per run.</li>
+    <li>Built the knowledge-graph ingestion path into the simulator: retrieval-judged proposals, dedup, human approval on every write.</li>
+    <li>Benchmarked open-weight LLMs head-to-head, and validated the Earth model to within 13 km (0.55%) across 4,371 geodesic pairs.</li>
   </ul>
 </div>
 
@@ -207,6 +208,16 @@
   </div>
   <ul>
     <li>Designed and deployed the company-wide SIEM for a card-issuing fintech, unifying AWS, GCP, and Datadog telemetry into one Elasticsearch cluster ingesting over 1 TB/day, and wrote 100+ rule-based and ML anomaly detections.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Mindtrip</span><span class="dot">&middot;</span><span class="sub">Software Engineer Intern</span></div>
+    <div class="r">May &ndash; Jul 2023</div>
+  </div>
+  <ul>
+    <li>Built internal admin and secure-query tooling in JavaScript and Rails via Retool, saving roughly 250 engineering hours a month.</li>
   </ul>
 </div>
 

@@ -132,17 +132,20 @@ const doc = new Document({
         'Sep 2025 – May 2027', 42
       ),
       note([b('Thesis: '), run(
-        'automating silicon spin qubit measurement with machine learning. Diraq and UNSW Sydney, ' +
+        'Automating silicon spin qubit measurement with machine learning. Diraq and UNSW Sydney, ' +
         'Sep 2026 – May 2027, co-supervised by Dr. Nard Dumoulin Stuyck and Dr. Henry Yuen.'
       )]),
-      note([b('Coursework: '), run('Quantum Error Correction'), DOT(), run('Quantum Engineering'),
-            DOT(), run('Quantum Simulation & Computing Lab'), DOT(), run('Quantum Optimization & ML.')]),
+      note([b('Quantum coursework: '), run('Error Correction'), DOT(), run('Engineering'),
+            DOT(), run('Simulation & Computing Lab'), DOT(), run('Optimization & ML.')]),
       note([b('TA: '), run('Introduction to Quantum Computing.')]),
       entryLine(
         [b('Washington University in St. Louis'), run(', BS in Computer Science and Economics'),
          DOT(), run('GPA 3.81/4.0')],
         'Aug 2021 – May 2025'
       ),
+      note([b('Coursework: '), run('Machine Learning'), DOT(), run('Analysis of Algorithms'),
+            DOT(), run('Computer Security. '), b('TA: '),
+            run('Malware Analysis; Parallel Programming.')]),
 
       // ---------- projects ----------
       heading('Selected Projects'),
@@ -227,22 +230,28 @@ const doc = new Document({
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
       bullet([run(
-        'Built the physics and sensor simulation core, and the knowledge-graph sync feeding its ' +
-        'platform capability data.'
+        'Built physics and sensor simulation for the core pipelines; fixed lossy unit round-trips ' +
+        'costing 60% of platform speed per run.'
       )]),
       bullet([run(
-        'Measured it against independent references: 4,371 geodesic pairs put the spherical-Earth ' +
-        'model within 13 km (0.55%) of WGS-84.'
+        'Built the knowledge-graph ingestion path into the simulator: retrieval-judged proposals, ' +
+        'dedup, human approval on every write.'
       )]),
       bullet([run(
-        'Disagreement is confined to a band no live case falls in; the report regenerates by one ' +
-        'command and fails CI until re-run.'
+        'Benchmarked open-weight LLMs head-to-head, and validated the Earth model to within 13 km ' +
+        '(0.55%) across 4,371 geodesic pairs.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
         'Designed and deployed the company-wide SIEM for a card-issuing fintech, unifying AWS, GCP, ' +
         'and Datadog telemetry into one Elasticsearch cluster ingesting over 1 TB/day, and wrote 100+ ' +
         'rule-based and ML anomaly detections.'
+      )]),
+
+      entryLine([b('Mindtrip'), DOT(), i('Software Engineer Intern')], 'May – Jul 2023'),
+      bullet([run(
+        'Built internal admin and secure-query tooling in JavaScript and Rails via Retool, saving ' +
+        'roughly 250 engineering hours a month.'
       )]),
 
       // ---------- honors ----------
