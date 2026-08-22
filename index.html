@@ -535,8 +535,27 @@
             <h3>Smack Technologies · Software Engineer Intern</h3>
             <div class="where">May – Aug 2026</div>
             <p>
-              I wrote physics simulations and decision models for the core technology pipelines, along with state
-              transition mappings and simulation benchmarks used to validate the learned policies.
+              I built the physics and sensor simulation core: closed-form line-of-sight and horizon geometry,
+              energy-maneuverability flyout, and ECI-to-ECEF coordinate transforms. I also wired platform
+              capability data out of a knowledge graph and into the simulator, through a retrieval-judged
+              pipeline with a human approving every write.
+            </p>
+            <p>
+              The last stretch has been measuring that core instead of extending it. The existing tests say the
+              sim still works. They don't say how far it sits from an independent answer, or whether that gap
+              ever turns a yes into a no. So each study takes one piece, gives it an answer that doesn't come
+              from the sim (a standard Earth, a conservation law, a halved time step), sweeps the real map
+              rather than a toy equator, and asks whether the difference is large enough to flip a cutoff the
+              sim already relies on. One command regenerates the report, and the suite fails until it is re-run
+              after a physics change.
+            </p>
+            <p>
+              First study is Earth shape. The sim treats Earth as a sphere and GPS uses a spheroid. Across 4,371
+              pairs the two answers differ by at most 13 km, about 0.55%, and roughly 4 km on average, with the
+              sign of the error depending on heading. Disagreement is confined to a narrow band around each
+              threshold that no live case falls inside, and the error is nowhere near large enough to reorder
+              the thresholds it feeds. That last sentence is the useful one, because it lets the team keep the
+              simple model on purpose rather than vaguely worrying about it.
             </p>
           </div>
           <div class="tl-item">

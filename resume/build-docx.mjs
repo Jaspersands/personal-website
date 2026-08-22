@@ -237,6 +237,15 @@ const doc = new Document({
         'horizon geometry, energy-maneuverability flyout, and ECI-to-ECEF coordinate transforms.'
       )]),
       bullet([run(
+        'Measured the core against independent references rather than its own tests: across 4,371 ' +
+        'geodesic pairs the spherical-Earth model differs from WGS-84 by at most 13 km (0.55%), ' +
+        'enough to flip a call only inside a narrow band no live case falls in.'
+      )]),
+      bullet([run(
+        'Report regenerates from one source file by a single command; the suite fails until it is ' +
+        're-run after a physics change.'
+      )]),
+      bullet([run(
         'Synced platform capability data from a knowledge graph into the simulator via a ' +
         'retrieval-judged, human-approved pipeline.'
       )]),
@@ -259,9 +268,8 @@ const doc = new Document({
               b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse 2026'), DOT(),
               run('Qualified, NYU Abu Dhabi Quantum Hackathon for Social Good 2027')]),
       bullet([b('Graduate Lead'), run(
-        ', Columbia Quantum Algorithms Reading Group (Sep 2025–Jun 2026): ran weekly sessions ' +
-        "covering all 33 chapters of Andrew Childs' quantum algorithms lecture notes, each with " +
-        'simulation checks.')]),
+        ', Columbia Quantum Algorithms Reading Group: weekly sessions through all 33 chapters ' +
+        "of Andrew Childs' notes.")]),
 
       // ---------- skills ----------
       heading('Skills'),
