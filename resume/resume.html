@@ -68,9 +68,10 @@
   li::before { content: "\2022"; position: absolute; left: 1pt; top: -0.3pt; }
 
   /* ---------- skills ---------- */
-  .skill { display: flex; gap: 4pt; margin-top: 1pt; align-items: baseline; }
-  .skill .k { flex: 0 0 auto; font-weight: 700; }
-  .skill .v { flex: 1 1 auto; }
+  /* Inline flow, not flex: wrapped lines run back to the left margin instead of
+     staying inside a column narrowed by the label. */
+  .skill { margin-top: 1pt; }
+  .skill .k { font-weight: 700; margin-right: 3pt; }
 
   .dot { padding: 0 2.5pt; }
   a { color: inherit; text-decoration: none; }
@@ -114,7 +115,7 @@
 
 <div class="entry">
   <div class="line">
-    <div class="l"><span class="org">WhatTheDuck</span>: quantum amplitude estimation for financial Value at Risk<span class="dot">&middot;</span><em>CUDA-Q, C++</em></div>
+    <div class="l"><span class="org"><a href="https://github.com/ShayManor/WhatTheDuck">WhatTheDuck</a></span>: quantum amplitude estimation for financial Value at Risk<span class="dot">&middot;</span><em>CUDA-Q, C++</em></div>
     <div class="r">Overall Winner, iQuHACK 2026</div>
   </div>
   <ul>
@@ -125,8 +126,8 @@
 
 <div class="entry">
   <div class="line">
-    <div class="l"><span class="org">WASM QEC Simulator</span>: surface-code decoding in the browser<span class="dot">&middot;</span><em>Rust, WebAssembly</em></div>
-    <div class="r">qcompiler.jaspersands.com</div>
+    <div class="l"><span class="org"><a href="https://github.com/Jaspersands/quantum-simulator-qec">WASM QEC Simulator</a></span>: surface-code decoding in the browser<span class="dot">&middot;</span><em>Rust, WebAssembly</em></div>
+    <div class="r"><a href="https://qcompiler.jaspersands.com/">qcompiler.jaspersands.com</a></div>
   </div>
   <ul>
     <li>Symplectic stabilizer simulator for rotated and XZZX surface codes, with exact MWPM and Union-Find decoding client-side.</li>
@@ -136,8 +137,8 @@
 
 <div class="entry">
   <div class="line">
-    <div class="l"><span class="org">Q-Search</span>: proof-gated quantum algorithm research and verification engine</div>
-    <div class="r">qsearch.jaspersands.com</div>
+    <div class="l"><span class="org"><a href="https://github.com/Jaspersands/qsearch">Q-Search</a></span>: proof-gated quantum algorithm research and verification engine</div>
+    <div class="r"><a href="https://qsearch.jaspersands.com/">qsearch.jaspersands.com</a></div>
   </div>
   <ul>
     <li>Automated search for structural quantum advantage on non-abelian HSP, dihedral coset, and linear code equivalence problems.</li>
@@ -147,7 +148,7 @@
 
 <div class="entry">
   <div class="line">
-    <div class="l"><span class="org">LLM-Based Lossless Text Compression</span><span class="dot">&middot;</span><em>PyTorch, CUDA</em></div>
+    <div class="l"><span class="org"><a href="https://github.com/Jaspersands/LLMcompression">LLM-Based Lossless Text Compression</a></span><span class="dot">&middot;</span><em>PyTorch, CUDA</em></div>
     <div class="r">Systems optimization</div>
   </div>
   <ul>
@@ -187,6 +188,10 @@
   </ul>
 </div>
 
+<div class="entry">
+  <div class="note"><b>Also:</b> <b>Desdr Open Insurance Toolkit</b>, Columbia (Dr. Eugene Wu, Sep&ndash;Dec 2025): actuarial and climate-risk modeling.</div>
+</div>
+
 <h2>Experience</h2>
 
 <div class="entry">
@@ -197,7 +202,7 @@
   <ul>
     <li>Built physics and sensor simulation for the core pipelines; fixed lossy unit round-trips costing 60% of platform speed per run.</li>
     <li>Built the knowledge-graph ingestion path into the simulator: retrieval-judged proposals, dedup, human approval on every write.</li>
-    <li>Benchmarked open-weight LLMs head-to-head, and validated the Earth model to within 13 km (0.55%) across 4,371 geodesic pairs.</li>
+    <li>Ran the measurement work: open-weight LLM benchmarks, and simulator error bounded to 0.55% against independent references.</li>
   </ul>
 </div>
 
@@ -228,7 +233,7 @@
 </ul>
 
 <h2>Skills</h2>
-<div class="skill"><span class="k">Quantum:</span><span class="v">Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP<span class="dot">&middot;</span>Hamiltonian simulation, phase and amplitude estimation, QSVT, LCU, VQE, QAOA<span class="dot">&middot;</span>surface codes, MWPM and Union-Find decoding<span class="dot">&middot;</span>randomized benchmarking, tomography<span class="dot">&middot;</span>quantum complexity (BQP, QMA), query complexity</span></div>
+<div class="skill"><span class="k">Quantum:</span><span class="v">Qiskit and Qiskit Runtime, Cirq, PennyLane, CUDA-Q, Stim, PyMatching, QuTiP<span class="dot">&middot;</span>Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, LCU, VQE, QAOA<span class="dot">&middot;</span>surface codes, MWPM and Union-Find decoding<span class="dot">&middot;</span>Trotter decomposition<span class="dot">&middot;</span>randomized benchmarking, tomography, noise modeling<span class="dot">&middot;</span>quantum complexity (BQP, QMA), query complexity</span></div>
 <div class="skill"><span class="k">Languages:</span><span class="v">Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java</span></div>
 <div class="skill"><span class="k">ML &amp; systems:</span><span class="v">PyTorch, CUDA, Hugging Face<span class="dot">&middot;</span>Linux, Git, Docker, WebAssembly, AWS, GCP, Elasticsearch, LaTeX</span></div>
 

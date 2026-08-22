@@ -19,7 +19,7 @@ try {
   );
 }
 const {
-  Document, Packer, Paragraph, TextRun, Tab, TabStopType,
+  Document, Packer, Paragraph, TextRun, Tab, TabStopType, ExternalHyperlink,
   AlignmentType, BorderStyle, LevelFormat, convertInchesToTwip,
 } = docx;
 
@@ -39,13 +39,17 @@ const run = (text, opts = {}) => new TextRun({ text, font: FONT, size: BODY, ...
 const b = (text) => run(text, { bold: true });
 const i = (text) => run(text, { italics: true });
 const DOT = () => run(' · ');
+// Pressable, but deliberately not styled as a link: no colour, no underline.
+const link = (text, href, opts = {}) =>
+  new ExternalHyperlink({ link: href, children: [run(text, opts)] });
 
 // A left block that can carry mixed formatting, with a date flushed right.
 const entryLine = (left, right, spaceBefore = 54) =>
   new Paragraph({
     tabStops: RIGHT_TAB,
     spacing: { before: spaceBefore, ...LINE },
-    children: [...left, new TextRun({ children: [new Tab()] }), run(right)],
+    children: [...left, new TextRun({ children: [new Tab()] }),
+              ...(Array.isArray(right) ? right : [run(right)])],
   });
 
 const note = (children, spaceBefore = 6) =>
@@ -108,11 +112,16 @@ const doc = new Document({
       new Paragraph({
         alignment: AlignmentType.CENTER,
         spacing: { line: 210, lineRule: 'exact' },
-        children: [run(
-          'Palo Alto, CA | (650) 924-8429 | jaspersands02@gmail.com | ' +
-          'jaspersands.com | github.com/Jaspersands | linkedin.com/in/jaspersands',
-          { size: 18 }
-        )],
+        children: [
+          run('Palo Alto, CA | (650) 924-8429 | ', { size: 18 }),
+          link('jaspersands02@gmail.com', 'mailto:jaspersands02@gmail.com', { size: 18 }),
+          run(' | ', { size: 18 }),
+          link('jaspersands.com', 'https://jaspersands.com/', { size: 18 }),
+          run(' | ', { size: 18 }),
+          link('github.com/Jaspersands', 'https://github.com/Jaspersands', { size: 18 }),
+          run(' | ', { size: 18 }),
+          link('linkedin.com/in/jaspersands', 'https://www.linkedin.com/in/jaspersands', { size: 18 }),
+        ],
       }),
       new Paragraph({
         alignment: AlignmentType.CENTER,
@@ -150,7 +159,7 @@ const doc = new Document({
       // ---------- projects ----------
       heading('Selected Projects'),
       entryLine(
-        [b('WhatTheDuck'), run(': quantum amplitude estimation for financial Value at Risk'),
+        [link('WhatTheDuck', 'https://github.com/ShayManor/WhatTheDuck', { bold: true }), run(': quantum amplitude estimation for financial Value at Risk'),
          DOT(), i('CUDA-Q, C++')],
         'Overall Winner, iQuHACK 2026', 42
       ),
@@ -163,9 +172,9 @@ const doc = new Document({
         'classical baseline.'
       )]),
       entryLine(
-        [b('WASM QEC Simulator'), run(': surface-code decoding in the browser'),
+        [link('WASM QEC Simulator', 'https://github.com/Jaspersands/quantum-simulator-qec', { bold: true }), run(': surface-code decoding in the browser'),
          DOT(), i('Rust, WebAssembly')],
-        'qcompiler.jaspersands.com'
+        [link('qcompiler.jaspersands.com', 'https://qcompiler.jaspersands.com/')]
       ),
       bullet([run(
         'Symplectic stabilizer simulator for rotated and XZZX surface codes, with exact MWPM and ' +
@@ -176,8 +185,8 @@ const doc = new Document({
         'threshold at 3.2%.'
       )]),
       entryLine(
-        [b('Q-Search'), run(': proof-gated quantum algorithm research and verification engine')],
-        'qsearch.jaspersands.com'
+        [link('Q-Search', 'https://github.com/Jaspersands/qsearch', { bold: true }), run(': proof-gated quantum algorithm research and verification engine')],
+        [link('qsearch.jaspersands.com', 'https://qsearch.jaspersands.com/')]
       ),
       bullet([run(
         'Automated search for structural quantum advantage on non-abelian HSP, dihedral coset, and ' +
@@ -188,7 +197,7 @@ const doc = new Document({
         'theorem modules, indexing negative results.'
       )]),
       entryLine(
-        [b('LLM-Based Lossless Text Compression'), DOT(), i('PyTorch, CUDA')],
+        [link('LLM-Based Lossless Text Compression', 'https://github.com/Jaspersands/LLMcompression', { bold: true }), DOT(), i('PyTorch, CUDA')],
         'Systems optimization'
       ),
       bullet([run(
@@ -226,6 +235,9 @@ const doc = new Document({
         'with human-in-the-loop feedback.'
       )]),
 
+      note([b('Also: '), b('Desdr Open Insurance Toolkit'), run(
+        ', Columbia (Dr. Eugene Wu, Sep–Dec 2025): actuarial and climate-risk modeling.')], 42),
+
       // ---------- experience ----------
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
@@ -238,8 +250,8 @@ const doc = new Document({
         'dedup, human approval on every write.'
       )]),
       bullet([run(
-        'Benchmarked open-weight LLMs head-to-head, and validated the Earth model to within 13 km ' +
-        '(0.55%) across 4,371 geodesic pairs.'
+        'Ran the measurement work: open-weight LLM benchmarks, and simulator error bounded to ' +
+        '0.55% against independent references.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
@@ -267,9 +279,10 @@ const doc = new Document({
       // ---------- skills ----------
       heading('Skills'),
       skill('Quantum:',
-        'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP · Hamiltonian simulation, ' +
-        'phase and amplitude estimation, QSVT, LCU, VQE, QAOA · surface codes, MWPM and Union-Find ' +
-        'decoding · randomized benchmarking, tomography · quantum complexity (BQP, QMA), query complexity'),
+        'Qiskit and Qiskit Runtime, Cirq, PennyLane, CUDA-Q, Stim, PyMatching, QuTiP · Hamiltonian ' +
+        'simulation, phase and amplitude estimation, QSVT and block encoding, LCU, VQE, QAOA · ' +
+        'surface codes, MWPM and Union-Find decoding · Trotter decomposition · randomized ' +
+        'benchmarking, tomography, noise modeling · quantum complexity (BQP, QMA), query complexity'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
