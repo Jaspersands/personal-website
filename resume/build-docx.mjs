@@ -71,7 +71,7 @@ const heading = (text) =>
 
 const skill = (label, value) =>
   new Paragraph({
-    spacing: { before: 20, ...LINE },
+    spacing: { before: 12, ...LINE },
     indent: { left: 0 },
     children: [b(label + '  '), run(value)],
   });
@@ -181,8 +181,7 @@ const doc = new Document({
         'Union-Find decoding client-side.'
       )]),
       bullet([run(
-        'Finite-size scaling over d = 3, 5, 7 at 20k shots/point puts the phenomenological ' +
-        'threshold at 3.2%.'
+        'Finite-size scaling puts the error threshold at 3.2% under phenomenological noise.'
       )]),
       entryLine(
         [link('Q-Search', 'https://github.com/Jaspersands/qsearch', { bold: true }), run(': proof-gated quantum algorithm research and verification engine')],
@@ -242,15 +241,15 @@ const doc = new Document({
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
       bullet([run(
-        'Built physics and sensor simulation for the core pipelines; fixed lossy unit round-trips ' +
-        'costing 60% of platform speed per run.'
+        'Built physics and sensor simulation for the core pipelines, fixing unit round-trips that ' +
+        'cost 60% of platform speed per run.'
       )]),
       bullet([run(
-        'Built the knowledge-graph ingestion path into the simulator: retrieval-judged proposals, ' +
-        'dedup, human approval on every write.'
+        'Built the knowledge-graph ingestion path into the simulator, with retrieval-judged ' +
+        'proposals and human approval on every write.'
       )]),
       bullet([run(
-        'Ran the measurement work: open-weight LLM benchmarks, and simulator error bounded to ' +
+        'Benchmarked open-weight language models head to head, and bounded simulator error to ' +
         '0.55% against independent references.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
@@ -278,11 +277,12 @@ const doc = new Document({
 
       // ---------- skills ----------
       heading('Skills'),
-      skill('Quantum:',
-        'Qiskit and Qiskit Runtime, Cirq, PennyLane, CUDA-Q, Stim, PyMatching, QuTiP · Hamiltonian ' +
-        'simulation, phase and amplitude estimation, QSVT and block encoding, LCU, VQE, QAOA · ' +
-        'surface codes, MWPM and Union-Find decoding · Trotter decomposition · randomized ' +
-        'benchmarking, tomography, noise modeling · quantum complexity (BQP, QMA), query complexity'),
+      skill('Quantum tools:', 'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP'),
+      skill('Algorithms:',
+        'Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, LCU, VQE, QAOA'),
+      skill('Error correction:',
+        'surface codes, MWPM and Union-Find decoding, randomized benchmarking, tomography, noise modeling'),
+      skill('Theory:', 'quantum complexity (BQP, QMA), query complexity'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
