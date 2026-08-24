@@ -128,7 +128,7 @@ const doc = new Document({
         spacing: { before: 60, ...LINE },
         children: [run(
           'Quantum algorithms, error correction, and machine learning for qubit control. ' +
-          'MS in computer science at Columbia. Thesis at Diraq and UNSW Sydney on ' +
+          'MS in Computer Science at Columbia. Thesis at Diraq and UNSW Sydney on ' +
           'automating silicon spin qubit measurement.'
         )],
       }),
@@ -142,7 +142,7 @@ const doc = new Document({
       ),
       note([b('Quantum coursework: '), run('Error Correction'), DOT(), run('Engineering'),
             DOT(), run('Simulation & Computing Lab'), DOT(), run('Optimization & ML.')]),
-      note([b('TA: '), run('Introduction to Quantum Computing. '), b('MS thesis'), run(' at Diraq and UNSW Sydney.')]),
+      note([b('TA: '), run('Introduction to Quantum Computing.')]),
       entryLine(
         [b('Washington University in St. Louis'), run(', BS in Computer Science and Economics'),
          DOT(), run('GPA 3.81/4.0')],
@@ -157,7 +157,7 @@ const doc = new Document({
       entryLine(
         [link('WhatTheDuck', 'https://github.com/ShayManor/WhatTheDuck', { bold: true }), run(': quantum amplitude estimation for financial Value at Risk'),
          DOT(), i('CUDA-Q, C++')],
-        'Overall Winner, iQuHACK 2026', 42
+        'Overall Winner, MIT iQuHACK 2026', 42
       ),
       bullet([run(
         'Wrote the GPU-accelerated state prep, threshold oracle, and bisection search driving ' +
@@ -194,7 +194,7 @@ const doc = new Document({
       )]),
       entryLine(
         [link('LLM-Based Lossless Text Compression', 'https://github.com/Jaspersands/LLMcompression', { bold: true }), DOT(), i('PyTorch, CUDA')],
-        'Systems optimization'
+        [link('github.com/Jaspersands/LLMcompression', 'https://github.com/Jaspersands/LLMcompression')]
       ),
       bullet([run(
         'Arithmetic coding on LLM predictions: 5–16× average, 39× best case, beating zstd and ' +
@@ -205,7 +205,7 @@ const doc = new Document({
       heading('Research'),
       entryLine(
         [b('Diraq / UNSW Sydney'), DOT(), i('MS Thesis Research')],
-        'Sep 2026 – Jun 2027', 42
+        'Sep 2026 – May 2027', 42
       ),
       bullet([run(
         'Automating silicon spin qubit characterization under Dr. Nard Dumoulin Stuyck, replacing ' +
@@ -236,7 +236,7 @@ const doc = new Document({
       entryLine(
         [b('Foster Care Policy Database'), run(', Washington University in St. Louis'),
          DOT(), i('Undergraduate Researcher')],
-        'Sep 2024 – Jun 2025'
+        'Sep 2024 – May 2025'
       ),
       bullet([run(
         'Fine-tuned LLaMA-3 with Hugging Face for QA over 50k foster-care policy documents, ' +
