@@ -142,7 +142,7 @@ const doc = new Document({
       ),
       note([b('Quantum coursework: '), run('Error Correction'), DOT(), run('Engineering'),
             DOT(), run('Simulation & Computing Lab'), DOT(), run('Optimization & ML.')]),
-      note([b('TA: '), run('Introduction to Quantum Computing.')]),
+      note([b('TA: '), run('Introduction to Quantum Computing. '), b('MS thesis'), run(' at Diraq and UNSW Sydney.')]),
       entryLine(
         [b('Washington University in St. Louis'), run(', BS in Computer Science and Economics'),
          DOT(), run('GPA 3.81/4.0')],
@@ -205,15 +205,15 @@ const doc = new Document({
       heading('Research'),
       entryLine(
         [b('Diraq / UNSW Sydney'), DOT(), i('MS Thesis Research')],
-        'Sep 2026 – May 2027', 42
+        'Sep 2026 – Jun 2027', 42
       ),
       bullet([run(
         'Automating silicon spin qubit characterization under Dr. Nard Dumoulin Stuyck, replacing ' +
         'manual tuning and interpretation.'
       )]),
       bullet([run(
-        'Pipelines to acquire charge measurements from cryogenic probing and classify device ' +
-        'states, benchmarked against expert reading.'
+        'Acquiring charge measurements from cryogenic probing, and classifying device states ' +
+        'against what an expert would call by hand.'
       )]),
       entryLine(
         [b('Cidon Systems Research Lab'), run(', Columbia University'), DOT(), i('Graduate Researcher')],
