@@ -140,10 +140,6 @@ const doc = new Document({
          DOT(), run('GPA 3.95/4.0')],
         'Sep 2025 – May 2027', 42
       ),
-      note([b('Thesis: '), run(
-        'Automating silicon spin qubit measurement with machine learning. Diraq and UNSW Sydney, ' +
-        'Sep 2026 – May 2027, co-supervised by Dr. Nard Dumoulin Stuyck and Dr. Henry Yuen.'
-      )]),
       note([b('Quantum coursework: '), run('Error Correction'), DOT(), run('Engineering'),
             DOT(), run('Simulation & Computing Lab'), DOT(), run('Optimization & ML.')]),
       note([b('TA: '), run('Introduction to Quantum Computing.')]),
@@ -208,8 +204,20 @@ const doc = new Document({
       // ---------- research ----------
       heading('Research'),
       entryLine(
+        [b('Diraq / UNSW Sydney'), DOT(), i('MS Thesis Research')],
+        'Sep 2026 – May 2027', 42
+      ),
+      bullet([run(
+        'Automating silicon spin qubit characterization under Dr. Nard Dumoulin Stuyck, replacing ' +
+        'manual tuning and interpretation.'
+      )]),
+      bullet([run(
+        'Pipelines to acquire charge measurements from cryogenic probing and classify device ' +
+        'states, benchmarked against expert reading.'
+      )]),
+      entryLine(
         [b('Cidon Systems Research Lab'), run(', Columbia University'), DOT(), i('Graduate Researcher')],
-        'Sep 2025 – Jun 2026', 42
+        'Sep 2025 – Jun 2026'
       ),
       bullet([run(
         'Built phishing and spam detection pipelines with Dr. Asaf Cidon and Barracuda Networks, ' +
@@ -235,8 +243,6 @@ const doc = new Document({
         'with human-in-the-loop feedback.'
       )]),
 
-      note([b('Also: '), b('Desdr Open Insurance Toolkit'), run(
-        ', Columbia (Dr. Eugene Wu, Sep–Dec 2025): actuarial and climate-risk modeling.')], 42),
 
       // ---------- experience ----------
       heading('Experience'),
