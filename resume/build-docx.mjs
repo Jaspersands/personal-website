@@ -194,11 +194,11 @@ const doc = new Document({
       )]),
       entryLine(
         [link('LLM-Based Lossless Text Compression', 'https://github.com/Jaspersands/LLMcompression', { bold: true }), DOT(), i('PyTorch, CUDA')],
-        [link('github.com/Jaspersands/LLMcompression', 'https://github.com/Jaspersands/LLMcompression')]
+        [link('jaspersands.com/llmcompression', 'https://jaspersands.com/llmcompression/')]
       ),
       bullet([run(
-        'Arithmetic coding on LLM predictions: 5–16× average, 39× best case, beating zstd and ' +
-        'gzip; static KV caching and CUDA graphs.'
+        'Arithmetic coding on LLM predictions, 5–16× average and 39× best case, at 100–1000× ' +
+        'lower throughput than gzip and zstd.'
       )]),
 
       // ---------- research ----------
