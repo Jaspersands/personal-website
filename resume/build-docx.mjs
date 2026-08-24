@@ -181,7 +181,8 @@ const doc = new Document({
         'Union-Find decoding client-side.'
       )]),
       bullet([run(
-        'Finite-size scaling puts the error threshold at 3.2% under phenomenological noise.'
+        'Finite-size scaling puts the threshold at 3.2% with MWPM, 2.7% with Union-Find, and ' +
+        '14.7% under code-capacity noise.'
       )]),
       entryLine(
         [link('Q-Search', 'https://github.com/Jaspersands/qsearch', { bold: true }), run(': proof-gated quantum algorithm research and verification engine')],
@@ -239,7 +240,7 @@ const doc = new Document({
 
       // ---------- experience ----------
       heading('Experience'),
-      entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
+      entryLine([b('Smack Technologies'), DOT(), i('AI Intern')], 'May – Aug 2026', 42),
       bullet([run(
         'Built physics and sensor simulation, integrating the knowledge graph to expand corpus ' +
         'generation.'
@@ -249,8 +250,8 @@ const doc = new Document({
         'speeding corpus generation 64x.'
       )]),
       bullet([run(
-        'Bounded simulator error to 0.55% against references chosen outside the simulator, and ' +
-        'wrote the bounds the team works from.'
+        'Bounded simulator error to 0.55% against references outside its own tests, in a report ' +
+        'that regenerates when the physics changes.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
@@ -277,7 +278,7 @@ const doc = new Document({
 
       // ---------- skills ----------
       heading('Skills'),
-      skill('Quantum tools:', 'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP'),
+      skill('Quantum tools:', 'Qiskit and Qiskit Runtime, Cirq, PennyLane, CUDA-Q, Stim, PyMatching, QuTiP'),
       skill('Quantum methods:',
         'Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, LCU, ' +
         'VQE, QAOA · randomized benchmarking, tomography, noise modeling · quantum complexity ' +
