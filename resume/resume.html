@@ -64,8 +64,11 @@
 
   /* ---------- bullets ---------- */
   ul { margin: 0.8pt 0 0; padding: 0; list-style: none; }
-  li { position: relative; padding-left: 9pt; margin-top: 0.4pt; }
-  li::before { content: "\2022"; position: absolute; left: 1pt; top: -0.3pt; }
+  /* Hanging indent without positioning. A positioned li becomes its own paint
+     layer and Chromium writes those last, which scrambles the PDF text layer
+     and leaves every bullet stranded after the final section. */
+  li { padding-left: 9pt; text-indent: -9pt; margin-top: 0.4pt; }
+  li::before { content: "\2022\00a0\00a0"; }
 
   /* ---------- skills ---------- */
   /* Inline flow, not flex: wrapped lines run back to the left margin instead of
