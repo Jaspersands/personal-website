@@ -241,20 +241,16 @@ const doc = new Document({
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
       bullet([run(
-        'Built physics and sensor simulation, and fixed a unit-conversion bug that cut simulated ' +
-        'speeds 60% per run.'
+        'Built physics and sensor simulation, integrating the knowledge graph to expand corpus ' +
+        'generation.'
       )]),
       bullet([run(
-        'Expanded the knowledge graph with far more platforms, weapons and sensors, and the ' +
-        'pipeline feeding them to the simulator.'
+        'Benchmarked open-weight models head to head on speed, intelligence and concurrency, ' +
+        'speeding corpus generation 64x.'
       )]),
       bullet([run(
-        'Ran head-to-head benchmarks across open-weight language models and wrote up the evidence ' +
-        'behind the choice.'
-      )]),
-      bullet([run(
-        'Bounded simulator error to 0.55% against independent references, and cut run time up to ' +
-        '64x with concurrency.'
+        'Bounded simulator error to 0.55% against references chosen outside the simulator, and ' +
+        'wrote the bounds the team works from.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
@@ -274,7 +270,7 @@ const doc = new Document({
       bullet([b('Overall Winner'), run(' and '), b('NVIDIA Ecosystem Award'), run(', MIT iQuHACK 2026'),
               DOT(), b('Audience Favorite'), run(', Harmoniqs Quantum Design 2026'), DOT(),
               b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse 2026'), DOT(),
-              run('Qualified, NYU Abu Dhabi Hackathon for Social Good 2027')]),
+              b('Qualified'), run(', NYU Abu Dhabi Hackathon for Social Good 2027')]),
       bullet([b('Graduate Lead'), run(
         ', Columbia Quantum Algorithms Reading Group: weekly sessions through all 33 chapters ' +
         "of Andrew Childs' notes.")]),
