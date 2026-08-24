@@ -66,7 +66,7 @@ const heading = (text) =>
   new Paragraph({
     spacing: { before: 100, after: 16, ...LINE },
     border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 1 } },
-    children: [run(text.toUpperCase(), { bold: true, size: 19, characterSpacing: 16 })],
+    children: [run(text.toUpperCase(), { bold: true, size: 21, characterSpacing: 16 })],
   });
 
 const skill = (label, value) =>
@@ -113,14 +113,14 @@ const doc = new Document({
         alignment: AlignmentType.CENTER,
         spacing: { line: 210, lineRule: 'exact' },
         children: [
-          run('Palo Alto, CA | (650) 924-8429 | ', { size: 18 }),
-          link('jaspersands02@gmail.com', 'mailto:jaspersands02@gmail.com', { size: 18 }),
-          run(' | ', { size: 18 }),
-          link('jaspersands.com', 'https://jaspersands.com/', { size: 18 }),
-          run(' | ', { size: 18 }),
-          link('github.com/Jaspersands', 'https://github.com/Jaspersands', { size: 18 }),
-          run(' | ', { size: 18 }),
-          link('linkedin.com/in/jaspersands', 'https://www.linkedin.com/in/jaspersands', { size: 18 }),
+          run('Palo Alto, CA | (650) 924-8429 | ', { size: 19 }),
+          link('jaspersands02@gmail.com', 'mailto:jaspersands02@gmail.com', { size: 19 }),
+          run(' | ', { size: 19 }),
+          link('jaspersands.com', 'https://jaspersands.com/', { size: 19 }),
+          run(' | ', { size: 19 }),
+          link('github.com/Jaspersands', 'https://github.com/Jaspersands', { size: 19 }),
+          run(' | ', { size: 19 }),
+          link('linkedin.com/in/jaspersands', 'https://www.linkedin.com/in/jaspersands', { size: 19 }),
         ],
       }),
       new Paragraph({
