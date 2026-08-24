@@ -8,6 +8,8 @@
 
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -82,5 +84,28 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
       `ERROR: content overflows one page by ${Math.round(height - CONTENT_H)}px. Trim before shipping.`
     );
     process.exit(1);
+  }
+
+  // The PDF is served with cache-control: max-age=14400, so replacing the file
+  // in place leaves visitors on the old one for up to four hours. Stamping the
+  // link with the file's own content hash changes the cache key exactly when
+  // the bytes change, which is what styles.css?v= does by hand.
+  // Hash the source, not the PDF: Chromium stamps a creation time into every
+  // render, so hashing the output would churn the cache key on every build even
+  // when nothing changed. resume.html changing is what should bust the cache.
+  const page_ = resolve(here, '..', 'index.html');
+  const hash = createHash('sha256').update(readFileSync(src)).digest('hex').slice(0, 8);
+  const html = readFileSync(page_, 'utf8');
+  const re = /(href="assets\/jaspersands_resume\.pdf)(\?v=[^"]*)?"/;
+  if (!re.test(html)) {
+    console.error('ERROR: no résumé link found in index.html; cache key not stamped.');
+    process.exit(1);
+  }
+  const stamped = html.replace(re, `$1?v=${hash}"`);
+  if (stamped !== html) {
+    writeFileSync(page_, stamped);
+    console.log(`stamped index.html résumé link with ?v=${hash}`);
+  } else {
+    console.log(`index.html already at ?v=${hash}`);
   }
 }
