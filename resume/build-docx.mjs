@@ -241,16 +241,20 @@ const doc = new Document({
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('Software Engineer Intern')], 'May – Aug 2026', 42),
       bullet([run(
-        'Built physics and sensor simulation for the core pipelines, fixing unit round-trips that ' +
-        'cost 60% of platform speed per run.'
+        'Built physics and sensor simulation, and fixed a unit-conversion bug that cut simulated ' +
+        'speeds 60% per run.'
       )]),
       bullet([run(
-        'Built the knowledge-graph ingestion path into the simulator, with retrieval-judged ' +
-        'proposals and human approval on every write.'
+        'Expanded the knowledge graph with far more platforms, weapons and sensors, and the ' +
+        'pipeline feeding them to the simulator.'
       )]),
       bullet([run(
-        'Benchmarked open-weight language models head to head, and bounded simulator error to ' +
-        '0.55% against independent references.'
+        'Ran head-to-head benchmarks across open-weight language models and wrote up the evidence ' +
+        'behind the choice.'
+      )]),
+      bullet([run(
+        'Bounded simulator error to 0.55% against independent references, and cut run time up to ' +
+        '64x with concurrency.'
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
@@ -278,11 +282,10 @@ const doc = new Document({
       // ---------- skills ----------
       heading('Skills'),
       skill('Quantum tools:', 'Qiskit and Qiskit Runtime, CUDA-Q, Stim, PyMatching, QuTiP'),
-      skill('Algorithms:',
-        'Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, LCU, VQE, QAOA'),
-      skill('Error correction:',
-        'surface codes, MWPM and Union-Find decoding, randomized benchmarking, tomography, noise modeling'),
-      skill('Theory:', 'quantum complexity (BQP, QMA), query complexity'),
+      skill('Quantum methods:',
+        'Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, LCU, ' +
+        'VQE, QAOA · randomized benchmarking, tomography, noise modeling · quantum complexity ' +
+        '(BQP, QMA), query complexity'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
