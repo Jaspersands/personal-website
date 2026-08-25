@@ -47,10 +47,17 @@ holding a single line.
 `measure.mjs` walks the same break rule and shows where the cost lands:
 
 ```
-flow 1821px -> paginated 1832px across 2 page(s); 11px lost at breaks
-  page 1: 99% full
-  page 2: 92% full
+flow 1894px -> paginated 1892px across 2 page(s); -2px lost at breaks
+  page 1: 100% full
+  page 2: 98% full
 ```
+
+Break placement, not height, is what usually blocks an addition. The two-page cut
+sits about 20px under the limit, and what fits is counterintuitive: a 38px "Other
+work" line overflows to a third page while a 51px coursework line does not, because
+the shorter one lands where it pushes the five-line Q-Search entry — which cannot
+split — past the page-one break. Test an addition by rendering it, never by adding
+its height to the flow.
 
 It also lists the blocks whose last line is nearly empty. Those are the cheapest
 place to buy a line back — a few words cut reclaims the whole line — and they are how

@@ -12,15 +12,15 @@
      replace it are data-t="2". cv/build.mjs --two puts class="two" on <html>, which
      flips which set is visible and tightens the vertical rhythm to match. Editing
      one file keeps the two versions from telling different stories. */
-  :root { --entry-gap: 6pt; --h2-gap: 12.5pt; --skill-gap: 2.6pt; }
-  html.two { --entry-gap: 5pt; --h2-gap: 11pt; --skill-gap: 2pt; }
+  :root { --entry-gap: 6pt; --h2-gap: 12.5pt; --skill-gap: 2.6pt; --lh: 1.24; }
+  html.two { --entry-gap: 3.5pt; --h2-gap: 9pt; --skill-gap: 1.6pt; --lh: 1.20; }
   html:not(.two) [data-t="2"] { display: none; }
   html.two [data-t="3"] { display: none; }
 
   body {
     font-family: "Liberation Serif", "Times New Roman", Times, serif;
     font-size: 10.4pt;
-    line-height: 1.24;
+    line-height: var(--lh);
     color: #000;
     text-rendering: geometricPrecision;
   }
@@ -108,7 +108,7 @@
     <div class="r">Aug 2021 &ndash; May 2025</div>
   </div>
   <div class="note"><span class="where">Bachelor of Science in Computer Science and Economics; Minor in Political Science.</span> GPA 3.81/4.0.</div>
-  <div class="note" data-t="3"><b>Coursework:</b> Machine Learning<span class="dot">&middot;</span>Analysis of Algorithms<span class="dot">&middot;</span>Algorithms for Biosequence Comparison<span class="dot">&middot;</span>Parallel &amp; Concurrent Programming<span class="dot">&middot;</span>Computer Security<span class="dot">&middot;</span>Reverse Engineering &amp; Malware Analysis<span class="dot">&middot;</span>Econometrics<span class="dot">&middot;</span>Game Theory.</div>
+  <div class="note"><b>Coursework:</b> Machine Learning<span class="dot">&middot;</span>Analysis of Algorithms<span class="dot">&middot;</span>Algorithms for Biosequence Comparison<span class="dot">&middot;</span>Parallel &amp; Concurrent Programming<span class="dot">&middot;</span>Computer Security<span class="dot">&middot;</span>Reverse Engineering &amp; Malware Analysis<span class="dot">&middot;</span>Econometrics<span class="dot">&middot;</span>Game Theory.</div>
 </div>
 
 <div class="entry" data-t="3">
@@ -220,9 +220,8 @@
     <div class="r"><a href="https://qcompiler.jaspersands.com/">qcompiler.jaspersands.com</a></div>
   </div>
   <ul>
-    <li data-t="3">Symplectic stabilizer simulator for rotated and XZZX surface codes with real-time error injection and syndrome visualization, running exact minimum-weight perfect matching and Union-Find decoding entirely client-side.</li>
-    <li data-t="3">Finite-size scaling estimates thresholds of 3.2% with MWPM, 2.7% with Union-Find, 14.7% at code capacity.</li>
-    <li data-t="2">Symplectic stabilizer simulator for rotated and XZZX surface codes, decoding syndromes client-side with exact MWPM and Union-Find. Finite-size scaling estimates thresholds of 3.2% with MWPM and 2.7% with Union-Find.</li>
+    <li>Symplectic stabilizer simulator for rotated and XZZX surface codes with real-time error injection and syndrome visualization, running exact minimum-weight perfect matching and Union-Find decoding entirely client-side.</li>
+    <li>Finite-size scaling estimates thresholds of 3.2% with MWPM, 2.7% with Union-Find, 14.7% at code capacity.</li>
   </ul>
 </div>
 
@@ -232,9 +231,8 @@
     <div class="r"><a href="https://qsearch.jaspersands.com/">qsearch.jaspersands.com</a></div>
   </div>
   <ul>
-    <li data-t="3">Automated search for structural quantum advantage on non-abelian hidden subgroup, dihedral coset, and linear code equivalence problems, pairing frontier theoretical reasoning with agentic engineering.</li>
-    <li data-t="3">Formal proof gates test each proposed mechanism against 1,200+ classical baselines across 720+ theorem modules, with negative results permanently indexed so the engine does not re-propose a dead end.</li>
-    <li data-t="2">Automated search for structural quantum advantage on non-abelian hidden subgroup, dihedral coset, and linear code equivalence problems, with formal proof gates testing each proposed mechanism against 1,200+ classical baselines.</li>
+    <li>Automated search for structural quantum advantage on non-abelian hidden subgroup, dihedral coset, and linear code equivalence problems, pairing frontier theoretical reasoning with agentic engineering.</li>
+    <li>Formal proof gates test each proposed mechanism against 1,200+ classical baselines across 720+ theorem modules, with negative results permanently indexed so the engine does not re-propose a dead end.</li>
   </ul>
 </div>
 
@@ -245,7 +243,7 @@
   </div>
   <ul>
     <li>Digitized adiabatic ground-state preparation on Heron's native fractional RZZ gates, roughly halving logical-to-physical translation error, with palindromic Trotter steps for second-order accuracy.</li>
-    <li data-t="3">Flattened the anneal schedule at the critical point, where a linear sweep races through the closing gap.</li>
+    <li>Flattened the anneal schedule at the critical point, where a linear sweep races through the closing gap.</li>
   </ul>
 </div>
 
@@ -260,7 +258,7 @@
   </ul>
 </div>
 
-<div class="entry" data-t="3">
+<div class="entry">
   <div class="line">
     <div class="l"><span class="org">Entanglement and Matrix Product States</span>: many-body systems</div>
     <div class="r"><a href="https://jaspersands.com/assets/mps_presentation.pdf">slides</a></div>
