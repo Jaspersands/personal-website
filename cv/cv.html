@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jasper Sands, Curriculum Vitae</title>
+<style>
+  @page { size: Letter; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    font-family: "Liberation Serif", "Times New Roman", Times, serif;
+    font-size: 10.4pt;
+    line-height: 1.24;
+    color: #000;
+    text-rendering: geometricPrecision;
+  }
+
+  /* ---------- header ---------- */
+  header { text-align: center; margin-bottom: 8pt; }
+  h1 {
+    font-size: 21pt; font-weight: 700; letter-spacing: 0.6pt;
+    margin: 0 0 3pt; line-height: 1;
+  }
+  .contact { font-size: 10pt; line-height: 1.35; }
+  .contact .sep { padding: 0 3pt; }
+
+  /* ---------- sections ---------- */
+  h2 {
+    font-size: 10.8pt; font-weight: 700; letter-spacing: 0.9pt;
+    text-transform: uppercase;
+    margin: 12.5pt 0 0; padding-bottom: 1.2pt;
+    border-bottom: 0.9pt solid #000;
+    break-after: avoid; page-break-after: avoid;
+  }
+
+  .entry { margin-top: 6pt; break-inside: avoid; page-break-inside: avoid; }
+  .entry:first-of-type { margin-top: 4.5pt; }
+
+  .line { display: flex; align-items: baseline; gap: 10pt; }
+  .line .l { flex: 1 1 auto; min-width: 0; }
+  .line .r { flex: 0 0 auto; white-space: nowrap; }
+
+  .org  { font-weight: 700; }
+  .sub  { font-style: italic; }
+  .where { font-style: italic; }
+
+  .note { margin-top: 1pt; }
+  .note b { font-weight: 700; }
+
+  /* Hanging indent without positioning, so the PDF text layer stays in
+     document order for anything that parses it. */
+  ul { margin: 1.5pt 0 0; padding: 0; list-style: none; }
+  li { padding-left: 10pt; text-indent: -10pt; margin-top: 1pt; }
+  li::before { content: "\2022\00a0\00a0"; }
+
+  /* Inline flow so wrapped skill lines return to the left margin. */
+  .skill { margin-top: 2.6pt; }
+  .skill .k { font-weight: 700; margin-right: 3pt; }
+
+  .dot { padding: 0 3pt; }
+  a { color: inherit; text-decoration: none; }
+  em { font-style: italic; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Jasper Sands</h1>
+  <div class="contact">
+    Palo Alto, CA<span class="sep">|</span><span style="white-space:nowrap">(650)&nbsp;924-8429</span><span class="sep">|</span><a href="mailto:jaspersands02@gmail.com">jaspersands02@gmail.com</a><span class="sep">|</span><a href="mailto:js6908@columbia.edu">js6908@columbia.edu</a><br>
+    <a href="https://jaspersands.com">jaspersands.com</a><span class="sep">|</span><a href="https://github.com/Jaspersands">github.com/Jaspersands</a><span class="sep">|</span><a href="https://www.linkedin.com/in/jaspersands">linkedin.com/in/jaspersands</a>
+  </div>
+</header>
+
+<h2>Research Interests</h2>
+<div class="entry">
+  <div class="note">
+    Quantum error correction and decoding<span class="dot">&middot;</span>quantum algorithms and query complexity<span class="dot">&middot;</span>machine learning for qubit characterization and control<span class="dot">&middot;</span>simulation of quantum systems on near-term hardware.
+  </div>
+</div>
+
+<h2>Education</h2>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Columbia University</span>, New York, NY</div>
+    <div class="r">Sep 2025 &ndash; May 2027</div>
+  </div>
+  <div class="note"><span class="where">Master of Science in Computer Science, Quantum Computing Track.</span> GPA 3.95/4.0.</div>
+  <div class="note"><b>Thesis:</b> <em>Automation of Silicon Spin Qubit Measurements Using Machine Learning.</em> Advised by Dr. Nard Dumoulin Stuyck at Diraq and UNSW Sydney, with Dr. Henry Yuen at Columbia.</div>
+  <div class="note"><b>Coursework:</b> Quantum Error Correction<span class="dot">&middot;</span>Quantum Engineering<span class="dot">&middot;</span>Quantum Simulation &amp; Computing Lab<span class="dot">&middot;</span>Quantum Optimization &amp; Machine Learning<span class="dot">&middot;</span>Machine-Assisted Mathematics<span class="dot">&middot;</span>Neural Networks &amp; Deep Learning<span class="dot">&middot;</span>Machine Learning for Functional Genomics.</div>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Washington University in St. Louis</span>, St. Louis, MO</div>
+    <div class="r">Aug 2021 &ndash; May 2025</div>
+  </div>
+  <div class="note"><span class="where">Bachelor of Science in Computer Science and Economics; Minor in Political Science.</span> GPA 3.81/4.0.</div>
+  <div class="note"><b>Coursework:</b> Machine Learning<span class="dot">&middot;</span>Analysis of Algorithms<span class="dot">&middot;</span>Algorithms for Biosequence Comparison<span class="dot">&middot;</span>Parallel &amp; Concurrent Programming<span class="dot">&middot;</span>Computer Security<span class="dot">&middot;</span>Reverse Engineering &amp; Malware Analysis<span class="dot">&middot;</span>Econometrics<span class="dot">&middot;</span>Game Theory.</div>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">DIS Copenhagen</span>, Copenhagen, Denmark<span class="dot">&middot;</span><span class="sub">Study Abroad</span></div>
+    <div class="r">Spring 2024</div>
+  </div>
+  <div class="note"><b>Coursework:</b> Artificial Neural Networks and Deep Learning<span class="dot">&middot;</span>Artificial Intelligence.</div>
+</div>
+
+<h2>Technical Reports</h2>
+<div class="entry">
+  <div class="note">
+    Mike Azure and Jasper Sands.
+    <a href="https://jaspersands.com/assets/practical-llm-based-lossless-compression.pdf"><em>Practical LLM-Based Lossless Compression: An Empirical Study.</em></a>
+    Columbia University, 2025.
+    <a href="https://jaspersands.com/assets/practical-llm-based-lossless-compression.pdf">jaspersands.com/assets/practical-llm-based-lossless-compression.pdf</a>
+  </div>
+</div>
+
+<h2>Research Experience</h2>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Diraq and UNSW Sydney</span><span class="dot">&middot;</span><span class="sub">MS Thesis Research</span></div>
+    <div class="r">Sep 2026 &ndash; May 2027</div>
+  </div>
+  <ul>
+    <li>Automating silicon spin qubit characterization under Dr. Nard Dumoulin Stuyck, targeting the manual tuning and interpretation of charge measurements that currently bottleneck semiconductor quantum hardware development.</li>
+    <li>Building pipelines that acquire charge measurement data from cryogenic probing infrastructure and classify charge transitions and device states with machine learning.</li>
+    <li>Evaluating the automated analysis against how an expert reads the same device by hand.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Cidon Systems Research Lab</span>, Columbia University<span class="dot">&middot;</span><span class="sub">Graduate Researcher</span></div>
+    <div class="r">Sep 2025 &ndash; Jun 2026</div>
+  </div>
+  <ul>
+    <li>Built phishing and spam detection pipelines with Dr. Asaf Cidon and Barracuda Networks, combining language-model embeddings with production email telemetry.</li>
+    <li>Tuned for precision against a fixed false-positive budget on live traffic, since a false positive quarantines real mail.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Desdr Open Insurance Toolkit</span>, Columbia University<span class="dot">&middot;</span><span class="sub">Graduate Researcher</span></div>
+    <div class="r">Sep &ndash; Dec 2025</div>
+  </div>
+  <ul>
+    <li>Extended an open-source insurance modeling toolkit with Dr. Eugene Wu, built for NGOs serving rural farmers.</li>
+    <li>Turned SMS survey data into actuarial and climate-risk features under severe data sparsity, and built models estimating expected agricultural losses to support micro-insurance program design.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Complex Resilient Intelligent Systems Lab</span>, Columbia University<span class="dot">&middot;</span><span class="sub">Graduate Researcher</span></div>
+    <div class="r">May &ndash; Dec 2025</div>
+  </div>
+  <ul>
+    <li>Reduced hallucination in generative protein modeling under Dr. Venkat Venkatasubramanian by grounding outputs in ontology and molecular graph data.</li>
+    <li>Built tooling turning natural-language drug queries into graph-derived checks on AlphaFold structures.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Foster System Database</span>, Washington University in St. Louis<span class="dot">&middot;</span><span class="sub">Undergraduate Researcher</span></div>
+    <div class="r">Sep 2024 &ndash; May 2025</div>
+  </div>
+  <ul>
+    <li>Fine-tuned LLaMA-3 under Dr. Ian Fillmore for question answering over 50k foster-care policy documents.</li>
+    <li>Implemented a human-in-the-loop feedback workflow deployed on Hugging Face Spaces, enabling cross-state policy comparison and interactive analysis of foster-care outcomes.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Computer Vision &amp; AI Lab</span>, Washington University in St. Louis<span class="dot">&middot;</span><span class="sub">Undergraduate Researcher</span></div>
+    <div class="r">Sep 2024 &ndash; Jun 2025</div>
+  </div>
+  <ul>
+    <li>Built distributed collection and processing pipelines under Dr. Umar Iqbal that parsed billions of forum posts for population-scale behavioral and privacy research.</li>
+    <li>Applied statistical modeling to demographic and behavioral patterns in online discourse.</li>
+  </ul>
+</div>
+
+<h2>Selected Projects</h2>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org"><a href="https://github.com/ShayManor/WhatTheDuck">WhatTheDuck</a></span>: quantum amplitude estimation for Value at Risk<span class="dot">&middot;</span><em>CUDA-Q, C++</em></div>
+    <div class="r">MIT iQuHACK 2026</div>
+  </div>
+  <ul>
+    <li>Wrote the GPU-accelerated state preparation, threshold oracle, and bisection search driving Iterative Quantum Amplitude Estimation for the State Street and Classiq challenge.</li>
+    <li>Measured query scaling matched the O(1/&epsilon;) bound against an O(1/&epsilon;&sup2;) quasi-Monte Carlo classical baseline.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org"><a href="https://github.com/Jaspersands/quantum-simulator-qec">WASM QEC Simulator</a></span>: surface-code decoding in the browser<span class="dot">&middot;</span><em>Rust, WebAssembly</em></div>
+    <div class="r"><a href="https://qcompiler.jaspersands.com/">qcompiler.jaspersands.com</a></div>
+  </div>
+  <ul>
+    <li>Symplectic stabilizer simulator for rotated and XZZX surface codes with real-time error injection and syndrome visualization, running exact minimum-weight perfect matching and Union-Find decoding entirely client-side.</li>
+    <li>Finite-size scaling puts the threshold at 3.2% with MWPM, 2.7% with Union-Find, 14.7% at code capacity.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org"><a href="https://github.com/Jaspersands/qsearch">Q-Search</a></span>: proof-gated quantum algorithm research and verification engine</div>
+    <div class="r"><a href="https://qsearch.jaspersands.com/">qsearch.jaspersands.com</a></div>
+  </div>
+  <ul>
+    <li>Automated search for structural quantum advantage on non-abelian hidden subgroup, dihedral coset, and linear code equivalence problems, pairing frontier theoretical reasoning with agentic engineering.</li>
+    <li>Formal proof gates test each proposed mechanism against 1,200+ classical baselines across 720+ theorem modules, with negative results permanently indexed so the engine does not re-propose a dead end.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Noise-Aware Adiabatic Simulation</span>: transverse-field Ising model<span class="dot">&middot;</span><em>Qiskit</em></div>
+    <div class="r">IBM Heron hardware</div>
+  </div>
+  <ul>
+    <li>Digitized adiabatic ground-state preparation on Heron's native fractional RZZ gates, roughly halving logical-to-physical translation error, with palindromic Trotter steps for second-order accuracy.</li>
+    <li>Flattened the anneal schedule at the critical point, where a linear sweep races through the closing gap.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org"><a href="https://github.com/Jaspersands/LLMcompression">LLM-Based Lossless Text Compression</a></span><span class="dot">&middot;</span><em>PyTorch, CUDA</em></div>
+    <div class="r"><a href="https://jaspersands.com/llmcompression/">jaspersands.com/llmcompression</a></div>
+  </div>
+  <ul>
+    <li>Arithmetic coding driven by autoregressive language model predictions across five models on the Canterbury Corpus, reaching 5&ndash;16&times; average and 39&times; best-case compression against 2&ndash;4&times; for gzip and zstd.</li>
+    <li>Static KV caching, CUDA graph capture, and batched segment processing made throughput measurable; the pipeline still runs 100&ndash;1000&times; slower than the classical compressors it beats.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Entanglement and Matrix Product States</span>: many-body systems</div>
+    <div class="r"><a href="https://jaspersands.com/assets/mps_presentation.pdf">slides</a></div>
+  </div>
+  <ul>
+    <li>Sequential SVD wavefunction decomposition measuring Schmidt spectra, entanglement entropy at every cut, and fidelity under truncation, relating bipartite entanglement structure to MPS compressibility.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="note"><b>Other work:</b> QSVT spectrum transformations, reshaping a matrix spectrum with quantum signal processing (<a href="https://jaspersands.com/assets/qsvt_presentation.pdf">slides</a>)<span class="dot">&middot;</span>HyperAMR, embedding metagenomic contigs and resistance annotations in one hyperbolic space (<a href="https://jaspersands.com/assets/hyperamr_paper.pdf">write-up</a>).</div>
+</div>
+
+<h2>Teaching Experience</h2>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Introduction to Quantum Computing</span>, Columbia University<span class="dot">&middot;</span><span class="sub">Teaching Assistant</span></div>
+    <div class="r">Jan &ndash; May 2026</div>
+  </div>
+  <ul>
+    <li>Designed problem sets on quantum circuit simulation and algorithm analysis, and supported students on measurement, entanglement, and the standard algorithm set.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Parallel and Concurrent Programming</span>, Washington University in St. Louis<span class="dot">&middot;</span><span class="sub">Teaching Assistant</span></div>
+    <div class="r">Jan &ndash; May 2025</div>
+  </div>
+  <ul>
+    <li>Designed and evaluated assignments on concurrency, synchronization, and performance analysis.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Reverse Engineering and Malware Analysis</span>, Washington University in St. Louis<span class="dot">&middot;</span><span class="sub">Teaching Assistant</span></div>
+    <div class="r">Aug &ndash; Dec 2024</div>
+  </div>
+  <ul>
+    <li>Supported an upper-level systems and security course and led review sessions before projects and exams.</li>
+  </ul>
+</div>
+
+<h2>Industry Experience</h2>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Smack Technologies</span><span class="dot">&middot;</span><span class="sub">AI Intern</span></div>
+    <div class="r">May &ndash; Aug 2026</div>
+  </div>
+  <ul>
+    <li>Built physics and sensor simulation for the core pipelines, integrating the knowledge graph to expand corpus generation.</li>
+    <li>Benchmarked open-weight models head to head on speed, intelligence and concurrency, speeding corpus generation 64&times;.</li>
+    <li>Bounded simulator error to 0.55% against references chosen outside its own tests, in a report that regenerates when the physics changes.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Highnote</span><span class="dot">&middot;</span><span class="sub">Cybersecurity Engineer Intern</span></div>
+    <div class="r">May &ndash; Jul 2024</div>
+  </div>
+  <ul>
+    <li>Designed and deployed the company-wide SIEM for a card-issuing fintech, unifying AWS, GCP, and Datadog telemetry into one Elasticsearch cluster ingesting over 1 TB/day.</li>
+    <li>Wrote 100+ rule-based and ML anomaly detections for suspicious authentication, command execution, and data access.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Mindtrip</span><span class="dot">&middot;</span><span class="sub">Software Engineer Intern</span></div>
+    <div class="r">May &ndash; Jul 2023</div>
+  </div>
+  <ul>
+    <li>Built internal admin and secure-query tooling in JavaScript and Ruby on Rails through Retool, replacing direct production database writes and saving roughly 250 engineering hours a month.</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="line">
+    <div class="l"><span class="org">Bugcrowd</span><span class="dot">&middot;</span><span class="sub">Associate Application Security Engineer</span></div>
+    <div class="r">May &ndash; Jul 2020</div>
+  </div>
+  <ul>
+    <li>Triaged and validated vulnerability submissions from a global researcher community, working with enterprise clients on severity prioritization and disclosure.</li>
+  </ul>
+</div>
+
+<h2>Awards and Competitions</h2>
+<ul>
+  <li><b>Overall Winner</b> and <b>NVIDIA Ecosystem Award</b>, MIT iQuHACK 2026, State Street and Classiq challenge.</li>
+  <li><b>Qualified</b>, NYU Abu Dhabi Quantum Hackathon for Social Good 2027.</li>
+  <li><b>Audience Favorite</b>, Harmoniqs Quantum Design Hackathon 2026.</li>
+  <li><b>Runner-Up</b>, Qualcomm Snapdragon Multiverse Hackathon 2026.</li>
+</ul>
+
+<h2>Technical Skills</h2>
+<div class="skill"><span class="k">Quantum software:</span><span class="v">Qiskit and Qiskit Runtime, Cirq, PennyLane, CUDA-Q, Stim, PyMatching, QuTiP<span class="dot">&middot;</span>statevector and noise-aware simulation, transpilation, backend execution and benchmarking.</span></div>
+<div class="skill"><span class="k">Quantum methods:</span><span class="v">Hamiltonian simulation, quantum phase estimation, amplitude amplification and estimation, QSVT and block encoding, linear combination of unitaries, quantum walks, VQE and QAOA, Trotter decomposition.</span></div>
+<div class="skill"><span class="k">Error correction:</span><span class="v">Rotated and XZZX surface codes, stabilizer formalism, minimum-weight perfect matching and Union-Find decoding, finite-size scaling and threshold estimation, randomized benchmarking, tomography, noise modeling.</span></div>
+<div class="skill"><span class="k">Theory:</span><span class="v">Quantum complexity (BQP, QMA), oracle and query complexity, asymptotic analysis, linear algebra and numerical methods, tensor networks, probability, convex and stochastic optimization.</span></div>
+<div class="skill"><span class="k">Programming:</span><span class="v">Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java.</span></div>
+<div class="skill"><span class="k">Machine learning:</span><span class="v">PyTorch, TensorFlow, scikit-learn, Hugging Face, CUDA, NumPy, SciPy, Pandas, NetworkX.</span></div>
+<div class="skill"><span class="k">Systems and tooling:</span><span class="v">Linux, Git, Docker, WebAssembly, AWS, GCP, Elasticsearch, Jupyter, LaTeX.</span></div>
+
+<h2>Leadership and Service</h2>
+<ul>
+  <li><b>Graduate Lead</b>, Columbia Quantum Algorithms Reading Group (Sep 2025 &ndash; Jun 2026). Ran weekly technical sessions covering all 33 chapters of Andrew Childs' quantum algorithms lecture notes, each paired with simulation checks, and brought in faculty and PhD students to speak.</li>
+  <li><b>Founding-semester member</b>, Columbia Autonomous Racing Club. Coordinate sponsor outreach and track testing.</li>
+  <li><b>Volunteer Tutor</b>, St. Louis Tutor Me Program. K-12 mathematics and literacy in underserved districts.</li>
+  <li><b>Team Captain</b>, WashU Gymnastics Club.</li>
+  <li><b>Student Organizer</b>, WashU Votes. Ran voter registration drives and lobbied at the Missouri State Capitol.</li>
+</ul>
+
+</body>
+</html>

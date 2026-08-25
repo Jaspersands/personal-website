@@ -13,7 +13,7 @@ node resume/measure.mjs      # page-fill report + resume/preview.png
 
 ## One page
 
-This résumé is deliberately one page; the two-page CV (`assets/jaspersands_cv.pdf`)
+This résumé is deliberately one page; the CV (`cv/cv.html` -> `assets/jaspersands_cv.pdf`)
 carries the long-form record. `build.mjs` measures the laid-out height against the
 printable area and **exits non-zero if the content spills over**, so overflow can't
 ship silently. `measure.mjs` prints the same number plus the remaining slack, which
