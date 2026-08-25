@@ -2,7 +2,8 @@
 // full each page is, and which blocks end on a nearly empty line, then writes one
 // preview PNG per page.
 //
-//   node cv/measure.mjs
+//   node cv/measure.mjs          # the full three-page CV
+//   node cv/measure.mjs --two    # the two-page cut
 //
 // Flow height alone understates the page count: an entry carrying break-inside:avoid
 // is pushed whole onto the next page, so the real cost of a break is the dead space
@@ -15,7 +16,8 @@ import { loadChromium, openCV, PAGE_H, CONTENT_W } from './build.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 const chromium = await loadChromium();
 const browser = await chromium.launch();
-const page = await openCV(browser);
+const two = process.argv.includes('--two');
+const page = await openCV(browser, { two });
 
 const items = await page.evaluate(() =>
   [...document.body.children].map(el => ({
@@ -88,10 +90,10 @@ for (const o of orphans) {
 await page.setViewportSize({ width: Math.round(CONTENT_W), height: Math.ceil(flow) + 20 });
 for (let i = 0; i < cuts.length - 1; i++) {
   await page.screenshot({
-    path: resolve(here, `preview-${i + 1}.png`),
+    path: resolve(here, `preview${two ? '-2page' : ''}-${i + 1}.png`),
     clip: { x: 0, y: cuts[i], width: CONTENT_W, height: cuts[i + 1] - cuts[i] },
   });
 }
-console.log(`\nwrote cv/preview-1..${cuts.length - 1}.png`);
+console.log(`\nwrote cv/preview${two ? '-2page' : ''}-1..${cuts.length - 1}.png`);
 
 await browser.close();
