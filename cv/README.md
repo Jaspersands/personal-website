@@ -47,9 +47,9 @@ holding a single line.
 `measure.mjs` walks the same break rule and shows where the cost lands:
 
 ```
-flow 1894px -> paginated 1892px across 2 page(s); -2px lost at breaks
+flow 1832px -> paginated 1835px across 2 page(s); 3px lost at breaks
   page 1: 100% full
-  page 2: 98% full
+  page 2: 92% full
 ```
 
 Break placement, not height, is what usually blocks an addition. The two-page cut
