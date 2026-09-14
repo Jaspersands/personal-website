@@ -274,10 +274,10 @@ const doc = new Document({
 
       // ---------- honors ----------
       heading('Honors & Leadership'),
-      bullet([b('Overall Winner'), run(' and '), b('NVIDIA Ecosystem Award'), run(', MIT iQuHACK 2026'),
+      bullet([b('Overall Winner'), run(' & '), b('NVIDIA Ecosystem Award'), run(', MIT iQuHACK 2026'),
               DOT(), b('Audience Favorite'), run(', Harmoniqs Quantum Design 2026'), DOT(),
-              b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse 2026'), DOT(),
-              b('Qualified'), run(', NYU Abu Dhabi Hackathon for Social Good 2027')]),
+              b('Runner-Up'), run(', Snapdragon Multiverse 2026'), DOT(),
+              b('Qualified'), run(', NYU Abu Dhabi Quantum and AI Hackathon for Social Good 2027')]),
       bullet([b('Graduate Lead'), run(
         ', Columbia Quantum Algorithms Reading Group: weekly sessions through all 33 chapters ' +
         "of Andrew Childs' notes.")]),
