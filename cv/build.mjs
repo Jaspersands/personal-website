@@ -2,8 +2,8 @@
 // with a hash of the source so a replaced PDF is not served stale for four hours.
 //
 //   npm i -D playwright && npx playwright install chromium
-//   node cv/build.mjs          # the full three-page CV
-//   node cv/build.mjs --two    # the two-page cut -> assets/jaspersands_cv_2page.pdf
+//   node cv/build.mjs          # the two-page CV -> assets/jaspersands_cv.pdf
+//   node cv/build.mjs --full   # the long one, kept for the record
 //
 // Both come out of the one source file. cv.html marks the long-only material
 // data-t="3" and its short replacements data-t="2"; the two-page build sets
@@ -24,9 +24,12 @@ import { createRequire } from 'node:module';
 const here = dirname(fileURLToPath(import.meta.url));
 const src = resolve(here, 'cv.html');
 
+// The two-page cut is the CV: it takes the plain filename and it is what the site
+// links. The long one is kept for the record under its own name. The class is still
+// called "two" because data-t="2"/"3" name page counts, not which variant is default.
 export const VARIANTS = {
-  full: { pdf: 'jaspersands_cv.pdf', pages: 3, two: false, stamps: true },
-  two: { pdf: 'jaspersands_cv_2page.pdf', pages: 2, two: true, stamps: false },
+  two: { pdf: 'jaspersands_cv.pdf', pages: 2, two: true, stamps: true },
+  full: { pdf: 'jaspersands_cv_3page.pdf', pages: 3, two: false, stamps: false },
 };
 
 export const DPI = 96;
@@ -74,7 +77,7 @@ export async function openCV(browser, { two = false } = {}) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
-  const variant = process.argv.includes('--two') ? VARIANTS.two : VARIANTS.full;
+  const variant = process.argv.includes('--full') ? VARIANTS.full : VARIANTS.two;
   const out = resolve(here, '..', 'assets', variant.pdf);
 
   const chromium = await loadChromium();
@@ -85,6 +88,13 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     path: out,
     format: 'Letter',
     printBackground: true,
+    displayHeaderFooter: true,
+    headerTemplate: '<span></span>',
+    footerTemplate:
+      '<div style="width:100%;padding:0 0.7in;font:8.5pt \'Liberation Serif\',\'Times New Roman\',serif;' +
+      'color:#444;display:flex;justify-content:space-between;">' +
+      '<span>Jasper Sands</span>' +
+      '<span><span class="pageNumber"></span> of <span class="totalPages"></span></span></div>',
     margin: {
       top: `${MARGIN.top}in`, bottom: `${MARGIN.bottom}in`,
       left: `${MARGIN.left}in`, right: `${MARGIN.right}in`,
@@ -103,7 +113,7 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
   if (pages !== variant.pages) {
     console.error(
       `ERROR: this variant is the ${variant.pages}-page CV but rendered ${pages}. ` +
-      `Run cv/measure.mjs${variant.two ? ' --two' : ''} to see where the breaks fall.`
+      `Run cv/measure.mjs${variant.two ? '' : ' --full'} to see where the breaks fall.`
     );
     process.exit(1);
   }
@@ -116,7 +126,12 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
   if (!variant.stamps) process.exit(0);
 
   const idx = resolve(here, '..', 'index.html');
-  const hash = createHash('sha256').update(readFileSync(src)).digest('hex').slice(0, 8);
+  // Hash the source and the variant identity. Hashing the source alone missed the day
+  // the two-page cut took over this filename: cv.html had not changed, so the key
+  // stayed put while the bytes behind it became a different document.
+  const hash = createHash('sha256')
+    .update(readFileSync(src)).update(`\0${variant.pdf}:${variant.pages}`)
+    .digest('hex').slice(0, 8);
   const html = readFileSync(idx, 'utf8');
   const re = /(href="assets\/jaspersands_cv\.pdf)(\?v=[^"]*)?"/;
   if (!re.test(html)) {

@@ -1,23 +1,28 @@
 # CV
 
-`cv.html` is the source of truth for **two** CVs: the full three-page one the site
-links, and a two-page cut.
+`cv.html` is the source of truth for **two** CVs: the two-page one the site links, and
+a longer three-page cut kept for the record.
 
 ```bash
 npm i -D playwright && npx playwright install chromium
 
-node cv/build.mjs            # -> assets/jaspersands_cv.pdf, stamps the site's ?v= key
-node cv/build.mjs --two      # -> assets/jaspersands_cv_2page.pdf
-node cv/measure.mjs [--two]  # page-break report + cv/preview[-2page]-N.png per page
+node cv/build.mjs            # the CV -> assets/jaspersands_cv.pdf, stamps the ?v= key
+node cv/build.mjs --full     # the long one -> assets/jaspersands_cv_3page.pdf
+node cv/measure.mjs [--full] # page-break report + cv/preview[-3page]-N.png per page
 ```
 
 ## One file, two versions
 
 Material that only belongs in the long CV is marked `data-t="3"`. Where the short cut
 needs different words rather than none — a merged pair of bullets, a citation without
-its publisher line — the replacement sits next to it marked `data-t="2"`. `--two` puts
-`class="two"` on `<html>`, which flips which set is visible and tightens the vertical
-rhythm to match.
+its publisher line — the replacement sits next to it marked `data-t="2"`. The two-page
+build puts `class="two"` on `<html>`, which flips which set is visible and tightens the
+vertical rhythm to match.
+
+The two-page cut is the CV: it takes the plain filename and it is what the site links.
+The long one is kept for the record as `jaspersands_cv_3page.pdf`, and `--full` builds
+it. The class is still named `two` because `data-t` values name page counts, not which
+variant is the default.
 
 Two separate files would have been less work today and wrong by next month: the copy
 you forget to update is the one that gets sent. Anything true of both versions is
@@ -28,7 +33,7 @@ To check nothing leaks across, render both and confirm each shows only its own t
 ```js
 [...document.querySelectorAll('[data-t]')]
   .filter(e => getComputedStyle(e).display !== 'none')
-  .map(e => e.getAttribute('data-t'))   // ['3'] for the full CV, ['2'] for --two
+  .map(e => e.getAttribute('data-t'))   // ['2'] for the CV, ['3'] under --full
 ```
 
 ## Page-count guards
@@ -64,12 +69,20 @@ place to buy a line back — a few words cut reclaims the whole line — and the
 the long version got from four pages to three without dropping any content.
 
 Page geometry lives in `build.mjs` (`MARGIN`, `CONTENT_W`, `PAGE_H`); `measure.mjs`
-imports it, so change it in one place.
+imports it, so change it in one place. Page numbers are drawn by Chromium into the
+bottom margin via `footerTemplate`, so they cost no content space and the fill budget
+is unaffected.
+
+## The cache key
+
+The `?v=` stamped into `index.html` hashes `cv.html` **and the variant identity**, not
+the rendered PDF — Chromium writes a creation time into every render, so hashing the
+output would churn the key on builds that changed nothing. The variant is in there
+because hashing the source alone missed the day the two-page cut took over
+`jaspersands_cv.pdf`: `cv.html` had not changed, so the key stayed put while the bytes
+behind it became a different document.
 
 ## Keeping it consistent with the résumé and the site
 
 The CV is a superset of `resume/resume.html` and the timeline in `index.html`. Dates,
 titles, and figures appear in all three, so a change to one is a change to all three.
-The `?v=` cache key stamped into `index.html` is a hash of `cv.html`, not of the PDF —
-Chromium writes a creation timestamp into every render, so hashing the output would
-churn the key on builds that changed nothing.
