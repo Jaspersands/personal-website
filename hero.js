@@ -4,6 +4,12 @@
  * Drives full-bleed Canvas 2D rotated surface code via stabilizer_qec.wasm
  * and HeroMath. Cursor acts as a heat source; rounds extract syndromes and
  * execute exact MWPM decoding in WebAssembly; logical errors trigger full-canvas flare.
+ *
+ * Additions:
+ * 1. Opening sequence: "JASPER" / "SANDS" typed in Pauli-X errors, erased live by MWPM.
+ * 2. Interactive distance controls: d = 5..41 [−] [+] and keyboard shortcuts [ / ].
+ * 3. Correlated cosmic-ray / TLS bursts (idle after 20s or on 'b' key).
+ * 4. Peer matching graph debug overlay ('g' key).
  */
 (() => {
   'use strict';
@@ -12,16 +18,18 @@
   const CELL_DESKTOP = 56;
   const CELL_TABLET = 48;
   const CELL_MOBILE = 44;
-  const D_MAX = 31;
-  const AMBIENT_RATE = 0.6;          // errors/sec across whole lattice
-  const CURSOR_PEAK = 2.5;           // errors/sec per qubit at pointer center
-  const CURSOR_SIGMA = 1.1;          // cells
+  const D_MIN = 5;
+  const D_MAX = 41;
+  const AMBIENT_RATE = 0.8;          // errors/sec across whole lattice
+  const CURSOR_PEAK = 3.2;           // errors/sec per qubit at pointer center
+  const CURSOR_SIGMA = 1.2;          // cells
   const PAULI_X_WEIGHT = 0.45;
   const PAULI_Z_WEIGHT = 0.45;       // remainder 0.10 is Y
   const ROUND_BASE_MS = 700;
   const ROUND_JITTER = 0.15;
-  const MAX_PENDING = 60;
+  const MAX_PENDING = 80;
   const TICK_MS = 50;
+  const IDLE_BURST_MS = 20000;       // 20s of inactivity triggers a burst
 
   // Animation durations (ms)
   const DUR_ERROR_IN = 180;
@@ -32,10 +40,44 @@
   const DUR_LOGICAL_FLASH = 650;
   const DUR_LATTICE_FADE_IN = 600;
 
+  // 3x5 pixel font bitmaps for JASPER SANDS opener
+  const FONT_3X5 = {
+    J: [[0,0,1],[0,0,1],[0,0,1],[1,0,1],[0,1,0]],
+    A: [[0,1,0],[1,0,1],[1,1,1],[1,0,1],[1,0,1]],
+    S: [[0,1,1],[1,0,0],[0,1,0],[0,0,1],[1,1,0]],
+    P: [[1,1,0],[1,0,1],[1,1,0],[1,0,0],[1,0,0]],
+    E: [[1,1,1],[1,0,0],[1,1,0],[1,0,0],[1,1,1]],
+    R: [[1,1,0],[1,0,1],[1,1,0],[1,0,1],[1,0,1]],
+    N: [[1,0,1],[1,1,1],[1,1,1],[1,0,1],[1,0,1]],
+    D: [[1,1,0],[1,0,1],[1,0,1],[1,0,1],[1,1,0]]
+  };
+
+  function getWordPixels(word, startR, startC) {
+    const pixels = [];
+    let c = startC;
+    for (const char of word) {
+      const glyph = FONT_3X5[char];
+      if (glyph) {
+        for (let r = 0; r < 5; r++) {
+          for (let col = 0; col < 3; col++) {
+            if (glyph[r][col]) {
+              pixels.push({ r: startR + r, c: c + col });
+            }
+          }
+        }
+      }
+      c += 4;
+    }
+    return pixels;
+  }
+
   // DOM elements
   const heroEl = document.querySelector('.hero');
   const canvas = document.querySelector('canvas.field');
   const readoutEl = document.getElementById('hero-readout');
+  const dValEl = document.getElementById('hr-d-val');
+  const dDecBtn = document.getElementById('hr-d-dec');
+  const dIncBtn = document.getElementById('hr-d-inc');
   const roundsValEl = document.getElementById('hr-rounds');
   const physValEl = document.getElementById('hr-phys');
   const logicValEl = document.getElementById('hr-logic');
@@ -57,9 +99,16 @@
   let isPageMode = false;
   let isVisible = true;
   let isReducedMotion = false;
+  let customD = null;
   let rafId = null;
   let tickTimer = null;
   let roundTimer = null;
+
+  // Opener & idle burst state
+  let isTypingOpener = false;
+  let openerTimer = null;
+  let lastBurstTime = performance.now();
+  let showMatchGraph = false;
 
   // Statistics
   let roundsCount = 0;
@@ -68,10 +117,10 @@
 
   // Active items
   let pendingErrors = []; // { q, pauli, t0 }
-  let activeDefects = new Map(); // stabIdx -> { t0, type, x, y }
-  let activeChains = []; // { type, qubits: [q...], t0, duration }
+  let activeDefects = new Map(); // stabIdx -> { t0, type, stab }
+  let activeChains = []; // { type, qubits: [q...], t0, drawDur, totalDur }
   let flashState = null; // { t0, duration }
-  let pointer = { x: -9999, y: -9999, active: false, lastMove: 0 };
+  let pointer = { x: -9999, y: -9999, active: false, lastMove: performance.now() };
   let dirty = true;
 
   // Theme palette
@@ -223,6 +272,13 @@
     const prevD = fitGeom ? fitGeom.d : 0;
     fitGeom = window.HeroMath.fit(width, height, baseCell, D_MAX);
 
+    if (customD) {
+      fitGeom.d = customD;
+      fitGeom.span = (customD - 1) * fitGeom.cell;
+      fitGeom.originX = (width - fitGeom.span) / 2;
+      fitGeom.originY = (height - fitGeom.span) / 2;
+    }
+
     if (engine && fitGeom.d !== prevD) {
       if (session) session.free();
       session = engine.session(fitGeom.d);
@@ -237,17 +293,47 @@
     requestFrame();
   }
 
+  function setDistance(newD) {
+    if (isTypingOpener) cancelOpener();
+    newD = Math.max(D_MIN, Math.min(D_MAX, newD));
+    if (newD % 2 === 0) newD += 1;
+    if (session && session.d === newD) return;
+
+    customD = newD;
+    if (session) session.free();
+    session = engine.session(newD);
+
+    const baseCell = getBaseCell(width);
+    fitGeom = window.HeroMath.fit(width, height, baseCell, D_MAX);
+    fitGeom.d = newD;
+    fitGeom.span = (newD - 1) * fitGeom.cell;
+    fitGeom.originX = (width - fitGeom.span) / 2;
+    fitGeom.originY = (height - fitGeom.span) / 2;
+
+    pendingErrors = [];
+    activeDefects.clear();
+    activeChains = [];
+    flashState = null;
+
+    buildStaticLayer();
+    updateCaption();
+    updateReadout();
+    dirty = true;
+    requestFrame();
+  }
+
   function updateCaption() {
     if (!captionEl || !session) return;
     const d = session.d;
     if (isReducedMotion) {
       captionEl.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
     } else {
-      captionEl.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise. A chain of errors across the whole width is a logical error — see if you can cause one. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
+      captionEl.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise. A chain of errors across the whole width is a logical error — see if you can cause one. Hotkeys: <code>[</code>/<code>]</code> distance, <code>b</code> burst, <code>g</code> matching graph. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
     }
   }
 
   function updateReadout() {
+    if (dValEl && session) dValEl.textContent = session.d;
     if (roundsValEl) roundsValEl.textContent = roundsCount.toLocaleString();
     if (physValEl) physValEl.textContent = physicalErrorsCount.toLocaleString();
     if (logicValEl) logicValEl.textContent = logicalErrorsCount.toLocaleString();
@@ -257,7 +343,7 @@
    * Periodic noise scheduler.
    */
   function tickNoise() {
-    if (!session || !isVisible || isReducedMotion) return;
+    if (!session || !isVisible || isReducedMotion || isTypingOpener) return;
     const dt = TICK_MS / 1000;
     const now = performance.now();
     let injected = 0;
@@ -288,6 +374,11 @@
           }
         }
       }
+    }
+
+    // Idle burst after 20s of inactivity
+    if (!pointer.active && (now - pointer.lastMove >= IDLE_BURST_MS) && (now - lastBurstTime >= IDLE_BURST_MS)) {
+      triggerBurst();
     }
 
     if (injected > 0) {
@@ -321,6 +412,55 @@
       } else {
         activeDefects.delete(i);
       }
+    }
+  }
+
+  /**
+   * Triggers a localized correlated burst of errors (e.g. cosmic ray or TLS defect).
+   */
+  function triggerBurst(customCenter) {
+    if (!session || isReducedMotion || isTypingOpener) return;
+    const now = performance.now();
+    lastBurstTime = now;
+
+    let centerPt;
+    if (customCenter) {
+      centerPt = customCenter;
+    } else if (pointer.active) {
+      centerPt = { x: pointer.x, y: pointer.y };
+    } else {
+      // Pick random center qubit, biased towards bulk
+      const margin = Math.max(1, Math.floor(session.d * 0.15));
+      const r = margin + Math.floor(Math.random() * (session.d - 2 * margin));
+      const c = margin + Math.floor(Math.random() * (session.d - 2 * margin));
+      centerPt = qubitPixel(r * session.d + c);
+    }
+
+    const radiusPx = 2.4 * fitGeom.cell;
+    let burstCount = 0;
+
+    for (let q = 0; q < session.numQubits && pendingErrors.length < MAX_PENDING; q++) {
+      const pt = qubitPixel(q);
+      const dist = Math.hypot(pt.x - centerPt.x, pt.y - centerPt.y);
+      if (dist <= radiusPx) {
+        const rnd = Math.random();
+        let pauli = 'X';
+        if (rnd < 0.65) pauli = 'X';
+        else if (rnd < 0.85) pauli = 'Z';
+        else pauli = 'Y';
+
+        session.toggle(q, pauli);
+        pendingErrors.push({ q, pauli, t0: now });
+        burstCount++;
+      }
+    }
+
+    if (burstCount > 0) {
+      physicalErrorsCount += burstCount;
+      updateSyndromes(now);
+      updateReadout();
+      dirty = true;
+      requestFrame();
     }
   }
 
@@ -383,6 +523,84 @@
   }
 
   /**
+   * Opening Sequence: types JASPER SANDS (or JS) in Pauli-X errors, then MWPM decodes and erases.
+   */
+  function startOpeningSequence() {
+    if (!session || session.d < 15 || isReducedMotion) {
+      startScheduler();
+      return;
+    }
+
+    isTypingOpener = true;
+    const d = session.d;
+    let pixels = [];
+
+    const topRow = Math.max(0, Math.floor(-fitGeom.originY / fitGeom.cell));
+    const bottomRow = Math.min(d - 1, Math.ceil((height - fitGeom.originY) / fitGeom.cell));
+    const midRow = Math.floor((topRow + bottomRow) / 2);
+
+    if (d >= 23) {
+      const c1 = Math.max(1, Math.floor((d - 23) / 2));
+      const c2 = Math.max(1, Math.floor((d - 19) / 2));
+      let startR = Math.max(1, midRow - 5);
+      if (startR + 11 >= d) startR = Math.max(1, d - 12);
+
+      const p1 = getWordPixels('JASPER', startR, c1);
+      const p2 = getWordPixels('SANDS', startR + 6, c2);
+      pixels = [...p1, ...p2];
+    } else {
+      const c = Math.max(1, Math.floor((d - 7) / 2));
+      const startR = Math.max(1, midRow - 2);
+      pixels = getWordPixels('JS', startR, c);
+    }
+
+    if (pixels.length === 0) {
+      isTypingOpener = false;
+      startScheduler();
+      return;
+    }
+
+    let pIdx = 0;
+    const intervalMs = Math.max(7, Math.floor(900 / pixels.length));
+
+    function typeNext() {
+      if (!isTypingOpener) return;
+      if (pIdx < pixels.length) {
+        const p = pixels[pIdx++];
+        const q = p.r * session.d + p.c;
+        const now = performance.now();
+        session.toggle(q, 'X');
+        pendingErrors.push({ q, pauli: 'X', t0: now });
+        physicalErrorsCount++;
+        updateSyndromes(now);
+        updateReadout();
+        dirty = true;
+        requestFrame();
+        openerTimer = setTimeout(typeNext, intervalMs);
+      } else {
+        openerTimer = setTimeout(() => {
+          if (!isTypingOpener) return;
+          isTypingOpener = false;
+          triggerRound();
+          startScheduler();
+        }, 350);
+      }
+    }
+
+    openerTimer = setTimeout(typeNext, 250);
+  }
+
+  function cancelOpener() {
+    if (!isTypingOpener) return;
+    isTypingOpener = false;
+    if (openerTimer) { clearTimeout(openerTimer); openerTimer = null; }
+    if (pendingErrors.length > 0) {
+      triggerRound();
+    }
+    startScheduler();
+  }
+
+  /**
    * Main animation rendering loop.
    */
   function render(now) {
@@ -408,7 +626,7 @@
     if (pointer.active && now - pointer.lastMove < 400) {
       keepAnimating = true;
     }
-    if (pendingErrors.length > 0 || activeDefects.size > 0) {
+    if (pendingErrors.length > 0 || activeDefects.size > 0 || isTypingOpener) {
       keepAnimating = true;
     }
 
@@ -416,8 +634,31 @@
     ctx.clearRect(0, 0, width, height);
     ctx.drawImage(staticCanvas, 0, 0, width, height);
 
-    // 2. Pointer heat glow
-    if (pointer.active && fitGeom) {
+    // 2. Matching graph overlay ('g' key debug)
+    if (showMatchGraph && activeDefects.size > 1) {
+      ctx.save();
+      ctx.strokeStyle = palette.fg3;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 4]);
+      ctx.globalAlpha = 0.35;
+      const defectList = Array.from(activeDefects.values());
+      for (let i = 0; i < Math.min(16, defectList.length); i++) {
+        for (let j = i + 1; j < Math.min(16, defectList.length); j++) {
+          if (defectList[i].type === defectList[j].type) {
+            const p1 = stabPixel(defectList[i].stab);
+            const p2 = stabPixel(defectList[j].stab);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.restore();
+    }
+
+    // 3. Pointer heat glow
+    if (pointer.active && fitGeom && !isTypingOpener) {
       const gradR = CURSOR_SIGMA * fitGeom.cell * 2.2;
       const grad = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, gradR);
       grad.addColorStop(0, palette.accent);
@@ -431,7 +672,7 @@
       ctx.restore();
     }
 
-    // 3. Lit defect stabilizers
+    // 4. Lit defect stabilizers
     activeDefects.forEach(defect => {
       const st = defect.stab;
       pathStabilizer(ctx, st);
@@ -445,7 +686,7 @@
       ctx.restore();
     });
 
-    // 4. Pending error dots
+    // 5. Pending error dots
     pendingErrors.forEach(err => {
       const pt = qubitPixel(err.q);
       const col = (err.pauli === 'X') ? palette.x : (err.pauli === 'Z' ? palette.z : palette.y);
@@ -461,7 +702,7 @@
       ctx.restore();
     });
 
-    // 5. Correction chains
+    // 6. Correction chains
     activeChains.forEach(ch => {
       if (ch.qubits.length < 1) return;
       const elapsed = now - ch.t0;
@@ -524,7 +765,7 @@
       ctx.restore();
     });
 
-    // 6. Logical error flash
+    // 7. Logical error flash
     if (flashAlpha > 0) {
       ctx.save();
       ctx.fillStyle = palette.accent;
@@ -548,6 +789,7 @@
 
   // Pointer event listeners
   function onPointerMove(e) {
+    if (isTypingOpener) cancelOpener();
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -579,10 +821,31 @@
     window.addEventListener('pointercancel', onPointerLeave, { passive: true });
   }
 
+  function setupControlsAndHotkeys() {
+    if (dDecBtn) dDecBtn.addEventListener('click', () => setDistance((session ? session.d : 27) - 2));
+    if (dIncBtn) dIncBtn.addEventListener('click', () => setDistance((session ? session.d : 27) + 2));
+
+    window.addEventListener('keydown', e => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      if (e.key === '[') {
+        setDistance((session ? session.d : 27) - 2);
+      } else if (e.key === ']') {
+        setDistance((session ? session.d : 27) + 2);
+      } else if (e.key === 'b' || e.key === 'B') {
+        triggerBurst();
+      } else if (e.key === 'g' || e.key === 'G') {
+        showMatchGraph = !showMatchGraph;
+        dirty = true;
+        requestFrame();
+      }
+    });
+  }
+
   // Reduced motion mode
   function applyReducedMotion(matches) {
     isReducedMotion = matches;
     if (isReducedMotion) {
+      if (openerTimer) clearTimeout(openerTimer);
       if (tickTimer) clearInterval(tickTimer);
       if (roundTimer) clearTimeout(roundTimer);
       if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
@@ -621,7 +884,7 @@
       stopScheduler();
     } else {
       isVisible = true;
-      startScheduler();
+      if (!isTypingOpener) startScheduler();
     }
   }
 
@@ -652,6 +915,7 @@
       engine = await window.QEC.load('assets/stabilizer_qec.wasm');
       resize();
       setupPointerTracking();
+      setupControlsAndHotkeys();
 
       // IntersectionObserver on hero (unless page mode)
       if (!isPageMode) {
@@ -659,7 +923,7 @@
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               isVisible = true;
-              startScheduler();
+              if (!isTypingOpener) startScheduler();
             } else {
               isVisible = false;
               stopScheduler();
@@ -676,20 +940,7 @@
       canvas.style.opacity = '1';
 
       if (!isReducedMotion) {
-        // Seed initial errors so the lattice is visibly active immediately
-        const now = performance.now();
-        const initialCount = 4;
-        for (let k = 0; k < initialCount; k++) {
-          const q = Math.floor(Math.random() * session.numQubits);
-          injectError(q, now);
-        }
-        physicalErrorsCount += initialCount;
-        updateSyndromes(now);
-        updateReadout();
-        dirty = true;
-        requestFrame();
-
-        startScheduler();
+        startOpeningSequence();
       } else {
         applyReducedMotion(true);
       }

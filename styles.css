@@ -157,6 +157,30 @@ img { display: block; max-width: 100%; }
   color: var(--fg);
   font-weight: 500;
 }
+.hr-d-ctl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.hr-d-ctl button {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1;
+  color: var(--fg-2);
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.05rem 0.3rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.hr-d-ctl button:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.hr-d-ctl button:active {
+  background: var(--rule);
+}
 #hr-logic.flash {
   color: var(--accent);
   text-shadow: 0 0 8px var(--accent);
