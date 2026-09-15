@@ -1,7 +1,7 @@
 # Example page: D (double-dot auto-tuner) and E (scroll zoom-out to the fabric)
 
 **Date:** 2026-09-15
-**Branch:** `explore/d-and-e` (from `feature/surface-code-hero` @ `7043aa3`)
+**Branch:** `feature/surface-code-hero` (same branch as the A+ build, new files only — another session is building A+ in this working tree, so a separate branch is not safe)
 **Status:** built autonomously overnight as an *example* for review; not the live site
 
 ## 1. Purpose
@@ -16,22 +16,23 @@ Show, in a working page, what directions D and E from the hero brainstorm feel l
 ```
 examples.html          the page (banner, nav, hero, fabric window, About, Work with D, footer)
 examples.css           page styles; reuses the site's tokens and type
-engine.js      (UMD)   wrapper over assets/stabilizer_qec.wasm — reusable by A+ later
+sessions.js    (UMD)   independent engine sessions built on the existing engine.js `rawExports`
+                       (engine.js frees the previous session on each `session()` call; E needs one per patch)
 dqd.js         (UMD)   pure: constant-interaction model, charge sensor, change-point detector, tuner state machine
 fabric-math.js (UMD)   pure: scroll→scale mapping, camera world↔screen transforms, patch layout and containment
 fabric.js      (IIFE)  E: patches, renderer, scheduler, cursor noise, merges
 tuner-view.js  (IIFE)  D: canvas renderer + animation driver around dqd.js
 assets/stabilizer_qec.wasm   copied from quantum-simulator-qec @ 5fd9fa0 (sha256 770cf1f7…)
-tests/engine.test.js, tests/dqd.test.js, tests/fabric-math.test.js   node, no framework
+tests/sessions.test.js, tests/dqd.test.js, tests/fabric-math.test.js   node, no framework
 ```
 
-Script order (all `defer`): `engine.js`, `dqd.js`, `fabric-math.js`, `fabric.js`, `tuner-view.js`.
+Script order (all `defer`): `engine.js` (existing), `hero-math.js` (existing; `poisson`, `gaussianRate`, `chainsFromCorrection` are reused), `sessions.js`, `dqd.js`, `fabric-math.js`, `fabric.js`, `tuner-view.js`.
 
 A banner at the top of the page states it is an example exploring two directions and links back to `index.html`.
 
-## 3. `engine.js`
+## 3. `sessions.js`
 
-As specified in the A+ design (§4.1), with one change: `engine.session(d)` returns an independent session each time and **does not** free previous ones — E runs one session per patch. `session.free()` releases it. Every read from wasm memory is copied out.
+`engine.js` already exists on the branch (built for A+) and exposes `rawExports`. `sessions.js` builds independent sessions from those exports — `QECSessions.create(rawExports, d)` — with the same field names `hero-math.js` expects (`d, qubits, stabs, numQubits, numStabs`) plus `qubitAt`, `toggle`, `syndrome`, `decode`, `applyCorrection`, `clear`, `free`. E runs one session per patch. Every read from wasm memory is copied out.
 
 ## 4. E — the fabric
 
