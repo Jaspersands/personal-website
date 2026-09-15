@@ -127,7 +127,8 @@ const doc = new Document({
         alignment: AlignmentType.CENTER,
         spacing: { before: 60, ...LINE },
         children: [run(
-          'Quantum algorithms, error correction, and machine learning for qubit control. ' +
+          'Quantum error correction, quantum algorithms, and machine learning for ' +
+          'quantum-device characterization. ' +
           'MS in Computer Science at Columbia. Thesis at Diraq and UNSW Sydney on ' +
           'automating silicon spin qubit measurement.'
         )],
@@ -157,7 +158,7 @@ const doc = new Document({
       entryLine(
         [link('WhatTheDuck', 'https://github.com/ShayManor/WhatTheDuck', { bold: true }), run(': quantum amplitude estimation for financial Value at Risk'),
          DOT(), i('CUDA-Q, C++')],
-        'Overall Winner, MIT iQuHACK 2026', 42
+        '', 0
       ),
       bullet([run(
         'Wrote the GPU-accelerated state prep, threshold oracle, and bisection search driving ' +
@@ -273,11 +274,11 @@ const doc = new Document({
       )]),
 
       // ---------- honors ----------
-      heading('Honors & Leadership'),
-      bullet([b('Overall Winner'), run(' & '), b('NVIDIA Ecosystem Award'), run(', MIT iQuHACK 2026'),
+      heading('Competitions & Leadership'),
+      bullet([b('Overall Winner'), run(' & '), b('NVIDIA Ecosystem Award'),
+              run(', MIT iQuHACK 2026, qualifying for the NYU Abu Dhabi Quantum and AI Hackathon 2027'),
               DOT(), b('Audience Favorite'), run(', Harmoniqs Quantum Design 2026'), DOT(),
-              b('Runner-Up'), run(', Qualcomm Snapdragon Multiverse 2026'), DOT(),
-              b('Qualified'), run(', NYU Abu Dhabi Quantum and AI Hackathon 2027')]),
+              b('Runner-Up'), run(', Qualcomm Snapdragon Hackathon 2026')]),
       bullet([b('Graduate Lead'), run(
         ', Columbia Quantum Algorithms Reading Group: weekly sessions through all 33 chapters ' +
         "of Andrew Childs' notes.")]),
@@ -286,9 +287,9 @@ const doc = new Document({
       heading('Skills'),
       skill('Quantum tools:', 'Qiskit and Qiskit Runtime, Cirq, PennyLane, CUDA-Q, Stim, PyMatching, QuTiP'),
       skill('Quantum methods:',
-        'Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, LCU, ' +
-        'VQE, QAOA · randomized benchmarking, tomography, noise modeling · quantum complexity ' +
-        '(BQP, QMA), query complexity'),
+        'Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, ' +
+        'VQE, QAOA · surface codes, stabilizer formalism, MWPM and Union-Find decoding, ' +
+        'threshold estimation, noise modeling'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
