@@ -276,7 +276,7 @@ const doc = new Document({
       // ---------- honors ----------
       heading('Competitions & Leadership'),
       bullet([b('Overall Winner'), run(' & '), b('NVIDIA Ecosystem Award'),
-              run(', MIT iQuHACK 2026, qualifying for the NYU Abu Dhabi Quantum and AI Hackathon 2027'),
+              run(', MIT iQuHACK 2026, qualified for the NYU Abu Dhabi Quantum and AI Hackathon 2027'),
               DOT(), b('Audience Favorite'), run(', Harmoniqs Quantum Design 2026'), DOT(),
               b('Runner-Up'), run(', Qualcomm Snapdragon Hackathon 2026')]),
       bullet([b('Graduate Lead'), run(
