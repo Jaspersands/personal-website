@@ -166,17 +166,17 @@
       const st = session.stabs[i];
       pathStabilizer(staticCtx, st);
       staticCtx.fillStyle = (st.type === 'X') ? palette.x : palette.z;
-      staticCtx.globalAlpha = 0.07;
+      staticCtx.globalAlpha = 0.12;
       staticCtx.fill();
       staticCtx.strokeStyle = (st.type === 'X') ? palette.x : palette.z;
-      staticCtx.globalAlpha = 0.25;
+      staticCtx.globalAlpha = 0.40;
       staticCtx.lineWidth = 1;
       staticCtx.stroke();
     }
 
     // 2. Hairline lattice grid
     staticCtx.strokeStyle = palette.rule;
-    staticCtx.globalAlpha = 0.5;
+    staticCtx.globalAlpha = 0.55;
     staticCtx.lineWidth = 1;
     staticCtx.beginPath();
     const d = session.d;
@@ -198,11 +198,11 @@
 
     // 3. Data qubit dots
     staticCtx.fillStyle = palette.fg3;
-    staticCtx.globalAlpha = 0.45;
+    staticCtx.globalAlpha = 0.65;
     for (let i = 0; i < session.numQubits; i++) {
       const pt = qubitPixel(i);
       staticCtx.beginPath();
-      staticCtx.arc(pt.x, pt.y, 3, 0, 2 * Math.PI);
+      staticCtx.arc(pt.x, pt.y, 3.5, 0, 2 * Math.PI);
       staticCtx.fill();
     }
     staticCtx.globalAlpha = 1;
@@ -549,12 +549,22 @@
   // Pointer event listeners
   function onPointerMove(e) {
     const rect = canvas.getBoundingClientRect();
-    pointer.x = e.clientX - rect.left;
-    pointer.y = e.clientY - rect.top;
-    pointer.active = true;
-    pointer.lastMove = performance.now();
-    dirty = true;
-    requestFrame();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    if (isPageMode || (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height)) {
+      pointer.x = x;
+      pointer.y = y;
+      pointer.active = true;
+      pointer.lastMove = performance.now();
+      dirty = true;
+      requestFrame();
+    } else {
+      if (pointer.active) {
+        pointer.active = false;
+        dirty = true;
+        requestFrame();
+      }
+    }
   }
 
   function onPointerLeave() {
@@ -564,10 +574,9 @@
   }
 
   function setupPointerTracking() {
-    const target = isPageMode ? window : heroEl;
-    target.addEventListener('pointermove', onPointerMove, { passive: true });
-    target.addEventListener('pointerleave', onPointerLeave, { passive: true });
-    target.addEventListener('pointercancel', onPointerLeave, { passive: true });
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerleave', onPointerLeave, { passive: true });
+    window.addEventListener('pointercancel', onPointerLeave, { passive: true });
   }
 
   // Reduced motion mode
@@ -667,6 +676,19 @@
       canvas.style.opacity = '1';
 
       if (!isReducedMotion) {
+        // Seed initial errors so the lattice is visibly active immediately
+        const now = performance.now();
+        const initialCount = 4;
+        for (let k = 0; k < initialCount; k++) {
+          const q = Math.floor(Math.random() * session.numQubits);
+          injectError(q, now);
+        }
+        physicalErrorsCount += initialCount;
+        updateSyndromes(now);
+        updateReadout();
+        dirty = true;
+        requestFrame();
+
         startScheduler();
       } else {
         applyReducedMotion(true);

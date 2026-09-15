@@ -28,13 +28,29 @@
    * Accepts a URL string or an ArrayBuffer / Uint8Array.
    */
   async function load(source) {
-    let buffer;
+    let buffer = null;
     if (typeof source === 'string') {
-      const resp = await fetch(source);
-      if (!resp.ok) {
-        throw new Error(`Failed to load wasm from ${source}: ${resp.status} ${resp.statusText}`);
+      const isFileProto = (typeof location !== 'undefined' && location.protocol === 'file:');
+      if (!isFileProto) {
+        try {
+          const resp = await fetch(source);
+          if (resp.ok) {
+            buffer = await resp.arrayBuffer();
+          }
+        } catch (_) {}
       }
-      buffer = await resp.arrayBuffer();
+      const b64 = (typeof window !== 'undefined' && window.__WASM_BASE64__) ||
+                  (typeof globalThis !== 'undefined' && globalThis.__WASM_BASE64__);
+      if (!buffer && b64) {
+        const bin = atob(b64);
+        const len = bin.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+        buffer = bytes.buffer;
+      }
+      if (!buffer) {
+        throw new Error(`Failed to load wasm from ${source}`);
+      }
     } else if (source instanceof ArrayBuffer) {
       buffer = source;
     } else if (source && source.buffer instanceof ArrayBuffer) {
