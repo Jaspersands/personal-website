@@ -241,7 +241,7 @@
     S.tickTimer = setTimeout(tick, C.TICK);
   }
   function start() {
-    if (S.running || reduced() || S.static || !S.engine) return;
+    if (S.running || reduced() || S.static || !S.engine || document.hidden) return;
     S.running = true; S.lastTick = now();
     if (!S.nextMerge) S.nextMerge = now() + 2500;
     S.tickTimer = setTimeout(tick, C.TICK);
