@@ -98,5 +98,35 @@ test('drift is a random walk with the configured scale', () => {
   assert.ok(Math.abs(rms - 1) < 0.1, `rms ${rms}`);
 });
 
+/* ---------------- change-point detector ---------------- */
+
+test('stepDiff needs complete windows and measures a clean step', () => {
+  const tr = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1];
+  assert.strictEqual(DQD.stepDiff(tr, 2, 4), null);
+  assert.strictEqual(DQD.stepDiff(tr, 4, 4), 1);
+  assert.ok(Math.abs(DQD.stepDiff(tr, 5, 4) - 0.75) < 1e-9);
+});
+
+test('detector confirms a step at the right place with the full height, and not on noise', () => {
+  const rand = DQD.mulberry32(11), sigma = 0.05;
+  const det = DQD.createDetector({ w: 4, k: 4, sigma });
+  let found = null;
+  for (let i = 0; i < 60; i++) {
+    const x = (i >= 30 ? 0.6 : 0) + sigma * DQD.gauss(rand);
+    const r = det.push(x);
+    if (r) { assert.strictEqual(found, null, 'reported twice'); found = r; }
+  }
+  assert.ok(found, 'no step found');
+  assert.ok(Math.abs(found.i - 29) <= 1, `position ${found.i}`);
+  assert.ok(Math.abs(found.height - 0.6) < 0.1, `height ${found.height}`);
+  const quiet = DQD.createDetector({ w: 4, k: 4, sigma });
+  for (let i = 0; i < 2000; i++) assert.strictEqual(quiet.push(sigma * DQD.gauss(rand)), null);
+});
+
+test('classifyStep tells the two dots apart by step height', () => {
+  assert.strictEqual(DQD.classifyStep(p, 0.95), 'dot1');
+  assert.strictEqual(DQD.classifyStep(p, -0.62), 'dot2');
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

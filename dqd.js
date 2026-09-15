@@ -80,5 +80,46 @@
     return dev;
   }
 
-  return { defaultParams, energy, occupation, transitionV1, transitionV2, mulberry32, gauss, createDevice };
+  /* ---------------- change-point detection on a 1-D sensor trace ----------------
+     A step at sample i is the difference between the mean of the w samples
+     after i and the mean of the w samples up to and including i. The detector
+     arms when that difference first exceeds k·sigma and confirms 2w samples
+     later, reporting the position and full height of the largest straddling
+     difference — by then the after-window has cleared the edge. */
+  function stepDiff(trace, i, w) {
+    if (i - w + 1 < 0 || i + w >= trace.length) return null;
+    let a = 0, b = 0;
+    for (let j = i - w + 1; j <= i; j++) a += trace[j];
+    for (let j = i + 1; j <= i + w; j++) b += trace[j];
+    return (b - a) / w;
+  }
+
+  function createDetector({ w = 4, k = 4, sigma }) {
+    const det = { trace: [], armedAt: -1, reset() { det.trace.length = 0; det.armedAt = -1; } };
+    det.push = x => {
+      const t = det.trace; t.push(x);
+      const i = t.length - 1 - w;                          // newest position with a complete after-window
+      if (det.armedAt < 0) {
+        const d = stepDiff(t, i, w);
+        if (d !== null && Math.abs(d) > k * sigma) det.armedAt = i;
+        return null;
+      }
+      if (t.length - 1 < det.armedAt + 2 * w) return null; // wait for the after-window to clear the edge
+      let best = 0, at = det.armedAt;
+      for (let j = det.armedAt; j <= det.armedAt + w; j++) {
+        const d = stepDiff(t, j, w);
+        if (d !== null && Math.abs(d) > Math.abs(best)) { best = d; at = j; }
+      }
+      det.armedAt = -1;
+      return { i: at, height: best };
+    };
+    return det;
+  }
+
+  // The sensor sits nearer dot 1, so its transitions are the taller steps.
+  const classifyStep = (p, h) =>
+    Math.abs(Math.abs(h) - p.s1) <= Math.abs(Math.abs(h) - p.s2) ? 'dot1' : 'dot2';
+
+  return { defaultParams, energy, occupation, transitionV1, transitionV2, mulberry32, gauss, createDevice,
+           stepDiff, createDetector, classifyStep };
 });
