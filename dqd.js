@@ -144,6 +144,7 @@
     const p = device.p;
     const o = Object.assign({ step: 1, calibN: 32, flatMV: 40, wallMax: 30, checkEvery: 225, checkSpan: 6, w: 4, k: 5, start: null }, opts);
     const clampV = v => Math.min(p.vMax, Math.max(p.vMin, v));
+    const LEVEL_TOL = 0.25 * p.s2;   // a changed cell moves the sensor by ≥ 0.4; an 8-sample mean has σ ≈ 0.018
     const t = {
       V1: o.start ? o.start.V1 : 100, V2: o.start ? o.start.V2 : 110,
       state: 'calibrate', sigma: null, N1: null, N2: null, lockLevel: null, walls: null,
@@ -153,6 +154,7 @@
     let det = null, calib = [], flat = 0, lockBuf = [], idle = 0;
     let sweep = null;   // centring: { origin:{V1,V2}, di, dist, walls:[] }
     let probe = null;   // check:    { origin:{V1,V2}, di, k, sum, near }
+    let prevLock = null; // lock level before a re-centre, to verify the cell afterwards
 
     const emit = e => t.events.push(e);
     const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
@@ -163,7 +165,7 @@
       return S;
     };
     const go = s => { t.state = s; det = newDet(); flat = 0; };
-    const retune = () => { t.retunes++; t.N1 = null; t.N2 = null; t.walls = null; go('empty'); };
+    const retune = () => { t.retunes++; t.N1 = null; t.N2 = null; t.walls = null; prevLock = null; go('empty'); };
 
     const steps = {
       calibrate() {
@@ -215,24 +217,34 @@
       },
       settle() {
         lockBuf.push(measure());
-        if (lockBuf.length >= 8) { t.lockLevel = mean(lockBuf); lockBuf = []; idle = 0; t.locks++; emit('locked'); go('locked'); }
+        if (lockBuf.length < 8) return;
+        const level = mean(lockBuf); lockBuf = [];
+        // After a re-centre the level must match the original lock: otherwise the
+        // re-centre landed in a neighbouring cell and the count is wrong — start over.
+        if (prevLock !== null && Math.abs(level - prevLock) > LEVEL_TOL) { prevLock = null; emit('drift'); retune(); return; }
+        prevLock = null; t.lockLevel = level; idle = 0; t.locks++; emit('locked'); go('locked');
       },
       locked() {
         idle++;
         lockBuf.push(measure()); if (lockBuf.length > 8) lockBuf.shift();
-        if (lockBuf.length === 8 && Math.abs(mean(lockBuf) - t.lockLevel) > 0.5 * p.s2) { emit('drift'); lockBuf = []; retune(); return; }
+        if (lockBuf.length === 8 && Math.abs(mean(lockBuf) - t.lockLevel) > LEVEL_TOL) { emit('drift'); lockBuf = []; retune(); return; }
         if (idle % o.checkEvery === 0) { probe = { origin: { V1: t.V1, V2: t.V2 }, di: 0, k: 0, sum: 0, near: false }; go('check'); }
       },
       check() {
-        const [dx, dy] = DIRS[probe.di];
+        // Probe order: the centre first, then ±V1, ±V2. A shifted centre level means a
+        // transition has passed under the operating point: re-tune from empty. A shifted
+        // level at a ±probe only means a wall has crept within reach: re-centre.
+        const [dx, dy] = probe.di === 0 ? [0, 0] : DIRS[probe.di - 1];
         t.V1 = clampV(probe.origin.V1 + dx * o.checkSpan); t.V2 = clampV(probe.origin.V2 + dy * o.checkSpan);
         probe.sum += measure(); probe.k++;
         if (probe.k < 4) return;
-        if (Math.abs(probe.sum / 4 - t.lockLevel) > 0.5 * p.s2) probe.near = true;
+        const shifted = Math.abs(probe.sum / 4 - t.lockLevel) > LEVEL_TOL;
+        if (probe.di === 0 && shifted) { t.V1 = probe.origin.V1; t.V2 = probe.origin.V2; probe = null; emit('drift'); lockBuf = []; retune(); return; }
+        if (shifted) probe.near = true;
         probe.di++; probe.k = 0; probe.sum = 0;
-        if (probe.di < 4) return;
+        if (probe.di < 5) return;
         t.V1 = probe.origin.V1; t.V2 = probe.origin.V2;
-        if (probe.near) { t.recentres++; emit('wall-near'); sweep = null; go('centre'); }
+        if (probe.near) { t.recentres++; prevLock = t.lockLevel; emit('wall-near'); sweep = null; go('centre'); }
         else { lockBuf = []; go('locked'); }
         probe = null;
       }

@@ -194,6 +194,21 @@ test('a small offset that brings a wall within 6 mV triggers a re-centre, not a 
   assert.ok(o.g1 === 1 && o.g2 === 1, `after recentre: (${o.g1},${o.g2})`);
 });
 
+test('an offset that lands during the check phase is a re-tune, not a re-centre in the wrong cell', () => {
+  const rand = DQD.mulberry32(21);
+  const dev = DQD.createDevice(p, rand, { driftSigma: 0 });
+  const t = DQD.createTuner(dev, { start: { V1: 70, V2: 80 } });
+  runUntil(t, () => t.state === 'locked', 2000);
+  runUntil(t, () => t.state === 'check', 1000);
+  assert.strictEqual(t.state, 'check');
+  dev.nudge(-22, -13);
+  runUntil(t, () => t.retunes > 0 || t.recentres > 0, 1000);
+  assert.strictEqual(t.retunes, 1, `expected a re-tune (events: ${t.events.join(' ')})`);
+  runUntil(t, () => t.state === 'locked', 4000);
+  const o = dev.truth(t.V1, t.V2);
+  assert.ok(o.g1 === 1 && o.g2 === 1, `re-locked in (${o.g1},${o.g2})`);
+});
+
 test('the tuner never reads the ground truth', () => {
   const dev = DQD.createDevice(p, DQD.mulberry32(2), { driftSigma: 0 });
   let calls = 0; const truth = dev.truth; dev.truth = (a, b) => { calls++; return truth(a, b); };
