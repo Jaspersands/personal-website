@@ -90,6 +90,17 @@ test('device offset shifts the honeycomb: truth() and measure() use drifted volt
   assert.strictEqual(dev.offset.d1, 30);
 });
 
+test('the window floor is empty even at the maximum offset', () => {
+  const o = DQD.occupation(p, p.vMin + p.offsetMax, p.vMin + p.offsetMax);
+  assert.strictEqual(o.g1, 0); assert.strictEqual(o.g2, 0);
+});
+
+test('nudge clamps the offset to ±offsetMax', () => {
+  const dev = DQD.createDevice(p, DQD.mulberry32(4));
+  dev.nudge(100, -100);
+  assert.strictEqual(dev.offset.d1, p.offsetMax); assert.strictEqual(dev.offset.d2, -p.offsetMax);
+});
+
 test('drift is a random walk with the configured scale', () => {
   const dev = DQD.createDevice(p, DQD.mulberry32(3), { driftSigma: 1 });
   let sq = 0; const N = 2000;
@@ -123,9 +134,75 @@ test('detector confirms a step at the right place with the full height, and not 
   for (let i = 0; i < 2000; i++) assert.strictEqual(quiet.push(sigma * DQD.gauss(rand)), null);
 });
 
+test('detector does not re-report the same edge once confirmed', () => {
+  const det = DQD.createDetector({ w: 4, k: 5, sigma: 0.05 });
+  let reports = 0;
+  for (let i = 0; i < 40; i++) if (det.push(i >= 20 ? 1 : 0)) reports++;
+  assert.strictEqual(reports, 1);
+});
+
 test('classifyStep tells the two dots apart by step height', () => {
   assert.strictEqual(DQD.classifyStep(p, 0.95), 'dot1');
   assert.strictEqual(DQD.classifyStep(p, -0.62), 'dot2');
+});
+
+/* ---------------- auto-tuner ---------------- */
+
+function runUntil(tuner, pred, max) { while (!pred() && tuner.measurements < max) tuner.step(); }
+
+test('tuner locks in (1,1) from 50 random starts within 2000 measurements', () => {
+  for (let seed = 0; seed < 50; seed++) {
+    const rand = DQD.mulberry32(100 + seed);
+    const dev = DQD.createDevice(p, rand, { driftSigma: 0 });
+    const start = { V1: 20 + 110 * rand(), V2: 20 + 110 * rand() };
+    const t = DQD.createTuner(dev, { start });
+    runUntil(t, () => t.state === 'locked', 2000);
+    assert.strictEqual(t.state, 'locked', `seed ${seed} ended in ${t.state} after ${t.measurements} (events: ${t.events.join(' ')})`);
+    const o = dev.truth(t.V1, t.V2);
+    assert.ok(o.g1 === 1 && o.g2 === 1, `seed ${seed} locked in (${o.g1},${o.g2}) at ${t.V1.toFixed(1)},${t.V2.toFixed(1)} (events: ${t.events.join(' ')})`);
+    assert.strictEqual(t.N1, 1); assert.strictEqual(t.N2, 1);
+    assert.ok(t.walls.right - t.walls.left > 20, 'walls found');
+  }
+});
+
+test('a 20 mV offset is detected as drift and the tuner re-locks in (1,1)', () => {
+  const rand = DQD.mulberry32(5);
+  const dev = DQD.createDevice(p, rand, { driftSigma: 0 });
+  const t = DQD.createTuner(dev, { start: { V1: 90, V2: 100 } });
+  runUntil(t, () => t.state === 'locked', 2000);
+  dev.nudge(20, 0);
+  runUntil(t, () => t.state !== 'locked', 500);
+  assert.ok(t.events.includes('drift'), `drift event (events: ${t.events.join(' ')})`);
+  runUntil(t, () => t.state === 'locked', 4000);
+  const o = dev.truth(t.V1, t.V2);
+  assert.ok(o.g1 === 1 && o.g2 === 1, `re-locked in (${o.g1},${o.g2})`);
+  assert.strictEqual(t.retunes, 1);
+});
+
+test('a small offset that brings a wall within 6 mV triggers a re-centre, not a re-tune', () => {
+  const rand = DQD.mulberry32(9);
+  const dev = DQD.createDevice(p, rand, { driftSigma: 0 });
+  const t = DQD.createTuner(dev, { start: { V1: 60, V2: 70 } });
+  runUntil(t, () => t.state === 'locked', 2000);
+  const half = (t.walls.right - t.walls.left) / 2;
+  dev.nudge(half - 4, 0);                       // right wall now ~4 mV away
+  runUntil(t, () => t.recentres > 0, 1500);
+  assert.strictEqual(t.recentres, 1, `recentres (events: ${t.events.join(' ')})`);
+  assert.strictEqual(t.retunes, 0);
+  runUntil(t, () => t.state === 'locked', 3000);
+  const o = dev.truth(t.V1, t.V2);
+  assert.ok(o.g1 === 1 && o.g2 === 1, `after recentre: (${o.g1},${o.g2})`);
+});
+
+test('the tuner never reads the ground truth', () => {
+  const dev = DQD.createDevice(p, DQD.mulberry32(2), { driftSigma: 0 });
+  let calls = 0; const truth = dev.truth; dev.truth = (a, b) => { calls++; return truth(a, b); };
+  const measureCalls = { n: 0 }; const measure = dev.measure; dev.measure = (a, b) => { measureCalls.n++; return measure(a, b); };
+  const t = DQD.createTuner(dev, { start: { V1: 70, V2: 60 } });
+  runUntil(t, () => t.state === 'locked', 2000);
+  // measure() calls truth() internally once per measurement; nothing else may.
+  assert.strictEqual(calls, measureCalls.n);
+  assert.strictEqual(t.measurements, measureCalls.n);
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

@@ -18,7 +18,8 @@
     a11: 0.085, a22: 0.080, a12: 0.018, a21: 0.015,  // meV per mV (lever arms)
     kT: 0.015,                                       // meV, ~175 mK
     s1: 1.0, s2: 0.6, b: 0.0015, sigma: 0.05,        // charge-sensor response
-    NMAX: 7, vMin: 0, vMax: 140                      // electrons per dot, mV window
+    NMAX: 7, vMin: -40, vMax: 140,                   // electrons per dot, mV window
+    offsetMax: 35                                    // |charge-noise offset| clamp, mV
   });
 
   const energy = (p, N1, N2, V1, V2) =>
@@ -73,9 +74,13 @@
       },
       drift(dt) {
         const s = driftSigma * Math.sqrt(dt);
-        dev.offset.d1 += s * gauss(rand); dev.offset.d2 += s * gauss(rand);
+        dev.nudge(s * gauss(rand), s * gauss(rand));
       },
-      nudge(dV1, dV2) { dev.offset.d1 += dV1; dev.offset.d2 += dV2; }
+      // Offsets are clamped: charge noise moves a honeycomb by millivolts, not by a window.
+      nudge(dV1, dV2) {
+        const lim = p.offsetMax ?? Infinity, c = v => Math.min(lim, Math.max(-lim, v));
+        dev.offset.d1 = c(dev.offset.d1 + dV1); dev.offset.d2 = c(dev.offset.d2 + dV2);
+      }
     };
     return dev;
   }
@@ -94,12 +99,13 @@
     return (b - a) / w;
   }
 
-  function createDetector({ w = 4, k = 4, sigma }) {
-    const det = { trace: [], armedAt: -1, reset() { det.trace.length = 0; det.armedAt = -1; } };
+  function createDetector({ w = 4, k = 5, sigma }) {
+    const det = { trace: [], armedAt: -1, blankUntil: -1, reset() { det.trace.length = 0; det.armedAt = -1; det.blankUntil = -1; } };
     det.push = x => {
       const t = det.trace; t.push(x);
       const i = t.length - 1 - w;                          // newest position with a complete after-window
       if (det.armedAt < 0) {
+        if (i < det.blankUntil) return null;               // before-window still straddles the last edge
         const d = stepDiff(t, i, w);
         if (d !== null && Math.abs(d) > k * sigma) det.armedAt = i;
         return null;
@@ -110,7 +116,7 @@
         const d = stepDiff(t, j, w);
         if (d !== null && Math.abs(d) > Math.abs(best)) { best = d; at = j; }
       }
-      det.armedAt = -1;
+      det.armedAt = -1; det.blankUntil = at + w;
       return { i: at, height: best };
     };
     return det;
@@ -120,6 +126,121 @@
   const classifyStep = (p, h) =>
     Math.abs(Math.abs(h) - p.s1) <= Math.abs(Math.abs(h) - p.s2) ? 'dot1' : 'dot2';
 
+  /* ---------------- auto-tuner ----------------
+     One step() is one measurement of the sensor at the current gate voltages.
+     The tuner only ever sees the sensor value, never the charge numbers.
+
+       calibrate  measure the noise floor at the starting point
+       empty      sweep both gates down until the trace has been flat for
+                  longer than a charging period — the dots are empty
+       load1      sweep V1 up to the first step: one electron in dot 1
+       load2      sweep V2 up to the first dot-2 step: one electron in dot 2
+       centre     find the four walls of the (1,1) cell and go to the middle
+       settle     record the sensor level at the operating point
+       locked     monitor; a level shift means a transition passed under the
+                  point (re-tune from empty); a periodic ±probe finds a wall
+                  creeping close (re-centre) */
+  function createTuner(device, opts = {}) {
+    const p = device.p;
+    const o = Object.assign({ step: 1, calibN: 32, flatMV: 40, wallMax: 30, checkEvery: 225, checkSpan: 6, w: 4, k: 5, start: null }, opts);
+    const clampV = v => Math.min(p.vMax, Math.max(p.vMin, v));
+    const t = {
+      V1: o.start ? o.start.V1 : 100, V2: o.start ? o.start.V2 : 110,
+      state: 'calibrate', sigma: null, N1: null, N2: null, lockLevel: null, walls: null,
+      samples: [], events: [], measurements: 0, retunes: 0, recentres: 0, locks: 0
+    };
+    const DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    let det = null, calib = [], flat = 0, lockBuf = [], idle = 0;
+    let sweep = null;   // centring: { origin:{V1,V2}, di, dist, walls:[] }
+    let probe = null;   // check:    { origin:{V1,V2}, di, k, sum, near }
+
+    const emit = e => t.events.push(e);
+    const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
+    const newDet = () => createDetector({ w: o.w, k: o.k, sigma: t.sigma });
+    const measure = () => {
+      const S = device.measure(t.V1, t.V2); t.measurements++;
+      t.samples.push({ V1: t.V1, V2: t.V2, S }); if (t.samples.length > 4000) t.samples.shift();
+      return S;
+    };
+    const go = s => { t.state = s; det = newDet(); flat = 0; };
+    const retune = () => { t.retunes++; t.N1 = null; t.N2 = null; t.walls = null; go('empty'); };
+
+    const steps = {
+      calibrate() {
+        calib.push(measure());
+        if (calib.length >= o.calibN) {
+          const m = mean(calib);
+          t.sigma = Math.max(1e-3, Math.sqrt(mean(calib.map(x => (x - m) ** 2))));
+          calib = []; emit('calibrated'); go('empty');
+        }
+      },
+      empty() {
+        t.V1 = clampV(t.V1 - o.step); t.V2 = clampV(t.V2 - o.step);
+        const r = det.push(measure());
+        if (r) { emit('step:' + classifyStep(p, r.height)); flat = 0; } else flat += o.step;
+        if (flat >= o.flatMV || (t.V1 <= p.vMin && t.V2 <= p.vMin)) { t.N1 = 0; t.N2 = 0; emit('empty'); go('load1'); }
+      },
+      load1() {
+        t.V1 = clampV(t.V1 + o.step);
+        const r = det.push(measure());
+        if (r) { t.N1 = 1; emit('loaded:dot1'); go('load2'); }
+        else if (t.V1 >= p.vMax) { emit('lost'); retune(); }
+      },
+      load2() {
+        t.V2 = clampV(t.V2 + o.step);
+        const r = det.push(measure());
+        if (r) {
+          if (classifyStep(p, r.height) === 'dot2') { t.N2 = 1; emit('loaded:dot2'); sweep = null; go('centre'); }
+          else { t.V1 = clampV(t.V1 - 2 * o.w * o.step); emit('backoff:dot1'); det = newDet(); }
+        } else if (t.V2 >= p.vMax) { emit('lost'); retune(); }
+      },
+      centre() {
+        if (!sweep) sweep = { origin: { V1: t.V1, V2: t.V2 }, di: 0, dist: 0, walls: [] };
+        const [dx, dy] = DIRS[sweep.di];
+        sweep.dist += o.step;
+        t.V1 = clampV(sweep.origin.V1 + dx * sweep.dist); t.V2 = clampV(sweep.origin.V2 + dy * sweep.dist);
+        const r = det.push(measure());
+        const atEdge = (dx && (t.V1 <= p.vMin || t.V1 >= p.vMax)) || (dy && (t.V2 <= p.vMin || t.V2 >= p.vMax));
+        let wall = null;
+        if (r) wall = (r.i + 1) * o.step;                  // the step lies between samples i and i+1
+        else if (sweep.dist >= o.wallMax || atEdge) wall = sweep.dist;
+        if (wall === null) return;
+        sweep.walls.push(wall); sweep.di++; sweep.dist = 0;
+        det = newDet();
+        if (sweep.di < 4) return;
+        const [L, R, D, U] = sweep.walls, org = sweep.origin;
+        t.V1 = clampV(org.V1 + (R - L) / 2); t.V2 = clampV(org.V2 + (U - D) / 2);
+        t.walls = { left: org.V1 - L, right: org.V1 + R, down: org.V2 - D, up: org.V2 + U };
+        sweep = null; lockBuf = []; emit('centred'); go('settle');
+      },
+      settle() {
+        lockBuf.push(measure());
+        if (lockBuf.length >= 8) { t.lockLevel = mean(lockBuf); lockBuf = []; idle = 0; t.locks++; emit('locked'); go('locked'); }
+      },
+      locked() {
+        idle++;
+        lockBuf.push(measure()); if (lockBuf.length > 8) lockBuf.shift();
+        if (lockBuf.length === 8 && Math.abs(mean(lockBuf) - t.lockLevel) > 0.5 * p.s2) { emit('drift'); lockBuf = []; retune(); return; }
+        if (idle % o.checkEvery === 0) { probe = { origin: { V1: t.V1, V2: t.V2 }, di: 0, k: 0, sum: 0, near: false }; go('check'); }
+      },
+      check() {
+        const [dx, dy] = DIRS[probe.di];
+        t.V1 = clampV(probe.origin.V1 + dx * o.checkSpan); t.V2 = clampV(probe.origin.V2 + dy * o.checkSpan);
+        probe.sum += measure(); probe.k++;
+        if (probe.k < 4) return;
+        if (Math.abs(probe.sum / 4 - t.lockLevel) > 0.5 * p.s2) probe.near = true;
+        probe.di++; probe.k = 0; probe.sum = 0;
+        if (probe.di < 4) return;
+        t.V1 = probe.origin.V1; t.V2 = probe.origin.V2;
+        if (probe.near) { t.recentres++; emit('wall-near'); sweep = null; go('centre'); }
+        else { lockBuf = []; go('locked'); }
+        probe = null;
+      }
+    };
+    t.step = () => { steps[t.state](); };
+    return t;
+  }
+
   return { defaultParams, energy, occupation, transitionV1, transitionV2, mulberry32, gauss, createDevice,
-           stepDiff, createDetector, classifyStep };
+           stepDiff, createDetector, classifyStep, createTuner };
 });
