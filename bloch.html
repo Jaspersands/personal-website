@@ -44,13 +44,13 @@
         <li class="n"><a href="#experience" class="link">Experience</a></li>
         <li class="n"><a href="#education" class="link">Education</a></li>
         <li class="n"><a href="#contact" class="link">Contact</a></li>
-        <li class="hero-toggle"><a href="bloch.html" class="hero-toggle-link" title="Switch to Plan C: Minimal Bloch Sphere Hero">⇋ Plan C (Bloch)</a></li>
+        <li class="hero-toggle"><a href="index.html" class="hero-toggle-link" title="Switch to Plan A: Living Surface Code Hero">⇋ Plan A (Surface Code)</a></li>
         <li><button class="theme" id="theme" type="button" aria-label="Toggle light or dark mode">◑</button></li>
       </ul>
     </div>
   </nav>
 
-  <header class="hero" id="top">
+  <header class="hero hero-bloch" id="top">
     <div class="wrap">
       <div class="hero-content rv">
         <div class="eyebrow">Quantum algorithms &amp; machine learning</div>
@@ -67,10 +67,10 @@
           <a class="btn" href="mailto:jaspersands02@gmail.com">Email</a>
         </div>
       </div>
-    </div>
-    <svg class="field" role="img" aria-label="Interactive distance-9 rotated surface code with live minimum-weight matching"></svg>
-    <div class="hero-caption">
-      Distance-9 rotated surface code, decoded live with minimum-weight matching. Hover a qubit to add an error. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">From my Rust/WASM simulator →</a>
+      <div class="hero-bloch-col rv">
+        <canvas id="bloch-canvas" width="320" height="320" role="img" aria-label="Precessing Bloch sphere representing a single qubit state"></canvas>
+        <div class="bloch-caption">Bloch sphere · a single qubit's state, precessing.</div>
+      </div>
     </div>
   </header>
 
@@ -696,7 +696,7 @@
   </footer>
 
   <script src="surface-code.js"></script>
-  <script src="field.js"></script>
+  <script src="bloch.js"></script>
   <script src="script.js"></script>
 </body>
 
