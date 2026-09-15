@@ -41,11 +41,11 @@
   `toggle(q, 'X'|'Z'|'Y')`, `syndrome() → Uint8Array` (copy), `decode() → {logical, cx, cz}` (copies, MWPM = decoder 2),
   `applyCorrection(cx, cz)`, `clear()`, `free()`.
 
-- [ ] **Step 1: Write the failing tests** — `tests/sessions.test.js`, identical in content to the engine tests listed in the spec §6, but constructed as `const s = QECSessions.create(engine.rawExports, d)`. Tests: geometry (d² qubits at odd coords, d²−1 stabilizers, X indexed first, `qubitAt`), boundary orientation (X half-plaquettes left/right, Z top/bottom), single bulk X → two diagonal Z defects, left-edge X → one Z defect, top-edge Z → one X defect, full row of X → no syndrome and `logical === 1`, short left-edge chain → `logical === 0` and correction clears the syndrome, 300 random rounds at d=15 p=3 % always cleared, `clear()` resets `logical`, **two sessions are independent** (toggle in one, the other stays quiet — the property engine.js cannot provide), d=27 decode with 40 errors < 20 ms.
+- [x] **Step 1: Write the failing tests** — `tests/sessions.test.js`, identical in content to the engine tests listed in the spec §6, but constructed as `const s = QECSessions.create(engine.rawExports, d)`. Tests: geometry (d² qubits at odd coords, d²−1 stabilizers, X indexed first, `qubitAt`), boundary orientation (X half-plaquettes left/right, Z top/bottom), single bulk X → two diagonal Z defects, left-edge X → one Z defect, top-edge Z → one X defect, full row of X → no syndrome and `logical === 1`, short left-edge chain → `logical === 0` and correction clears the syndrome, 300 random rounds at d=15 p=3 % always cleared, `clear()` resets `logical`, **two sessions are independent** (toggle in one, the other stays quiet — the property engine.js cannot provide), d=27 decode with 40 errors < 20 ms.
 
-- [ ] **Step 2: Run** — `node tests/sessions.test.js` → `Cannot find module '../sessions.js'`.
+- [x] **Step 2: Run** — `node tests/sessions.test.js` → `Cannot find module '../sessions.js'`.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 ```js
 /* sessions.js — independent sessions over the QEC wasm exports (engine.rawExports).
@@ -88,9 +88,9 @@
 });
 ```
 
-- [ ] **Step 4: Run** — 11 passed.
+- [x] **Step 4: Run** — 11 passed.
 
-- [ ] **Step 5: Commit** — `git add sessions.js tests/sessions.test.js && git commit -m "Add sessions.js: independent QEC sessions for the fabric"`
+- [x] **Step 5: Commit** — `git add sessions.js tests/sessions.test.js && git commit -m "Add sessions.js: independent QEC sessions for the fabric"`
 
 ---
 
@@ -109,7 +109,7 @@
   - `DQD.mulberry32(seed) → () => [0,1)` and `DQD.gauss(rand) → N(0,1)`
   - `DQD.createDevice(p, rand) → device` with `device.offset = {d1, d2}` (mV), `device.measure(V1, V2) → S`, `device.truth(V1, V2) → occupation at the drifted voltages`, `device.drift(dtSeconds)` (random walk, `driftSigma` mV/√s, default 0.15), `device.nudge(dV1, dV2)`.
 
-- [ ] **Step 1: Write the failing tests** (`tests/dqd.test.js`, first block)
+- [x] **Step 1: Write the failing tests** (`tests/dqd.test.js`, first block)
 
 ```js
 const assert = require('assert');
@@ -210,11 +210,11 @@ console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `node tests/dqd.test.js` — Expected: `Cannot find module '../dqd.js'`.
 
-- [ ] **Step 3: Implement the model, sensor, and device in `dqd.js`**
+- [x] **Step 3: Implement the model, sensor, and device in `dqd.js`**
 
 ```js
 /* dqd.js — constant-interaction model of a double quantum dot, a simulated
@@ -295,9 +295,9 @@ Run: `node tests/dqd.test.js` — Expected: `Cannot find module '../dqd.js'`.
 });
 ```
 
-- [ ] **Step 4: Run tests** — `node tests/dqd.test.js` → 7 passed.
+- [x] **Step 4: Run tests** — `node tests/dqd.test.js` → 7 passed.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add dqd.js tests/dqd.test.js
@@ -317,7 +317,7 @@ git commit -m "Add the double-dot constant-interaction model and charge sensor"
 - `DQD.createDetector({w=4, k=4, sigma}) → det` with `det.push(x) → null | {i, height}`; it returns a confirmed step once, `2w` samples after the first exceedance, with `height` the maximum-magnitude windowed difference over the straddling positions and `i` its position (the step lies between `trace[i]` and `trace[i+1]`). `det.trace` is the samples pushed so far; `det.reset()` clears it.
 - `DQD.classifyStep(p, height) → 'dot1' | 'dot2'` — nearer to `s1` or `s2` in absolute value.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```js
 test('stepDiff needs complete windows and measures a clean step', () => {
@@ -349,9 +349,9 @@ test('classifyStep tells the two dots apart by step height', () => {
 });
 ```
 
-- [ ] **Step 2: Run** — expected failures: `DQD.stepDiff is not a function`.
+- [x] **Step 2: Run** — expected failures: `DQD.stepDiff is not a function`.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 ```js
   function stepDiff(trace, i, w) {
@@ -388,9 +388,9 @@ test('classifyStep tells the two dots apart by step height', () => {
 ```
 Add `stepDiff, createDetector, classifyStep` to the returned object.
 
-- [ ] **Step 4: Run** — `node tests/dqd.test.js` → 10 passed.
+- [x] **Step 4: Run** — `node tests/dqd.test.js` → 10 passed.
 
-- [ ] **Step 5: Commit** — `git commit -am "Add the change-point detector for charge-sensor traces"`
+- [x] **Step 5: Commit** — `git commit -am "Add the change-point detector for charge-sensor traces"`
 
 ---
 ### Task 4: `dqd.js` — the auto-tuner state machine
@@ -406,7 +406,7 @@ Add `stepDiff, createDetector, classifyStep` to the returned object.
 - Events emitted: `calibrated`, `step:dot1`, `step:dot2`, `empty`, `loaded:dot1`, `loaded:dot2`, `backoff:dot1`, `lost`, `centred`, `locked`, `drift`, `wall-near`.
 - The tuner never calls `device.truth()`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```js
 function runUntil(tuner, pred, max) { while (!pred() && tuner.measurements < max) tuner.step(); }
@@ -456,9 +456,9 @@ test('a small offset that brings a wall within 6 mV triggers a re-centre, not a 
 });
 ```
 
-- [ ] **Step 2: Run** — expected: `DQD.createTuner is not a function`.
+- [x] **Step 2: Run** — expected: `DQD.createTuner is not a function`.
 
-- [ ] **Step 3: Implement `createTuner`**
+- [x] **Step 3: Implement `createTuner`**
 
 ```js
   function createTuner(device, opts = {}) {
@@ -563,9 +563,9 @@ test('a small offset that brings a wall within 6 mV triggers a re-centre, not a 
 ```
 Add `createTuner` to the returned object.
 
-- [ ] **Step 4: Run** — `node tests/dqd.test.js` → 13 passed. If the 50-start test fails for particular seeds, print the event log for that seed and fix the machine — do not loosen the assertion.
+- [x] **Step 4: Run** — `node tests/dqd.test.js` → 13 passed. If the 50-start test fails for particular seeds, print the event log for that seed and fix the machine — do not loosen the assertion.
 
-- [ ] **Step 5: Commit** — `git commit -am "Add the double-dot auto-tuner state machine"`
+- [x] **Step 5: Commit** — `git commit -am "Add the double-dot auto-tuner state machine"`
 
 ---
 
@@ -582,7 +582,7 @@ Add `createTuner` to the returned object.
 - `FabricMath.camera({viewW, viewH, cell, centre}) → {toScreen(wx,wy) → [sx,sy], toWorld(sx,sy) → [wx,wy], cell}` — `px per world unit = cell / 2`, `centre` maps to the viewport centre.
 - `FabricMath.patchAt(layout, wx, wy) → index|−1` (inside the patch's `0..2d` square).
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```js
 const assert = require('assert');
@@ -637,9 +637,9 @@ console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);
 ```
 
-- [ ] **Step 2: Run** — expected: `Cannot find module '../fabric-math.js'`.
+- [x] **Step 2: Run** — expected: `Cannot find module '../fabric-math.js'`.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 ```js
 /* fabric-math.js — pure geometry for the lattice-surgery fabric (E). World
@@ -691,9 +691,9 @@ process.exit(failed ? 1 : 0);
 });
 ```
 
-- [ ] **Step 4: Run** — 5 passed.
+- [x] **Step 4: Run** — 5 passed.
 
-- [ ] **Step 5: Commit** — `git add fabric-math.js tests/fabric-math.test.js && git commit -m "Add fabric-math: layout, scroll-to-scale mapping, camera"`
+- [x] **Step 5: Commit** — `git add fabric-math.js tests/fabric-math.test.js && git commit -m "Add fabric-math: layout, scroll-to-scale mapping, camera"`
 
 ---
 ### Task 6: `examples.html` + `examples.css` — page skeleton
@@ -707,12 +707,12 @@ process.exit(failed ? 1 : 0);
 - Uses no `.rv` class (its reveal depends on `script.js`). Uses `.ex-hero`, never `.hero` (owned by A+ styles).
 - Inline theme script identical to `index.html`'s, plus a tiny inline theme toggle handler (same `localStorage` key `theme`).
 
-- [ ] **Step 1: Write `examples.html`**
+- [x] **Step 1: Write `examples.html`**
 
 Sections, in order, all inside `.wrap` where the site does: `.ex-banner` (text: *Example page — exploring two directions: E, a scroll zoom-out from one logical qubit to a lattice-surgery fabric, and D, an auto-tuner for a double quantum dot. Not the live site.* with a link *← Back to the site* → `index.html`); `nav.nav` (mark + About / Work / Contact + theme button `#theme`); `header.ex-hero#top` with the A+ hero copy (eyebrow, `h1`, lede, CTAs), `p#ex-readout` (`rounds <b id="ex-rounds">0</b> · physical errors <b id="ex-phys">0</b> · logical errors <b id="ex-logical">0</b>`), `p#ex-caption` (spec §4.4 A+ caption with `<span id="ex-d">27</span>` and the simulator link); `section.ex-window` with `p#ex-window-caption` (spec §4.4 window caption); `main#main` → `section.section#about` (the site's About prose), `section.section#work` with one `article.piece.ex-piece` (framing copy from spec §5.4 on the left; `div.demo` on the right with `.demo-head` (`Charge stability · double dot` / `sensor signal`), `canvas#dqd` (`width=480 height=480`), `#dqd-readout`, `p#dqd-hint` "Drag on the diagram to add charge noise."), `section.section#contact` (the site's contact paragraph and addresses); `footer`.
 - `canvas#fabric` is the first child of `body` after the skip link, `aria-hidden="true"` (the hero caption is the accessible description).
 
-- [ ] **Step 2: Write `examples.css`**
+- [x] **Step 2: Write `examples.css`**
 
 ```css
 /* examples.css — layered over styles.css. Only .ex-* and #dqd* selectors. */
@@ -750,9 +750,9 @@ main .section, footer { background: color-mix(in srgb, var(--bg) 90%, transparen
 @media (max-width: 560px) { .ex-meta { margin-top: 1.5rem; } }
 ```
 
-- [ ] **Step 3: Verify in the preview** — open `http://localhost:4173/examples.html`; screenshot at 1440 px and 390 px; `read_console_messages` shows no errors (scripts that don't exist yet must not be referenced until their tasks — add each `<script>` tag in the task that creates the file).
+- [x] **Step 3: Verify in the preview** — open `http://localhost:4173/examples.html`; screenshot at 1440 px and 390 px; `read_console_messages` shows no errors (scripts that don't exist yet must not be referenced until their tasks — add each `<script>` tag in the task that creates the file).
 
-- [ ] **Step 4: Commit** — `git add examples.html examples.css && git commit -m "Add the D+E example page skeleton"`
+- [x] **Step 4: Commit** — `git add examples.html examples.css && git commit -m "Add the D+E example page skeleton"`
 
 ---
 
@@ -797,9 +797,9 @@ Key functions:
 - `boot()` — `resize()`; `QEC.load('assets/stabilizer_qec.wasm').then(e => { engine = e; makeSessions(); readyAt = performance.now(); requestFrame(); }).catch(() => hero.classList.add('static'))`; listeners: `scroll` (passive), `resize` (debounced 200 ms), `MutationObserver` on `documentElement` `data-theme` → `readColours(); buildSprite(); dirty = true; requestFrame()`.
 - `makeSessions()` — `patches = L.patches.map(q => ({...q, s: QECSessions.create(engine.rawExports, L.d), pending: [], lit: new Map(), chains: [], flashAt: 0, rounds: 0, phys: 0, logical: 0, nextRound: …}))` freeing old sessions first.
 
-- [ ] **Step 1: Implement the module as above.**
-- [ ] **Step 2: Verify in the preview** — at 1440×900: hero shows a d=27 patch filling the viewport (cell 56 px), cropped top/bottom; scroll to the window band → the 5×3 fabric is fully visible with 6-cell gaps; scroll back up → zooms in; light/dark toggle recolours; `javascript_tool`: `__fabric.patches.length === 15`; no console errors; `read_network_requests` shows `stabilizer_qec.wasm` once.
-- [ ] **Step 3: Commit** — `git add fabric.js examples.html && git commit -m "Add the fabric: patches, sprite, camera, scroll zoom-out"`
+- [x] **Step 1: Implement the module as above.**
+- [x] **Step 2: Verify in the preview** — at 1440×900: hero shows a d=27 patch filling the viewport (cell 56 px), cropped top/bottom; scroll to the window band → the 5×3 fabric is fully visible with 6-cell gaps; scroll back up → zooms in; light/dark toggle recolours; `javascript_tool`: `__fabric.patches.length === 15`; no console errors; `read_network_requests` shows `stabilizer_qec.wasm` once.
+- [x] **Step 3: Commit** — `git add fabric.js examples.html && git commit -m "Add the fabric: patches, sprite, camera, scroll zoom-out"`
 
 ---
 
@@ -818,9 +818,9 @@ Behaviour (per spec §4.1, matching the A+ round):
 - Pointer: `pointermove` on `window` → store `{px, py, t}`; considered active if moved within 400 ms; `pointerleave` on `document` → inactive. `canvas` has `touch-action: pan-y`.
 - `visibilitychange` → stop/start the tick chain; scrolling past the window band does **not** pause (the fabric stays visible under content).
 
-- [ ] **Step 1: Implement.**
-- [ ] **Step 2: Verify** — scribble across the hero width: chains draw, then a logical error flashes and `#ex-logical` increments; a short scribble is corrected without a logical error; readout counts rise; zoomed out, hovering a far patch adds errors there; `javascript_tool` after 10 s idle: `__fabric.state.frames` stops increasing between rounds (no idle frames); console clean.
-- [ ] **Step 3: Commit** — `git commit -am "Fabric: live noise, MWPM rounds, chains, cursor noise, readout"` (only `fabric.js`).
+- [x] **Step 1: Implement.**
+- [x] **Step 2: Verify** — scribble across the hero width: chains draw, then a logical error flashes and `#ex-logical` increments; a short scribble is corrected without a logical error; readout counts rise; zoomed out, hovering a far patch adds errors there; `javascript_tool` after 10 s idle: `__fabric.state.frames` stops increasing between rounds (no idle frames); console clean.
+- [x] **Step 3: Commit** — `git commit -am "Fabric: live noise, MWPM rounds, chains, cursor noise, readout"` (only `fabric.js`).
 
 ---
 
@@ -833,9 +833,9 @@ Behaviour (per spec §4.1, matching the A+ round):
 - Reduced motion (`reduced.matches`, observed live): tick chain and merges off; a fixed composed frame (2 short chains per hero patch drawn once from a seeded decode); scroll zoom still follows position.
 - Fallback: `QEC.load` rejection → `hero.classList.add('static')`; CSS `.ex-hero.static .ex-meta, .ex-window.static p { display: none }` (add these two lines to `examples.css` — created in Task 6, so it is this task's file to modify).
 
-- [ ] **Step 1: Implement.**
-- [ ] **Step 2: Verify** — watch two merges at the window band; emulate reduced motion (`javascript_tool` can't; use `resize_window` colorScheme only — so verify by temporarily forcing `reduced = {matches: true}` via `__fabric.state.forceReduced = true; __fabric.redraw()` and screenshot); block the wasm (`__fabric` not needed: load `examples.html?nowasm=1`, which makes `fabric.js` skip `QEC.load`) → captions hidden, page usable.
-- [ ] **Step 3: Commit** — `git add fabric.js examples.css && git commit -m "Fabric: lattice-surgery merges, reduced motion, fallback"`
+- [x] **Step 1: Implement.**
+- [x] **Step 2: Verify** — watch two merges at the window band; emulate reduced motion (`javascript_tool` can't; use `resize_window` colorScheme only — so verify by temporarily forcing `reduced = {matches: true}` via `__fabric.state.forceReduced = true; __fabric.redraw()` and screenshot); block the wasm (`__fabric` not needed: load `examples.html?nowasm=1`, which makes `fabric.js` skip `QEC.load`) → captions hidden, page usable.
+- [x] **Step 3: Commit** — `git add fabric.js examples.css && git commit -m "Fabric: lattice-surgery merges, reduced motion, fallback"`
 
 ---
 
@@ -858,16 +858,16 @@ Behaviour:
 - Drag: `pointerdown` → capture; `pointermove` → `device.nudge(dx·DRAG_MV_PER_PX, −dy·DRAG_MV_PER_PX)` (canvas y is inverted relative to V2); mark ground truth dirty.
 - Reduced motion: run the tuner to `locked` synchronously at load (≤2000 steps), draw once, no loop, drag disabled.
 
-- [ ] **Step 1: Implement.**
-- [ ] **Step 2: Verify** — the tuner runs: diagonal sweep down, up along V1, up along V2, cross sweeps, lock; the ring sits inside the `(1,1)` cell of the faint honeycomb; readout says `locked (1,1)`; drag 40 px → honeycomb shifts, `drift` → re-tune → locks again with `retunes` incremented; drag 12 px → `wall-near` → recentre; console clean; stacked layout at 390 px.
-- [ ] **Step 3: Commit** — `git add tuner-view.js examples.html && git commit -m "Add the double-dot auto-tuner view"`
+- [x] **Step 1: Implement.**
+- [x] **Step 2: Verify** — the tuner runs: diagonal sweep down, up along V1, up along V2, cross sweeps, lock; the ring sits inside the `(1,1)` cell of the faint honeycomb; readout says `locked (1,1)`; drag 40 px → honeycomb shifts, `drift` → re-tune → locks again with `retunes` incremented; drag 12 px → `wall-near` → recentre; console clean; stacked layout at 390 px.
+- [x] **Step 3: Commit** — `git add tuner-view.js examples.html && git commit -m "Add the double-dot auto-tuner view"`
 
 ---
 
 ### Task 11: Final verification and hand-off
 
-- [ ] Run all tests: `node tests/sessions.test.js && node tests/dqd.test.js && node tests/fabric-math.test.js` → all pass.
-- [ ] Preview matrix: 1440×900, 1024×768, 390×844 × light/dark; screenshots of hero, window band, D panel; `read_console_messages` empty of errors; `read_network_requests` for `.wasm` (one request, ~79 KB gzip is a server property — note size only).
-- [ ] Idle cost check: `javascript_tool` — sample `__fabric.state.frames` twice 3 s apart with no pointer movement and no scrolling → difference ≤ number of rounds elapsed × frames per round animation (< 200).
-- [ ] `git status` shows only the other session's pre-existing modifications plus nothing of ours uncommitted.
-- [ ] Write the hand-off summary for the user: what to open (`examples.html`), what to try (scroll, scribble, drag), what's real vs illustrated, and the decision points.
+- [x] Run all tests: `node tests/sessions.test.js && node tests/dqd.test.js && node tests/fabric-math.test.js` → all pass.
+- [x] Preview matrix: 1440×900, 1024×768, 390×844 × light/dark; screenshots of hero, window band, D panel; `read_console_messages` empty of errors; `read_network_requests` for `.wasm` (one request, ~79 KB gzip is a server property — note size only).
+- [x] Idle cost check: `javascript_tool` — sample `__fabric.state.frames` twice 3 s apart with no pointer movement and no scrolling → difference ≤ number of rounds elapsed × frames per round animation (< 200).
+- [x] `git status` shows only the other session's pre-existing modifications plus nothing of ours uncommitted.
+- [x] Write the hand-off summary for the user: what to open (`examples.html`), what to try (scroll, scribble, drag), what's real vs illustrated, and the decision points.
