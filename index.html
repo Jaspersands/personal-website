@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jasper Sands | Quantum Algorithms and Machine Learning</title>
   <meta name="description"
-    content="Jasper Sands, MS student in computer science at Columbia on the quantum computing track. Thesis research on automating silicon spin qubit measurement with machine learning at Diraq and UNSW Sydney.">
+    content="Jasper Sands, MS student in computer science at Columbia on the quantum computing track. Thesis research on automating silicon spin-qubit measurement with machine learning at Diraq and UNSW Sydney.">
   <meta name="author" content="Jasper Sands">
   <meta property="og:title" content="Jasper Sands | Quantum Algorithms and Machine Learning">
   <meta property="og:description"
@@ -56,12 +56,12 @@
         <h1>Jasper Sands</h1>
         <p class="lede">
           Master's student in computer science at <strong>Columbia</strong>, on the quantum computing track.
-          Starting September 2026 I'll be in Sydney for my thesis, working on automating silicon spin qubit
+          Starting September 2026 I'll be in Sydney for my thesis, working on automating silicon spin-qubit
           measurement with machine learning. It's co-supervised at Diraq/UNSW and Columbia.
         </p>
         <div class="cta">
-          <a class="btn solid" href="assets/jaspersands_resume.pdf?v=54efdc83">Résumé</a>
-          <a class="btn" href="assets/jaspersands_cv.pdf">CV</a>
+          <a class="btn solid" href="assets/jaspersands_resume.pdf?v=be103882">Résumé</a>
+          <a class="btn" href="assets/jaspersands_cv.pdf?v=076abe89">CV</a>
           <a class="btn" href="https://github.com/Jaspersands">GitHub</a>
           <a class="btn" href="https://www.linkedin.com/in/jaspersands">LinkedIn</a>
           <a class="btn" href="mailto:jaspersands02@gmail.com">Email</a>
@@ -272,7 +272,7 @@
                 </svg>
                 <p class="hint">
                   Phenomenological noise, T = d rounds, exact MWPM, measured on the simulator itself. A
-                  finite-size scaling fit puts the threshold at 3.2%: below it a bigger code wins, above it a
+                  finite-size scaling fit estimates the threshold at 3.2%: below it a bigger code wins, above it a
                   bigger code just gives noise more places to land. Union-Find on the same sweep thresholds at
                   2.7%, and code-capacity noise at 14.7%.
                 </p>
@@ -283,17 +283,24 @@
           <article class="piece rv">
             <div class="piece-body">
               <h3>Noise-Aware Adiabatic Simulation</h3>
-              <div class="where">IBM Heron hardware · transverse-field Ising model</div>
+              <div class="where">IBM Heron r2 · transverse-field Ising model</div>
               <p>
-                Digitized adiabatic ground state preparation for the 1D transverse-field Ising model. I used the Heron
-                processor's native fractional RZZ gates, which cut the logical-to-physical translation error
-                roughly in half, plus a palindromic Trotter step for second-order accuracy. The energy gap closes
-                near the critical point, so a linear sweep moves too quickly through the part that matters.
-                Flattening the schedule around s꜀ slows it down there instead.
+                Digitized adiabatic ground state preparation for the 1D transverse-field Ising model on IBM's
+                Heron r2. I used the processor's parameterised RZZ(θ) pulses rather than fixed two-qubit
+                decompositions, plus a palindromic Trotter step for second-order accuracy. The gap closes near the
+                critical point, so a linear sweep moves too quickly through the part that matters; flattening the
+                schedule around s꜀ slows it down there instead. Benchmarking eight ansatz variants gave the more
+                interesting result. A counterdiabatic correction that is exact in the closed-system limit is a net
+                loss under real noise: its threefold entangling-gate overhead admits more error per layer than the
+                correction removes. The best ansatz on hardware is not the best ansatz on a simulator.
               </p>
               <div class="tags">
-                <span class="tag">IBM Heron</span><span class="tag">Trotter–Suzuki</span>
+                <span class="tag">IBM Heron</span><span class="tag">Suzuki–Trotter</span>
                 <span class="tag">Counterdiabatic driving</span><span class="tag">Qiskit</span>
+              </div>
+              <div class="inline-links">
+                <a href="assets/noise-aware-adiabatic-ansatz.pdf">Paper</a>
+                <a href="assets/noise-aware-adiabatic-slides.pdf">Slides</a>
               </div>
             </div>
             <div class="demo">
@@ -462,6 +469,12 @@
           contigs and antimicrobial resistance annotations into a shared hyperbolic space
           (<a href="assets/hyperamr_paper.pdf">write-up</a>).
         </p>
+
+        <p class="also rv">
+          Other hackathons: <strong>Audience Favorite</strong> at the Harmoniqs Quantum Design Hackathon 2026,
+          and <strong>Runner-Up</strong> at the Qualcomm Snapdragon Hackathon 2026. The iQuHACK win also qualified
+          us for the NYU Abu Dhabi Quantum and AI Hackathon for Social Good 2027.
+        </p>
       </div>
     </section>
 
@@ -473,7 +486,7 @@
             <h3>Diraq / UNSW Sydney</h3>
             <div class="where">MS Thesis Research · Sep 2026 – May 2027</div>
             <p>
-              Automating silicon spin qubit characterization under Dr. Nard Dumoulin Stuyck. Manual tuning and
+              Automating silicon spin-qubit characterization under Dr. Nard Dumoulin Stuyck. Manual tuning and
               interpretation of charge measurements is one of the real bottlenecks in scaling semiconductor
               quantum hardware, so the work is to build pipelines that acquire charge data from cryogenic
               probing, classify charge transitions and device states with machine learning, and measure that
