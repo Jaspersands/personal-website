@@ -69,8 +69,11 @@ main .section, footer { background: color-mix(in srgb, var(--bg) 90%, transparen
 #dqd-readout b { color: var(--fg); font-weight: 500; }
 
 @media (max-width: 960px) {
+  /* Lattice band on top, text on translucent ground below it. */
+  .ex-hero { align-items: end; }
+  .ex-hero .wrap { padding-top: 30vh; }
   .ex-hero::before {
-    background: linear-gradient(180deg, transparent 0 40%, color-mix(in srgb, var(--bg) 90%, transparent) 60%);
+    background: linear-gradient(180deg, transparent 0 22%, color-mix(in srgb, var(--bg) 90%, transparent) 40%);
   }
   .ex-meta { position: static; text-align: left; max-width: none; margin-top: 2rem; padding: 0 2.5rem 1.5rem; }
   .ex-piece { grid-template-columns: 1fr; }
