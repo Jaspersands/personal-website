@@ -410,6 +410,7 @@
   /* ---------------- boot ---------------- */
   function markStatic() { S.static = true; hero.classList.add('static'); if (win) win.classList.add('static'); }
   function boot() {
+    window.__fabric = { state: S, C, redraw: () => { S.dirty = true; requestFrame(); }, setReduced(v) { S.forceReduced = !!v; onReduced(); } };
     readColours(); resize();
     if (params.get('nowasm') === '1') { markStatic(); return; }
     window.QEC.load('assets/stabilizer_qec.wasm').then(engine => {
@@ -426,14 +427,13 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
     new MutationObserver(() => { readColours(); buildSprite(); S.dirty = true; requestFrame(); })
       .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    const onReduced = () => {
+    function onReduced() {
       if (!S.engine) return;
       if (reduced()) { stop(); S.patches.forEach(P => { P.anim = null; P.frozen = null; }); composeFrozen(); }
       else { S.patches.forEach(P => { P.frozen = null; }); start(); }
       S.dirty = true; requestFrame();
-    };
+    }
     reducedMQ.addEventListener ? reducedMQ.addEventListener('change', onReduced) : reducedMQ.addListener(onReduced);
-    window.__fabric = { state: S, C, redraw: () => { S.dirty = true; requestFrame(); }, setReduced(v) { S.forceReduced = !!v; onReduced(); } };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
