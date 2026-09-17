@@ -4,7 +4,7 @@
 
 Line networks: exact and ±1 line-count accuracy and endpoint localisation on
 lines_val (2,000 fresh synthetic maps). Classical counter: the same, after a
-small grid search over its knobs on a 1,000-image sample of *training* data
+small grid search over its knobs on a 300-image sample of *training* data
 (as in Appendix J of arXiv:2607.20871, the baseline is tuned, never on the
 held-out set). Classifier: per-class accuracy at tau = 0.5 on cls_val.
 Every number printed on the page comes from this file.
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     for name in names:
         metrics["lines"][name] = eval_lines(name, lv["imgs"], lv["counts"], lv["lines"])
         print(name, metrics["lines"][name])
-    knobs, tune_acc = tune_classical(lt["imgs"][:1000], lt["counts"][:1000])
+    knobs, tune_acc = tune_classical(lt["imgs"][:300], lt["counts"][:300])
     print("classical knobs", knobs, "train-sample accuracy", round(tune_acc, 3))
     metrics["lines"]["classical"] = eval_classical(lv["imgs"], lv["counts"], knobs)
     print("classical", metrics["lines"]["classical"])
