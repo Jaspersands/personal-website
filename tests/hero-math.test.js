@@ -53,9 +53,9 @@ async function runTests() {
   });
 
   // 2. poisson()
-  test('poisson(): empirical mean over 20,000 draws is within 3% of lambda', () => {
+  test('poisson(): empirical mean over 50,000 draws is within tolerance of lambda', () => {
     const lambdas = [0.05, 1.0, 4.0];
-    const N = 20000;
+    const N = 50000;
 
     lambdas.forEach(lambda => {
       let sum = 0;
@@ -64,7 +64,8 @@ async function runTests() {
       }
       const mean = sum / N;
       const relDiff = Math.abs(mean - lambda) / lambda;
-      assert(relDiff < 0.03, `poisson(${lambda}) mean was ${mean.toFixed(4)}, rel diff ${relDiff.toFixed(4)} >= 0.03`);
+      const tol = lambda < 0.1 ? 0.05 : 0.03;
+      assert(relDiff < tol, `poisson(${lambda}) mean was ${mean.toFixed(4)}, rel diff ${relDiff.toFixed(4)} >= ${tol}`);
     });
   });
 

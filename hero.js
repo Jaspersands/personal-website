@@ -42,13 +42,13 @@
 
   // 3x5 pixel font bitmaps for JASPER SANDS opener
   const FONT_3X5 = {
-    J: [[0,0,1],[0,0,1],[0,0,1],[1,0,1],[0,1,0]],
+    J: [[1,1,1],[0,0,1],[0,0,1],[1,0,1],[0,1,0]],
     A: [[0,1,0],[1,0,1],[1,1,1],[1,0,1],[1,0,1]],
-    S: [[0,1,1],[1,0,0],[0,1,0],[0,0,1],[1,1,0]],
+    S: [[0,1,1],[1,0,0],[1,1,0],[0,0,1],[1,1,0]],
     P: [[1,1,0],[1,0,1],[1,1,0],[1,0,0],[1,0,0]],
     E: [[1,1,1],[1,0,0],[1,1,0],[1,0,0],[1,1,1]],
     R: [[1,1,0],[1,0,1],[1,1,0],[1,0,1],[1,0,1]],
-    N: [[1,0,1],[1,1,1],[1,1,1],[1,0,1],[1,0,1]],
+    N: [[1,0,1],[1,1,0],[1,0,1],[0,1,1],[1,0,1]],
     D: [[1,1,0],[1,0,1],[1,0,1],[1,0,1],[1,1,0]]
   };
 
@@ -71,6 +71,51 @@
     return pixels;
   }
 
+  function getWordBoxes(word, startR, startC) {
+    const boxes = [];
+    let c = startC;
+    for (const char of word) {
+      const glyph = FONT_3X5[char];
+      if (glyph) {
+        for (let r = 0; r < 5; r++) {
+          for (let col = 0; col < 3; col++) {
+            if (glyph[r][col]) {
+              boxes.push({ r: startR + r, c: c + col });
+            }
+          }
+        }
+      }
+      c += 4;
+    }
+    return boxes;
+  }
+
+  function getWordSegments(word, startR, startC) {
+    const segments = [];
+    let c = startC;
+    for (const char of word) {
+      const glyph = FONT_3X5[char];
+      if (glyph) {
+        for (let r = 0; r < 5; r++) {
+          for (let col = 0; col < 2; col++) {
+            if (glyph[r][col] && glyph[r][col + 1]) {
+              segments.push({ r1: startR + r, c1: c + col, r2: startR + r, c2: c + col + 1 });
+            }
+          }
+        }
+        for (let r = 0; r < 4; r++) {
+          for (let col = 0; col < 3; col++) {
+            if (glyph[r][col] && glyph[r + 1][col]) {
+              segments.push({ r1: startR + r, c1: c + col, r2: startR + r + 1, c2: c + col });
+            }
+          }
+        }
+      }
+      c += 4;
+    }
+    return segments;
+  }
+
   // DOM elements
   const heroEl = document.querySelector('.hero');
   const canvas = document.querySelector('canvas.field');
@@ -82,6 +127,7 @@
   const physValEl = document.getElementById('hr-phys');
   const logicValEl = document.getElementById('hr-logic');
   const captionEl = document.querySelector('.hero-caption');
+  const replayBtn = document.getElementById('hr-replay');
 
   if (!heroEl || !canvas) return;
 
@@ -104,9 +150,12 @@
   let tickTimer = null;
   let roundTimer = null;
 
-  // Opener & idle burst state
+  // Opener & idle burst state (Hybrid: 56x56 syndrome boxes + illuminated error chains)
   let isTypingOpener = false;
   let openerTimer = null;
+  let openerFadeStart = null;
+  let openerBoxes = [];      // [{ r, c, t0 }]
+  let openerSegments = [];   // [{ r1, c1, r2, c2 }]
   let lastBurstTime = performance.now();
   let showMatchGraph = false;
 
@@ -328,7 +377,7 @@
     if (isReducedMotion) {
       captionEl.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
     } else {
-      captionEl.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise. A chain of errors across the whole width is a logical error — see if you can cause one. Hotkeys: <code>[</code>/<code>]</code> distance, <code>b</code> burst, <code>g</code> matching graph. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
+      captionEl.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise. A chain of errors across the whole width is a logical error — see if you can cause one. Hotkeys: <code>r</code> replay opener, <code>[</code> and <code>]</code> distance, <code>b</code> burst, <code>g</code> matching graph. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
     }
   }
 
@@ -522,8 +571,28 @@
     roundTimer = setTimeout(triggerRound, ms);
   }
 
+  function replayOpener() {
+    if (openerTimer) { clearTimeout(openerTimer); openerTimer = null; }
+    isTypingOpener = false;
+    openerFadeStart = null;
+    openerBoxes = [];
+    openerSegments = [];
+    pendingErrors = [];
+    activeDefects.clear();
+    activeChains = [];
+    if (session) session.clear();
+    dirty = true;
+    requestFrame();
+    startOpeningSequence();
+  }
+
   /**
-   * Opening Sequence: types JASPER SANDS (or JS) in Pauli-X errors, then MWPM decodes and erases.
+   * Opening Sequence: types JASPER SANDS (or JS) in the Hybrid Quantum Diagnostic style:
+   * - 56x56 glowing syndrome stabilizer box tiles
+   * - Continuous illuminated Pauli error strings connecting qubit gates along strokes
+   * - Dual-core qubit gate nodes at active intersections
+   *
+   * Plays completely without early mouse interruption, holds for 1.6s, then MWPM clears it.
    */
   function startOpeningSequence() {
     if (!session || session.d < 15 || isReducedMotion) {
@@ -531,68 +600,110 @@
       return;
     }
 
+    if (openerTimer) { clearTimeout(openerTimer); openerTimer = null; }
     isTypingOpener = true;
+    openerFadeStart = null;
+    openerBoxes = [];
+    openerSegments = [];
+    pendingErrors = [];
+    activeDefects.clear();
+    activeChains = [];
+    session.clear();
+
+    heroEl.classList.add('hero--typing');
     const d = session.d;
-    let pixels = [];
 
     const topRow = Math.max(0, Math.floor(-fitGeom.originY / fitGeom.cell));
     const bottomRow = Math.min(d - 1, Math.ceil((height - fitGeom.originY) / fitGeom.cell));
     const midRow = Math.floor((topRow + bottomRow) / 2);
 
-    if (d >= 23) {
-      const c1 = Math.max(1, Math.floor((d - 23) / 2));
-      const c2 = Math.max(1, Math.floor((d - 19) / 2));
-      let startR = Math.max(1, midRow - 5);
-      if (startR + 11 >= d) startR = Math.max(1, d - 12);
+    let boxesQueue = [];
+    let pixelsQueue = [];
+    let segmentsQueue = [];
 
-      const p1 = getWordPixels('JASPER', startR, c1);
-      const p2 = getWordPixels('SANDS', startR + 6, c2);
-      pixels = [...p1, ...p2];
+    if (d >= 23) {
+      const c1 = Math.max(1, Math.floor((d - 1 - 23) / 2));
+      const c2 = Math.max(1, Math.floor((d - 1 - 19) / 2));
+      let startR = Math.max(1, midRow - 5);
+      if (startR + 11 >= d - 1) startR = Math.max(1, d - 13);
+
+      boxesQueue = [...getWordBoxes('JASPER', startR, c1), ...getWordBoxes('SANDS', startR + 6, c2)];
+      pixelsQueue = [...getWordPixels('JASPER', startR, c1), ...getWordPixels('SANDS', startR + 6, c2)];
+      segmentsQueue = [...getWordSegments('JASPER', startR, c1), ...getWordSegments('SANDS', startR + 6, c2)];
     } else {
-      const c = Math.max(1, Math.floor((d - 7) / 2));
+      const c = Math.max(1, Math.floor((d - 1 - 7) / 2));
       const startR = Math.max(1, midRow - 2);
-      pixels = getWordPixels('JS', startR, c);
+      boxesQueue = getWordBoxes('JS', startR, c);
+      pixelsQueue = getWordPixels('JS', startR, c);
+      segmentsQueue = getWordSegments('JS', startR, c);
     }
 
-    if (pixels.length === 0) {
+    const totalSteps = Math.max(boxesQueue.length, pixelsQueue.length);
+    if (totalSteps === 0) {
       isTypingOpener = false;
+      heroEl.classList.remove('hero--typing');
       startScheduler();
       return;
     }
 
-    let pIdx = 0;
-    const intervalMs = Math.max(7, Math.floor(900 / pixels.length));
+    let stepIdx = 0;
+    // Deliberate rhythmic typing: 24ms per step (~2.4s total) on desktop, 70ms on mobile (~1.1s)
+    const intervalMs = (d >= 23) ? 24 : 70;
 
     function typeNext() {
       if (!isTypingOpener) return;
-      if (pIdx < pixels.length) {
-        const p = pixels[pIdx++];
-        const q = p.r * session.d + p.c;
-        const now = performance.now();
-        session.toggle(q, 'X');
-        pendingErrors.push({ q, pauli: 'X', t0: now });
-        physicalErrorsCount++;
-        updateSyndromes(now);
+      const now = performance.now();
+
+      if (stepIdx < totalSteps) {
+        if (stepIdx < boxesQueue.length) {
+          const b = boxesQueue[stepIdx];
+          openerBoxes.push({ r: b.r, c: b.c, t0: now });
+        }
+
+        if (stepIdx < pixelsQueue.length) {
+          const p = pixelsQueue[stepIdx];
+          const q = p.r * session.d + p.c;
+          session.toggle(q, 'X');
+          pendingErrors.push({ q, pauli: 'X', t0: now });
+          physicalErrorsCount++;
+          updateSyndromes(now);
+        }
+
+        const activeCoordSet = new Set(pendingErrors.map(e => e.q));
+        openerSegments = segmentsQueue.filter(seg => {
+          const q1 = seg.r1 * session.d + seg.c1;
+          const q2 = seg.r2 * session.d + seg.c2;
+          return activeCoordSet.has(q1) && activeCoordSet.has(q2);
+        });
+
+        stepIdx++;
         updateReadout();
         dirty = true;
         requestFrame();
         openerTimer = setTimeout(typeNext, intervalMs);
       } else {
+        // Hold the completed name for 1600ms so the user can comfortably read it
         openerTimer = setTimeout(() => {
           if (!isTypingOpener) return;
           isTypingOpener = false;
+          openerFadeStart = performance.now();
+          heroEl.classList.remove('hero--typing');
           triggerRound();
           startScheduler();
-        }, 350);
+        }, 1600);
       }
     }
 
-    openerTimer = setTimeout(typeNext, 250);
+    openerTimer = setTimeout(typeNext, 350);
   }
 
   function cancelOpener() {
-    if (!isTypingOpener) return;
+    if (!isTypingOpener && !openerFadeStart) return;
     isTypingOpener = false;
+    openerFadeStart = null;
+    openerBoxes = [];
+    openerSegments = [];
+    heroEl.classList.remove('hero--typing');
     if (openerTimer) { clearTimeout(openerTimer); openerTimer = null; }
     if (pendingErrors.length > 0) {
       triggerRound();
@@ -626,7 +737,7 @@
     if (pointer.active && now - pointer.lastMove < 400) {
       keepAnimating = true;
     }
-    if (pendingErrors.length > 0 || activeDefects.size > 0 || isTypingOpener) {
+    if (pendingErrors.length > 0 || activeDefects.size > 0 || isTypingOpener || openerBoxes.length > 0 || openerSegments.length > 0 || openerFadeStart) {
       keepAnimating = true;
     }
 
@@ -672,6 +783,38 @@
       ctx.restore();
     }
 
+    // 3.5. Opener Syndrome Boxes (Hybrid: 56x56 glowing syndrome tiles)
+    if (openerBoxes.length > 0) {
+      let boxAlpha = 0.38;
+      if (openerFadeStart) {
+        const fadeElapsed = now - openerFadeStart;
+        boxAlpha *= Math.max(0, 1 - fadeElapsed / DUR_CHAIN_FADE);
+        if (fadeElapsed >= DUR_CHAIN_FADE) openerBoxes = [];
+      }
+      ctx.save();
+      openerBoxes.forEach(b => {
+        const bx = fitGeom.originX + b.c * fitGeom.cell;
+        const by = fitGeom.originY + b.r * fitGeom.cell;
+        const cell = fitGeom.cell;
+        const isX = (b.r + b.c) % 2 !== 0;
+        const col = isX ? palette.x : palette.z;
+
+        ctx.globalAlpha = boxAlpha;
+        ctx.fillStyle = col;
+        ctx.shadowColor = col;
+        ctx.shadowBlur = 4;
+
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(bx + 2, by + 2, cell - 4, cell - 4, 4);
+        } else {
+          ctx.rect(bx + 2, by + 2, cell - 4, cell - 4);
+        }
+        ctx.fill();
+      });
+      ctx.restore();
+    }
+
     // 4. Lit defect stabilizers
     activeDefects.forEach(defect => {
       const st = defect.stab;
@@ -679,26 +822,93 @@
       ctx.save();
       const col = (defect.type === 'X') ? palette.x : palette.z;
       ctx.fillStyle = col;
-      ctx.globalAlpha = 0.55;
-      ctx.shadowColor = col;
-      ctx.shadowBlur = 10;
+      if (isTypingOpener) {
+        ctx.globalAlpha = 0.08;
+        ctx.shadowBlur = 0;
+      } else {
+        ctx.globalAlpha = 0.55;
+        ctx.shadowColor = col;
+        ctx.shadowBlur = 10;
+      }
       ctx.fill();
       ctx.restore();
     });
 
-    // 5. Pending error dots
+    // 4.5. Opener Connecting Error Strings (Hybrid: continuous illuminated Pauli chains)
+    if (openerSegments.length > 0) {
+      let segAlpha = 1;
+      if (openerFadeStart) {
+        const fadeElapsed = now - openerFadeStart;
+        segAlpha = Math.max(0, 1 - fadeElapsed / DUR_CHAIN_FADE);
+        if (fadeElapsed >= DUR_CHAIN_FADE) openerSegments = [];
+      }
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Outer glow & stroke
+      ctx.strokeStyle = palette.x;
+      ctx.lineWidth = 5.2;
+      ctx.shadowColor = palette.x;
+      ctx.shadowBlur = 6;
+      ctx.globalAlpha = segAlpha;
+      ctx.beginPath();
+      openerSegments.forEach(seg => {
+        const x1 = fitGeom.originX + seg.c1 * fitGeom.cell;
+        const y1 = fitGeom.originY + seg.r1 * fitGeom.cell;
+        const x2 = fitGeom.originX + seg.c2 * fitGeom.cell;
+        const y2 = fitGeom.originY + seg.r2 * fitGeom.cell;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+      });
+      ctx.stroke();
+
+      // Inner bright core
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.0;
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = segAlpha * 0.92;
+      ctx.beginPath();
+      openerSegments.forEach(seg => {
+        const x1 = fitGeom.originX + seg.c1 * fitGeom.cell;
+        const y1 = fitGeom.originY + seg.r1 * fitGeom.cell;
+        const x2 = fitGeom.originX + seg.c2 * fitGeom.cell;
+        const y2 = fitGeom.originY + seg.r2 * fitGeom.cell;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+      });
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 5. Pending error dots (qubit gates)
     pendingErrors.forEach(err => {
       const pt = qubitPixel(err.q);
       const col = (err.pauli === 'X') ? palette.x : (err.pauli === 'Z' ? palette.z : palette.y);
       const progress = Math.min(1, (now - err.t0) / DUR_ERROR_IN);
-      const r = 3 + 2.5 * progress;
+      const r = isTypingOpener ? 5.2 : (3 + 2.5 * progress);
+      let dotAlpha = 1;
+      if (openerFadeStart) {
+        const fadeElapsed = now - openerFadeStart;
+        dotAlpha = Math.max(0, 1 - fadeElapsed / DUR_CHAIN_FADE);
+      }
       ctx.save();
+      ctx.globalAlpha = dotAlpha;
       ctx.beginPath();
       ctx.arc(pt.x, pt.y, r, 0, 2 * Math.PI);
       ctx.fillStyle = col;
       ctx.shadowColor = col;
-      ctx.shadowBlur = 6;
+      ctx.shadowBlur = isTypingOpener ? 4 : 6;
       ctx.fill();
+
+      if (isTypingOpener) {
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 2.0, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.globalAlpha = dotAlpha * 0.92;
+        ctx.fill();
+      }
+
       ctx.restore();
     });
 
@@ -789,7 +999,6 @@
 
   // Pointer event listeners
   function onPointerMove(e) {
-    if (isTypingOpener) cancelOpener();
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -825,9 +1034,15 @@
     if (dDecBtn) dDecBtn.addEventListener('click', () => setDistance((session ? session.d : 27) - 2));
     if (dIncBtn) dIncBtn.addEventListener('click', () => setDistance((session ? session.d : 27) + 2));
 
+    if (replayBtn) {
+      replayBtn.addEventListener('click', replayOpener);
+    }
+
     window.addEventListener('keydown', e => {
       if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
-      if (e.key === '[') {
+      if (e.key === 'r' || e.key === 'R') {
+        replayOpener();
+      } else if (e.key === '[') {
         setDistance((session ? session.d : 27) - 2);
       } else if (e.key === ']') {
         setDistance((session ? session.d : 27) + 2);

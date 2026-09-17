@@ -69,10 +69,16 @@
     </div>
     <div class="ex-meta">
       <p id="ex-readout" aria-live="off">rounds <b id="ex-rounds">0</b> · physical errors <b id="ex-phys">0</b> · logical errors <b id="ex-logical">0</b></p>
+      <div class="ex-zoom-container">
+        <span class="zoom-label">Camera Zoom:</span>
+        <button type="button" class="zoom-btn" id="zoom-hero-btn">1 Qubit (Hero)</button>
+        <input type="range" id="ex-zoom-slider" min="0" max="1" step="0.005" value="0" aria-label="Camera zoom slider">
+        <button type="button" class="zoom-btn" id="zoom-fabric-btn">15 Qubits (Fabric)</button>
+      </div>
       <p id="ex-caption">
         A distance-<span id="ex-d">27</span> rotated surface code, decoded live by my Rust simulator compiled to
         WebAssembly. Move the pointer to add noise. A chain of errors across the whole width is a logical error —
-        see if you can cause one. Scroll to zoom out.
+        see if you can cause one. Scroll or use the slider to zoom out to the 15-qubit lattice-surgery processor.
         <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>
       </p>
     </div>
@@ -117,11 +123,15 @@
               <h3>Auto-tuning a double quantum dot</h3>
               <div class="where">a toy of what my thesis automates</div>
               <p>
-                A constant-interaction model of a silicon double quantum dot, read out through a simulated charge
-                sensor. The tuner never sees the charge numbers, only the sensor. It empties both dots, adds one
-                electron to each by counting charge transitions with a change-point detector, then centres the
-                (1,1) operating point and holds it. Drag on the diagram to add charge noise and watch it re-tune.
-                Parameters are illustrative; the thesis works on real devices at Diraq and UNSW.
+                In silicon quantum computers, qubits are encoded in the spins of isolated single electrons.
+                Before you can compute, you have to initialize the system into the <strong>(1,1) charge state</strong>
+                (one electron in dot 1, one electron in dot 2). Doing this by hand is a bottleneck that takes hours.
+              </p>
+              <p>
+                This simulator models a double quantum dot read out via a nearby charge sensor.
+                <strong>The tuner is blind to the 2D honeycomb</strong>—it only measures 1D sensor blips.
+                It empties both dots down to (0,0), adds one electron to each dot using change-point detection,
+                and locks safely in the center of the (1,1) cell.
               </p>
               <div class="tags">
                 <span class="tag">Constant-interaction model</span><span class="tag">Charge sensing</span>
@@ -131,17 +141,30 @@
             <div class="demo">
               <div class="demo-head"><span class="t">Charge stability · double dot</span><span class="t">sensor signal</span></div>
               <div class="demo-body">
+                <div class="dqd-pipeline" aria-label="Auto-tuner progress">
+                  <div class="dqd-step" id="step-empty"><span class="step-num">1</span> Empty (0,0)</div>
+                  <div class="dqd-step" id="step-load1"><span class="step-num">2</span> Load Dot 1</div>
+                  <div class="dqd-step" id="step-load2"><span class="step-num">3</span> Load Dot 2</div>
+                  <div class="dqd-step" id="step-centre"><span class="step-num">4</span> Centre (1,1)</div>
+                  <div class="dqd-step" id="step-locked"><span class="step-num">5</span> Locked (1,1)</div>
+                </div>
                 <canvas id="dqd" width="480" height="480" role="img" aria-label="Charge stability diagram of a simulated double quantum dot with the auto-tuner's path"></canvas>
                 <div id="dqd-readout" aria-live="off">
                   <span>V₁ <b id="dqd-v1">·</b> mV</span>
                   <span>V₂ <b id="dqd-v2">·</b> mV</span>
+                  <span>Sensor S <b id="dqd-sensor">·</b></span>
                   <span><b id="dqd-state">starting</b></span>
                   <span>(N₁, N₂) <b id="dqd-n">(?, ?)</b></span>
                   <span>retunes <b id="dqd-retunes">0</b> · recentres <b id="dqd-recentres">0</b></span>
                 </div>
+                <div class="dqd-buttons">
+                  <button type="button" class="btn small" id="dqd-drift-btn">⚡ Inject Drift Noise</button>
+                  <button type="button" class="btn small" id="dqd-reset-btn">↺ Re-tune from Scratch</button>
+                </div>
                 <p class="hint" id="dqd-hint">
-                  Drag on the diagram to add charge noise. Faint lines are the model's true charge transitions,
-                  hidden from the tuner; bright pixels are what it has actually measured.
+                  Drag on the diagram or click <strong>⚡ Inject Drift Noise</strong> to add electrostatic charge noise.
+                  Faint honeycomb lines and (N₁, N₂) labels are ground truth hidden from the tuner;
+                  bright pixels are what its sensor has measured.
                 </p>
               </div>
             </div>
@@ -179,6 +202,7 @@
     </div>
   </footer>
 
+  <script src="assets/wasm-data.js" defer></script>
   <script src="engine.js" defer></script>
   <script src="hero-math.js" defer></script>
   <script src="sessions.js" defer></script>

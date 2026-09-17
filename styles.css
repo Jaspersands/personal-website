@@ -96,17 +96,7 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
 }
 .hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(to right,
-    color-mix(in srgb, var(--bg) 92%, transparent) 0%,
-    color-mix(in srgb, var(--bg) 90%, transparent) 42%,
-    color-mix(in srgb, var(--bg) 40%, transparent) 60%,
-    transparent 75%
-  );
+  display: none;
 }
 .hero .wrap {
   position: relative;
@@ -114,18 +104,48 @@ img { display: block; max-width: 100%; }
   width: 100%;
 }
 .hero-content {
+  position: relative;
   max-width: 34rem;
+  transition: opacity 0.8s ease;
+}
+.hero-content::before {
+  content: '';
+  position: absolute;
+  inset: -1.25rem -1.75rem;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 16px;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    color-mix(in srgb, var(--bg) 65%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 42%, transparent) 55%,
+    transparent 90%
+  );
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  mask-image: radial-gradient(ellipse at 40% 45%, black 50%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse at 40% 45%, black 50%, transparent 90%);
+  transition: opacity 0.8s ease;
+}
+.hero-content h1 {
+  text-shadow: 0 1px 3px var(--bg);
+}
+.hero.hero--typing .hero-content {
+  opacity: 0.2;
+}
+.hero.hero--typing .hero-content::before {
+  opacity: 0.05;
 }
 
+canvas#fabric,
 .hero canvas.field {
-  position: absolute;
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: auto;
   touch-action: pan-y;
   z-index: 0;
-  opacity: 0;
   display: block;
 }
 
@@ -137,9 +157,41 @@ img { display: block; max-width: 100%; }
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: 0.35rem;
   max-width: 30rem;
   text-align: right;
+}
+.hero-zoom-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: 0.15rem 0;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--fg-3);
+}
+.zoom-btn {
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border: 1px solid var(--rule);
+  color: var(--fg-2);
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.zoom-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#hero-zoom-slider,
+#ex-zoom-slider {
+  width: 6.5rem;
+  height: 4px;
+  accent-color: var(--accent);
+  cursor: pointer;
 }
 .hero-readout {
   font-family: var(--mono);
@@ -181,6 +233,25 @@ img { display: block; max-width: 100%; }
 .hr-d-ctl button:active {
   background: var(--rule);
 }
+.hr-replay-btn {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  line-height: 1;
+  color: var(--fg-2);
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.1rem 0.4rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.hr-replay-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.hr-replay-btn:active {
+  background: var(--rule);
+}
 #hr-logic.flash {
   color: var(--accent);
   text-shadow: 0 0 8px var(--accent);
@@ -201,30 +272,191 @@ img { display: block; max-width: 100%; }
   color: var(--accent);
 }
 
-/* ---------------- A++: Whole-Page Variant ---------------- */
-body[data-field="page"] canvas.field {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: auto;
+/* ---------------- Fabric Window & Background Flow ---------------- */
+.fabric-window {
+  position: relative;
+  z-index: 1;
+  min-height: 70vh;
+  display: grid;
+  align-items: end;
 }
-body[data-field="page"] nav,
-body[data-field="page"] main,
-body[data-field="page"] footer {
+.fabric-window p {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--fg-3);
+  max-width: 34rem;
+  margin: 0 auto 2rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  line-height: 1.6;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+.fabric-window.static p { display: none; }
+
+nav, .hero, .fabric-window, main, footer {
   position: relative;
   z-index: 1;
 }
-body[data-field="page"] .section {
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
+main .section, footer {
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
 }
-body[data-field="page"] .band {
-  background: color-mix(in srgb, var(--bg-2) 90%, transparent);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
+.band {
+  background: color-mix(in srgb, var(--bg-2) 92%, transparent);
+}
+
+/* ---------------- D: Double-Dot Auto-Tuner ---------------- */
+.piece.ex-piece {
+  grid-template-columns: 1fr minmax(28rem, 34rem);
+}
+.piece.ex-piece .demo {
+  max-width: 34rem;
+}
+.piece.ex-piece canvas#dqd {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+.piece.ex-piece canvas#dqd.grabbing {
+  cursor: grabbing;
+}
+.dqd-pipeline {
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.dqd-step {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  padding: 0.22rem 0.5rem;
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--fg-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+.dqd-step .step-num {
+  font-size: 0.625rem;
+  opacity: 0.85;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--fg-3) 15%, transparent);
+}
+.dqd-step.completed {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--rule));
+  color: var(--fg-2);
+}
+.dqd-step.completed .step-num {
+  background: color-mix(in srgb, var(--accent) 25%, var(--bg));
+  color: var(--accent);
+  font-weight: 600;
+}
+.dqd-step.active {
+  background: color-mix(in srgb, var(--accent) 15%, var(--bg));
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.dqd-step.active .step-num {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+}
+.dqd-status-desc {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--fg-2);
+  background: color-mix(in srgb, var(--bg-2) 65%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.45rem 0.65rem;
+  margin-bottom: 0.625rem;
+  min-height: 2.2rem;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.25s, color 0.25s;
+}
+.dqd-status-desc.flaring {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-2));
+}
+.dqd-trace-wrap {
+  margin-top: 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--bg-2) 40%, var(--bg));
+  overflow: hidden;
+}
+.dqd-trace-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--fg-3);
+  letter-spacing: 0.02em;
+}
+#dqd-trace-step-indicator {
+  font-weight: 600;
+  color: var(--fg-3);
+  transition: color 0.2s;
+}
+#dqd-trace-step-indicator.hit {
+  color: var(--accent);
+}
+#dqd-sensor-trace {
+  width: 100%;
+  height: 70px;
+  display: block;
+}
+#dqd-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--fg-3);
+}
+#dqd-readout b {
+  color: var(--fg);
+  font-weight: 500;
+}
+.dqd-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.dqd-buttons .btn.small {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.6875rem;
+  font-family: var(--mono);
+  cursor: pointer;
+}
+.dqd-buttons .btn.small:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 960px) {
+  .piece.ex-piece { grid-template-columns: 1fr; }
 }
 
 .eyebrow {
@@ -496,12 +728,12 @@ footer a:hover { color: var(--fg); }
     padding: 4.5rem 0 2rem;
   }
   .hero::before {
-    background: linear-gradient(to bottom,
-      transparent 0%,
-      transparent 35%,
-      color-mix(in srgb, var(--bg) 90%, transparent) 65%,
-      var(--bg) 95%
-    );
+    display: none;
+  }
+  .hero-content::before {
+    inset: -1rem -1rem;
+    mask-image: radial-gradient(ellipse at 50% 50%, black 50%, transparent 95%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 50%, transparent 95%);
   }
   .hero-meta {
     position: static;

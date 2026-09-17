@@ -8,7 +8,7 @@
    Boltzmann average at kT smooths each transition. The sensor sees a weighted
    sum of the two occupations plus a small linear background and noise. */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory();
+  if (typeof module === 'object' && module && module.exports) module.exports = factory();
   else root.DQD = factory();
 })(typeof globalThis !== 'undefined' ? globalThis : this, () => {
   'use strict';
@@ -73,13 +73,15 @@
         return p.s1 * o.N1 + p.s2 * o.N2 + p.b * (V1 + V2) + p.sigma * gauss(rand);
       },
       drift(dt) {
+        if (!dt || dt <= 0 || !isFinite(dt)) return;
         const s = driftSigma * Math.sqrt(dt);
         dev.nudge(s * gauss(rand), s * gauss(rand));
       },
       // Offsets are clamped: charge noise moves a honeycomb by millivolts, not by a window.
       nudge(dV1, dV2) {
+        if (!isFinite(dV1) || !isFinite(dV2)) return;
         const lim = p.offsetMax ?? Infinity, c = v => Math.min(lim, Math.max(-lim, v));
-        dev.offset.d1 = c(dev.offset.d1 + dV1); dev.offset.d2 = c(dev.offset.d2 + dV2);
+        dev.offset.d1 = c((dev.offset.d1 || 0) + dV1); dev.offset.d2 = c((dev.offset.d2 || 0) + dV2);
       }
     };
     return dev;
@@ -148,7 +150,7 @@
     const t = {
       V1: o.start ? o.start.V1 : 100, V2: o.start ? o.start.V2 : 110,
       state: 'calibrate', sigma: null, N1: null, N2: null, lockLevel: null, walls: null,
-      samples: [], events: [], measurements: 0, retunes: 0, recentres: 0, locks: 0
+      samples: [], events: [], measurements: 0, retunes: 0, recentres: 0, locks: 0, lastEdge: null
     };
     const DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
     let det = null, calib = [], flat = 0, lockBuf = [], idle = 0;
@@ -159,39 +161,59 @@
     const emit = e => t.events.push(e);
     const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
     const newDet = () => createDetector({ w: o.w, k: o.k, sigma: t.sigma });
+    // A confirmed step lies between detector samples r.i and r.i+1; the detector's trace
+    // is one entry per measurement since the current state began, so the edge's global
+    // measurement index is recoverable. Views use it to mark the edge where it really is.
+    const noteEdge = r => {
+      const after = det.trace.length - 1 - r.i;
+      t.lastEdge = { m: t.measurements - after, height: r.height, dot: classifyStep(p, r.height) };
+    };
     const measure = () => {
       const S = device.measure(t.V1, t.V2); t.measurements++;
       t.samples.push({ V1: t.V1, V2: t.V2, S }); if (t.samples.length > 4000) t.samples.shift();
       return S;
     };
     const go = s => { t.state = s; det = newDet(); flat = 0; };
-    const retune = () => { t.retunes++; t.N1 = null; t.N2 = null; t.walls = null; prevLock = null; go('empty'); };
+    const retune = () => {
+      t.retunes++;
+      t.N1 = null;
+      t.N2 = null;
+      t.walls = null;
+      prevLock = null;
+      if (!t.sigma || !isFinite(t.sigma)) t.sigma = p.sigma;
+      go('empty');
+    };
 
     const steps = {
       calibrate() {
         calib.push(measure());
         if (calib.length >= o.calibN) {
           const m = mean(calib);
-          t.sigma = Math.max(1e-3, Math.sqrt(mean(calib.map(x => (x - m) ** 2))));
+          const variance = mean(calib.map(x => (x - m) ** 2));
+          const std = Math.sqrt(variance);
+          t.sigma = isFinite(std) && std > 1e-3 ? Math.min(0.10, std) : p.sigma;
           calib = []; emit('calibrated'); go('empty');
         }
       },
       empty() {
         t.V1 = clampV(t.V1 - o.step); t.V2 = clampV(t.V2 - o.step);
         const r = det.push(measure());
-        if (r) { emit('step:' + classifyStep(p, r.height)); flat = 0; } else flat += o.step;
-        if (flat >= o.flatMV || (t.V1 <= p.vMin && t.V2 <= p.vMin)) { t.N1 = 0; t.N2 = 0; emit('empty'); go('load1'); }
+        if (r) { noteEdge(r); emit('step:' + classifyStep(p, r.height)); flat = 0; } else flat += o.step;
+        if ((t.V1 <= p.vMin && t.V2 <= p.vMin) || (flat >= o.flatMV && t.V1 <= 15 && t.V2 <= 15)) {
+          t.N1 = 0; t.N2 = 0; emit('empty'); go('load1');
+        }
       },
       load1() {
         t.V1 = clampV(t.V1 + o.step);
         const r = det.push(measure());
-        if (r) { t.N1 = 1; emit('loaded:dot1'); go('load2'); }
+        if (r) { noteEdge(r); t.N1 = 1; emit('step:dot1'); emit('loaded:dot1'); go('load2'); }
         else if (t.V1 >= p.vMax) { emit('lost'); retune(); }
       },
       load2() {
         t.V2 = clampV(t.V2 + o.step);
         const r = det.push(measure());
         if (r) {
+          noteEdge(r); emit('step:' + classifyStep(p, r.height));
           if (classifyStep(p, r.height) === 'dot2') { t.N2 = 1; emit('loaded:dot2'); sweep = null; go('centre'); }
           else { t.V1 = clampV(t.V1 - 2 * o.w * o.step); emit('backoff:dot1'); det = newDet(); }
         } else if (t.V2 >= p.vMax) { emit('lost'); retune(); }
@@ -204,7 +226,7 @@
         const r = det.push(measure());
         const atEdge = (dx && (t.V1 <= p.vMin || t.V1 >= p.vMax)) || (dy && (t.V2 <= p.vMin || t.V2 >= p.vMax));
         let wall = null;
-        if (r) wall = (r.i + 1) * o.step;                  // the step lies between samples i and i+1
+        if (r) { noteEdge(r); emit('step:' + classifyStep(p, r.height)); wall = (r.i + 1) * o.step; }   // the step lies between samples i and i+1
         else if (sweep.dist >= o.wallMax || atEdge) wall = sweep.dist;
         if (wall === null) return;
         sweep.walls.push(wall); sweep.di++; sweep.dist = 0;
@@ -250,6 +272,28 @@
       }
     };
     t.step = () => { steps[t.state](); };
+    t.retune = retune;
+    t.reset = (start) => {
+      if (start) {
+        t.V1 = clampV(start.V1);
+        t.V2 = clampV(start.V2);
+      }
+      calib = [];
+      flat = 0;
+      lockBuf = [];
+      idle = 0;
+      sweep = null;
+      probe = null;
+      prevLock = null;
+      t.N1 = null;
+      t.N2 = null;
+      t.walls = null;
+      t.lockLevel = null;
+      t.samples.length = 0;
+      t.events.length = 0;
+      go('calibrate');
+    };
+    t.getDetector = () => det;
     return t;
   }
 

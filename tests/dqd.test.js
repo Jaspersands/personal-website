@@ -209,6 +209,18 @@ test('an offset that lands during the check phase is a re-tune, not a re-centre 
   assert.ok(o.g1 === 1 && o.g2 === 1, `re-locked in (${o.g1},${o.g2})`);
 });
 
+test('lastEdge points at the measurement pair that straddles the real transition', () => {
+  const rand = DQD.mulberry32(31);
+  const dev = DQD.createDevice(p, rand, { driftSigma: 0 });
+  const t = DQD.createTuner(dev, { start: { V1: 60, V2: 70 } });
+  runUntil(t, () => t.state === 'load2', 2000);           // load1 just confirmed its edge
+  assert.ok(t.lastEdge && t.lastEdge.dot === 'dot1', 'edge recorded as dot 1');
+  const m = t.lastEdge.m;                                  // 1-based: last measurement before the edge
+  const before = t.samples[m - 1], after = t.samples[m];
+  const Vt = DQD.transitionV1(p, 0, 0, before.V2);
+  assert.ok(before.V1 <= Vt + 1 && after.V1 >= Vt - 1, `edge between V1=${before.V1} and ${after.V1}, true transition ${Vt.toFixed(1)}`);
+});
+
 test('the tuner never reads the ground truth', () => {
   const dev = DQD.createDevice(p, DQD.mulberry32(2), { driftSigma: 0 });
   let calls = 0; const truth = dev.truth; dev.truth = (a, b) => { calls++; return truth(a, b); };

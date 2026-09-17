@@ -250,8 +250,8 @@
 
   /**
    * Solves Minimum-Weight Perfect Matching on defects of a single type.
-   * If defects.length <= 10, computes exact global minimum via branch-and-bound.
-   * If defects.length > 10, uses greedy matching fallback.
+   * If defects.length <= 12, computes exact global minimum via branch-and-bound.
+   * If defects.length > 12, uses greedy matching fallback.
    */
   function match(lat, defects, type) {
     if (!defects || defects.length === 0) return { pairs: [], cost: 0 };
@@ -259,7 +259,8 @@
     const graph = lat.graphs[type];
     const defectIds = defects.map(d => (typeof d === 'object' ? d.id : d));
 
-    if (defectIds.length <= 10) {
+    // d=5 has 12 stabilizers of each type, so this cutoff makes the band demo exact always.
+    if (defectIds.length <= 12) {
       return matchExact(graph, defectIds);
     } else {
       return matchGreedy(graph, defectIds);
