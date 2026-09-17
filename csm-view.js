@@ -185,9 +185,17 @@
   root.querySelectorAll('[data-model]').forEach(btn => btn.addEventListener('click', async () => {
     const name = btn.dataset.model; if (name === S.model) return;
     root.querySelectorAll('[data-model]').forEach(b => b.classList.toggle('on', b === btn));
-    S.model = name;
-    if (!loaded.has(name)) { stage(`loading the ${name} model…`, 'thinking'); await load(name); }
-    if (S.img && S.result && !S.result.rejected) { clearTimeout(S.timer); S.cycle++; try { await analyse(); } catch (e) { /* stage set below */ } if (S.running) S.timer = setTimeout(() => { if (S.running) cycleOnce(); }, T.HOLD_OK); }
+    const previous = S.model; S.model = name;
+    if (!loaded.has(name)) {
+      stage(`loading the ${name} model…`, 'thinking');
+      try { await load(name); }
+      catch (err) { S.model = previous; root.querySelectorAll('[data-model]').forEach(b => b.classList.toggle('on', b.dataset.model === previous)); stage(`${name} model unavailable — ${err.message}`, 'reject'); return; }
+    }
+    if (S.img && S.result && !S.result.rejected) {
+      clearTimeout(S.timer); S.cycle++;
+      try { await analyse(); } catch (err) { stage('model unavailable — ' + err.message, 'reject'); }
+      if (S.running) S.timer = setTimeout(() => { if (S.running) cycleOnce(); }, T.HOLD_OK);
+    }
   }));
 
   /* ---------------- boot ---------------- */
