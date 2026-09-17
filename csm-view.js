@@ -78,11 +78,13 @@
     if (n > 0 && n <= 8) {
       const xs = lines.map(l => (l.xs + l.xe) / 2 * 2);
       const edges = [0, ...xs, 256];
+      const narrow = Math.min(...xs.slice(1).map((x, i) => x - xs[i]), 256) < 40;   // stagger neighbours when regions are tight
       for (let k = 0; k <= n; k++) {
         const cx = (edges[k] + edges[k + 1]) / 2, label = `(${n - k},${k})`;
-        if (edges[k + 1] - edges[k] < 22) continue;
-        octx.fillStyle = 'rgba(0,0,0,0.55)'; octx.fillRect(cx - 17, 232, 34, 14);
-        octx.fillStyle = 'rgba(255,255,255,0.92)'; octx.fillText(label, cx, 239);
+        if (edges[k + 1] - edges[k] < 16) continue;
+        const y = narrow && k % 2 ? 222 : 239;
+        octx.fillStyle = 'rgba(0,0,0,0.6)'; octx.fillRect(cx - 17, y - 7, 34, 14);
+        octx.fillStyle = 'rgba(255,255,255,0.92)'; octx.fillText(label, cx, y);
       }
     }
   }
@@ -187,9 +189,11 @@
     root.querySelectorAll('[data-model]').forEach(b => b.classList.toggle('on', b === btn));
     const previous = S.model; S.model = name;
     if (!loaded.has(name)) {
+      const before = { text: stageEl.textContent, cls: stageEl.className };
       stage(`loading the ${name} model…`, 'thinking');
       try { await load(name); }
       catch (err) { S.model = previous; root.querySelectorAll('[data-model]').forEach(b => b.classList.toggle('on', b.dataset.model === previous)); stage(`${name} model unavailable — ${err.message}`, 'reject'); return; }
+      stageEl.textContent = before.text; stageEl.className = before.cls;   // nothing to re-run on a rejected map: restore
     }
     if (S.img && S.result && !S.result.rejected) {
       clearTimeout(S.timer); S.cycle++;
