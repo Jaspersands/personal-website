@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-17
 **Branch:** `feature/surface-code-hero`
-**Status:** approved design (both networks, both sizes, placed under the thesis)
+**Status:** built and verified 2026-09-17 (see ml/README.md and assets/models/csm-metrics.json)
 
 ## 1. Purpose
 
