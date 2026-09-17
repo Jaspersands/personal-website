@@ -39,8 +39,18 @@
           }
         } catch (_) {}
       }
-      const b64 = (typeof window !== 'undefined' && window.__WASM_BASE64__) ||
-                  (typeof globalThis !== 'undefined' && globalThis.__WASM_BASE64__);
+      // Offline fallback (the page opened from disk, where fetch is blocked): pull the
+      // base64 copy in assets/wasm-data.js on demand, so web visitors never download it.
+      let b64 = (typeof globalThis !== 'undefined' && globalThis.__WASM_BASE64__) || null;
+      if (!buffer && !b64 && typeof document !== 'undefined') {
+        b64 = await new Promise(resolve => {
+          const s = document.createElement('script');
+          s.src = source.replace(/[^/]*$/, '') + 'wasm-data.js';
+          s.onload = () => resolve(globalThis.__WASM_BASE64__ || null);
+          s.onerror = () => resolve(null);
+          document.head.appendChild(s);
+        });
+      }
       if (!buffer && b64) {
         const bin = atob(b64);
         const len = bin.length;

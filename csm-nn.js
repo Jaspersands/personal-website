@@ -60,7 +60,44 @@
   }
 
   /* ---------------- ops (NCHW, Float32Array) ---------------- */
+  // 3x3 'same' convolution, the hot path: the input is zero-padded once per layer so the
+  // inner loop has no bounds checks, and two output channels are accumulated per pass so
+  // each of the nine loads feeds two multiply-adds.
+  function conv3x3(x, C, H, W, w, b, cout, relu) {
+    const PW = W + 2, HW = H * W, PHW = (H + 2) * PW;
+    const pad = new Float32Array(C * PHW);
+    for (let c = 0; c < C; c++) for (let y = 0; y < H; y++) pad.set(x.subarray(c * HW + y * W, c * HW + (y + 1) * W), c * PHW + (y + 1) * PW + 1);
+    const out = new Float32Array(cout * HW);
+    for (let co = 0; co < cout; co += 2) {
+      const two = co + 1 < cout, oa = co * HW, ob = two ? (co + 1) * HW : oa;
+      for (let i = 0; i < HW; i++) out[oa + i] = b[co];
+      if (two) for (let i = 0; i < HW; i++) out[ob + i] = b[co + 1];
+      for (let ci = 0; ci < C; ci++) {
+        const wa = (co * C + ci) * 9, wb = two ? ((co + 1) * C + ci) * 9 : wa;
+        const a0 = w[wa], a1 = w[wa + 1], a2 = w[wa + 2], a3 = w[wa + 3], a4 = w[wa + 4], a5 = w[wa + 5], a6 = w[wa + 6], a7 = w[wa + 7], a8 = w[wa + 8];
+        const b0 = w[wb], b1 = w[wb + 1], b2 = w[wb + 2], b3 = w[wb + 3], b4 = w[wb + 4], b5 = w[wb + 5], b6 = w[wb + 6], b7 = w[wb + 7], b8 = w[wb + 8];
+        const pb = ci * PHW;
+        for (let y = 0; y < H; y++) {
+          const r0 = pb + y * PW, r1 = r0 + PW, r2 = r1 + PW, o = y * W;
+          if (two) {
+            for (let xx = 0; xx < W; xx++) {
+              const v0 = pad[r0 + xx], v1 = pad[r0 + xx + 1], v2 = pad[r0 + xx + 2], v3 = pad[r1 + xx], v4 = pad[r1 + xx + 1], v5 = pad[r1 + xx + 2], v6 = pad[r2 + xx], v7 = pad[r2 + xx + 1], v8 = pad[r2 + xx + 2];
+              out[oa + o + xx] += a0 * v0 + a1 * v1 + a2 * v2 + a3 * v3 + a4 * v4 + a5 * v5 + a6 * v6 + a7 * v7 + a8 * v8;
+              out[ob + o + xx] += b0 * v0 + b1 * v1 + b2 * v2 + b3 * v3 + b4 * v4 + b5 * v5 + b6 * v6 + b7 * v7 + b8 * v8;
+            }
+          } else {
+            for (let xx = 0; xx < W; xx++) {
+              out[oa + o + xx] += a0 * pad[r0 + xx] + a1 * pad[r0 + xx + 1] + a2 * pad[r0 + xx + 2] + a3 * pad[r1 + xx] + a4 * pad[r1 + xx + 1] + a5 * pad[r1 + xx + 2] + a6 * pad[r2 + xx] + a7 * pad[r2 + xx + 1] + a8 * pad[r2 + xx + 2];
+            }
+          }
+        }
+      }
+      if (relu) { for (let i = oa; i < oa + HW; i++) if (out[i] < 0) out[i] = 0; if (two) for (let i = ob; i < ob + HW; i++) if (out[i] < 0) out[i] = 0; }
+    }
+    return out;
+  }
   function conv2d(x, C, H, W, w, b, cout, k, relu) {
+    if (k === 3) return conv3x3(x, C, H, W, w, b, cout, relu);
     const p = (k - 1) >> 1, out = new Float32Array(cout * H * W), HW = H * W;
     for (let co = 0; co < cout; co++) {
       const ob = co * HW, bias = b[co];
