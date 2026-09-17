@@ -17,6 +17,7 @@
   const T = { ACQUIRE: 2500, HOLD_OK: 4500, HOLD_REJECT: 2600, JUMP_DX: [6, 11] };
   const CLASS_MIX = [['clean', .55], ['degraded', .15], ['unstable', .15], ['unclear', .15]];
   const MODEL_URLS = { classifier: 'assets/models/classifier.json', compact: 'assets/models/compact.json', full: 'assets/models/full.json' };
+  let classicalKnobs = {};   // the baseline's knobs as tuned by ml/eval.py, so the live count and the reported accuracy agree
 
   /* ---------------- colours ---------------- */
   const hexToRgb = h => { h = h.trim().replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
@@ -136,7 +137,7 @@
     if (cycle !== S.cycle) return;
     const probs = { clean: c.out.probs[0], unstable: c.out.probs[1], unclear: c.out.probs[2] };
     setBars(probs);
-    const classical = D.classicalCount(img, H, W);
+    const classical = D.classicalCount(img, H, W, classicalKnobs);
     if (probs.unstable >= 0.5 || probs.unclear >= 0.5 || probs.clean < 0.5) {
       const why = probs.unstable >= 0.5 ? 'unstable — charge jumped mid-scan' : probs.unclear >= 0.5 ? 'unclear — lines not countable' : 'not clean';
       stage(`rejected · ${why} · re-measure`, 'reject');
@@ -194,6 +195,8 @@
   new MutationObserver(readColours).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   worker.addEventListener('message', e => { if (e.data.type === 'loaded') { S.params[e.data.name] = e.data.params; const b = root.querySelector(`[data-model="${e.data.name}"]`); if (b) b.textContent = `${e.data.name} · ${(e.data.params / 1000).toFixed(0)}k`; } });
   fetch('assets/models/csm-metrics.json').then(r => r.json()).then(m => {
+    const k = m.lines.classical.knobs || {};
+    classicalKnobs = { sigmaY: k.sigma_y, sigmaX: k.sigma_x, prominence: k.prominence, minSep: k.min_sep };
     const pct = v => (v * 100).toFixed(1) + ' %';
     metricsEl.innerHTML = `Held-out synthetic maps (${m.heldout.toLocaleString()}): exact line count — compact <b>${pct(m.lines.compact.exact)}</b>, full <b>${pct(m.lines.full.exact)}</b>, classical counter <b>${pct(m.lines.classical.exact)}</b> · classifier macro accuracy <b>${pct(m.classifier.macro)}</b>.`;
   }).catch(() => { metricsEl.textContent = ''; });
