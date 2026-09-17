@@ -30,8 +30,10 @@
   /* heat: Float32Array of 3*H*W (signed heatmap, dx, dy). Returns lines sorted
      by start x: [{xs, ys, xe, ye, score}]. Each end blob predicts its start via
      the offset field (divided by the blob height it was weighted with) and
-     snaps to the nearest unused start blob within `corridor` px. */
-  function decodeLines(heat, H, W, tau = 0.3, corridor = 8) {
+     snaps to the nearest unused start blob. The snap distance is anisotropic,
+     |dx| + wy*|dy| < corridor: the offset's x component is precise and is what
+     tells neighbouring lines (>= 9 px apart) apart; its length component is not. */
+  function decodeLines(heat, H, W, tau = 0.3, corridor = 20, wy = 0.35) {
     const HW = H * W, h = heat.subarray(0, HW);
     const starts = peaks2d(h, H, W, tau, 1), ends = peaks2d(h, H, W, tau, -1);
     const used = new Set(), lines = [];
@@ -40,7 +42,7 @@
       const px = e.x + heat[HW + e.y * W + e.x] / mag * OFFSET_SCALE;
       const py = e.y + heat[2 * HW + e.y * W + e.x] / mag * OFFSET_SCALE;
       let best = -1, bd = corridor;
-      starts.forEach((s, i) => { if (used.has(i)) return; const d = Math.hypot(s.x - px, s.y - py); if (d < bd) { best = i; bd = d; } });
+      starts.forEach((s, i) => { if (used.has(i)) return; const d = Math.abs(s.x - px) + wy * Math.abs(s.y - py); if (d < bd) { best = i; bd = d; } });
       if (best >= 0) { used.add(best); const s = starts[best]; lines.push({ xs: s.x, ys: s.y, xe: e.x, ye: e.y, score: Math.min(e.v, s.v) }); }
     }
     lines.sort((a, b) => a.xs - b.xs);

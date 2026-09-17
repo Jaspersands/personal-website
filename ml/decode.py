@@ -33,9 +33,13 @@ def _peaks2d(a: np.ndarray, tau: float) -> list[tuple[int, int, float]]:
     return out
 
 
-def decode_lines(heat: np.ndarray, tau: float = 0.3, corridor: float = 8.0) -> list[dict]:
-    """heat: (3, H, W). Returns lines sorted by start x:
-    [{xs, ys, xe, ye, score}]"""
+def decode_lines(heat: np.ndarray, tau: float = 0.3, corridor: float = 20.0, wy: float = 0.35) -> list[dict]:
+    """heat: (3, H, W). Returns lines sorted by start x: [{xs, ys, xe, ye, score}].
+
+    The snapping corridor is anisotropic: the offset's x component is precise
+    (neighbouring lines are >= 9 px apart, so x is what disambiguates them)
+    while its length component is not, so the snap distance is
+    |dx| + wy * |dy| and must be below `corridor`."""
     h = heat[0]
     starts = _peaks2d(h, tau)
     ends = _peaks2d(-h, tau)
@@ -51,7 +55,7 @@ def decode_lines(heat: np.ndarray, tau: float = 0.3, corridor: float = 8.0) -> l
         for i, (ys, xs, sv) in enumerate(starts):
             if i in used:
                 continue
-            d = math.hypot(xs - px, ys - py)
+            d = abs(xs - px) + wy * abs(ys - py)
             if d < bd:
                 best, bd = i, d
         if best >= 0:
