@@ -336,7 +336,7 @@
       if (reduced()) {
         heroCaption.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
       } else {
-        heroCaption.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise; a chain of errors across the whole width is a logical error — see if you can cause one. Scroll to zoom out to a fabric of 15 logical qubits. Keys: <code>r</code> replay, <code>[</code> <code>]</code> distance, <code>b</code> burst, <code>g</code> matching graph. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
+        heroCaption.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise; a chain of errors across the whole width is a logical error — see if you can cause one. Scroll to zoom out to a fabric of 15 logical qubits. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
       }
     }
     const winCaption = $('fabric-window-caption') || $('ex-window-caption');
@@ -1022,7 +1022,7 @@
     const dIncBtn = document.getElementById('hr-d-inc');
     if (dIncBtn) dIncBtn.addEventListener('click', () => setDistance(S.L.d + 2));
 
-    // Hotkeys: r, [, ], b, g
+    // Undocumented keys for anyone reading the source: r replay, [ ] distance, b burst, g matching graph
     window.addEventListener('keydown', e => {
       if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
       if (e.key === 'r' || e.key === 'R') {

@@ -161,38 +161,6 @@ canvas#fabric,
   max-width: 30rem;
   text-align: right;
 }
-.hero-zoom-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin: 0.15rem 0;
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  color: var(--fg-3);
-}
-.zoom-btn {
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-  border: 1px solid var(--rule);
-  color: var(--fg-2);
-  font-family: var(--mono);
-  font-size: 0.625rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.zoom-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-#hero-zoom-slider,
-#ex-zoom-slider {
-  width: 6.5rem;
-  height: 4px;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
 .hero-readout {
   font-family: var(--mono);
   font-size: 0.6875rem;
@@ -231,25 +199,6 @@ canvas#fabric,
   border-color: var(--accent);
 }
 .hr-d-ctl button:active {
-  background: var(--rule);
-}
-.hr-replay-btn {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  line-height: 1;
-  color: var(--fg-2);
-  background: var(--bg-2);
-  border: 1px solid var(--rule);
-  border-radius: 2px;
-  padding: 0.1rem 0.4rem;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.hr-replay-btn:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-.hr-replay-btn:active {
   background: var(--rule);
 }
 #hr-logic.flash {
