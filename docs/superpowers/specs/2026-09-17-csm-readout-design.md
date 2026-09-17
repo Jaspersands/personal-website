@@ -61,11 +61,11 @@ Labels: `N`, per-line `(x_start, y_start)`, `(x_end, y_end)`; classes as three i
 
 Shared **preprocessing / stem**: per-image standardisation (zero mean, unit variance) followed by local contrast normalisation (subtract a 9×9 Gaussian-blurred local mean, divide by local std + ε) — a fixed, parameter-free stand-in for the paper's histogram-invariant stem; done identically in Python and JS.
 
-**CSMClassifier** (one size): conv stem 3×3 → four stages [16, 32, 64, 128] of (3×3 conv, BN, ReLU) ×2 + 2×2 max-pool → global average pool → MLP 128→64→3 → sigmoids. ≈ 300k parameters. Loss: BCE-with-logits per class. Trained on a synthetic corpus balanced across clean / unstable / unclear (the paper trains this model on real data only; ours is synthetic and the caption says so).
+**CSMClassifier** (one size): conv stem 3×3 → four stages [16, 32, 64, 128] of (3×3 conv, BN, ReLU) ×2 + 2×2 max-pool → global average pool → MLP 128→64→3 → sigmoids. 304,499 parameters. Loss: BCE-with-logits per class. Trained on a synthetic corpus balanced across clean / unstable / unclear (the paper trains this model on real data only; ours is synthetic and the caption says so).
 
 **ChargeLineNet** (two sizes): U-Net, 3 encoder levels + bottleneck + 3 decoder levels with skip connections, bilinear ×2 upsampling, isotropic 3×3 convs (the paper's anisotropic multi-branch blocks are a documented simplification), final 1×1 conv → **3 channels**: signed heatmap (start +1 / end −1 Gaussians, σ = 1.5 px) and offset vectors (Δx, Δy) from each end point to its start, weighted by the end blob.
-- **compact**: widths [12, 24, 48], bottleneck 48 ≈ 0.17M parameters, ≈ 0.33 GMAC per image.
-- **full**: widths [32, 64, 128], bottleneck 128 with two extra bottleneck convs ≈ 1.2M parameters, ≈ 2.4 GMAC (the paper: 935,283).
+- **compact**: widths [12, 24, 48], bottleneck 48 — 170,787 parameters.
+- **full**: widths [32, 64, 128], bottleneck 128 with two extra bottleneck convs — 1,505,411 parameters (the paper: 935,283).
 - Loss: foreground-weighted MSE on the heatmap (weight 10 within blobs) + masked smooth-L1 on offsets at end blobs (paper Appendix D 2, simplified).
 - Training: AdamW, cosine schedule with warm-up, gradient clipping, random horizontal flips; 40k synthetic images, 15 epochs compact / 20 epochs full on MPS. Held-out: 2,000 fresh images.
 
