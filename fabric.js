@@ -321,6 +321,7 @@
     const dVal = $('hr-d-val') || $('ex-d');
     if (dVal) dVal.textContent = d;
     document.querySelectorAll('#hero-d, #ex-d, .ex-d, .fabric-d').forEach(el => { el.textContent = d; });
+    const np = $('hero-n-patches'); if (np && S.L) np.textContent = S.L.patches.length;
     const rEl = $('hr-rounds') || $('ex-rounds');
     if (rEl) rEl.textContent = P.rounds.toLocaleString();
     const pEl = $('hr-phys') || $('ex-phys');
@@ -329,21 +330,6 @@
     if (lEl) lEl.textContent = P.logical.toLocaleString();
   }
 
-  function updateCaption() {
-    const d = S.L ? S.L.d : 27;
-    const heroCaption = document.querySelector('.hero-caption');
-    if (heroCaption) {
-      if (reduced()) {
-        heroCaption.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
-      } else {
-        heroCaption.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise; a chain of errors across the whole width is a logical error — see if you can cause one. Scroll to zoom out to a fabric of 15 logical qubits. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
-      }
-    }
-    const winCaption = $('fabric-window-caption') || $('ex-window-caption');
-    if (winCaption) {
-      winCaption.innerHTML = `One logical qubit among many. Each patch is a distance-<span class="fabric-d">${d}</span> surface code with its own decoder rounds. The merges between patches are lattice surgery — how logical gates are performed — illustrated here, not simulated.`;
-    }
-  }
 
   /* ---------------- hybrid opener ---------------- */
   function startOpeningSequence() {
