@@ -29,21 +29,25 @@
   const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
   /* ---------------- worker ---------------- */
-  const worker = new Worker('csm-worker.js');
+  // Opened from disk (file://), browsers block both Workers and fetch: the map still gets
+  // acquired and drawn, but the networks are marked unavailable instead of failing later.
+  let worker = null, workerError = null;
+  try { worker = new Worker('csm-worker.js'); } catch (err) { workerError = err; }
   const pending = new Map(); let nextId = 1;
   const loaded = new Set(), loading = new Map();
-  worker.onmessage = e => {
+  if (worker) worker.onmessage = e => {
     const m = e.data;
     if (m.type === 'loaded') { loaded.add(m.name); const r = loading.get(m.name); if (r) { r.resolve(m); loading.delete(m.name); } }
     else if (m.type === 'error' && m.id == null) { const r = loading.get(m.name); if (r) { r.reject(new Error(m.message)); loading.delete(m.name); } }
     else if (m.type === 'result' || m.type === 'error') { const p = pending.get(m.id); if (p) { pending.delete(m.id); m.type === 'error' ? p.reject(new Error(m.message)) : p.resolve(m); } }
   };
-  worker.onerror = e => { for (const [, r] of loading) r.reject(new Error(e.message || 'worker error')); loading.clear(); for (const [, p] of pending) p.reject(new Error(e.message || 'worker error')); pending.clear(); };
-  const load = name => loaded.has(name) ? Promise.resolve() : (loading.has(name) ? loading.get(name).promise : (() => {
+  if (worker) worker.onerror = e => { for (const [, r] of loading) r.reject(new Error(e.message || 'worker error')); loading.clear(); for (const [, p] of pending) p.reject(new Error(e.message || 'worker error')); pending.clear(); };
+  const offline = () => new Error(location.protocol === 'file:' ? 'the networks need the page served over http(s) — open jaspersands.com' : (workerError && workerError.message) || 'worker unavailable');
+  const load = name => !worker ? Promise.reject(offline()) : loaded.has(name) ? Promise.resolve() : (loading.has(name) ? loading.get(name).promise : (() => {
     let resolve, reject; const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
     loading.set(name, { promise, resolve, reject }); worker.postMessage({ type: 'load', name, url: MODEL_URLS[name] }); return promise;
   })());
-  const run = (name, img) => new Promise((resolve, reject) => { const id = nextId++; pending.set(id, { resolve, reject }); const copy = new Float32Array(img); worker.postMessage({ type: 'run', name, id, img: copy }, [copy.buffer]); });
+  const run = (name, img) => !worker ? Promise.reject(offline()) : new Promise((resolve, reject) => { const id = nextId++; pending.set(id, { resolve, reject }); const copy = new Float32Array(img); worker.postMessage({ type: 'run', name, id, img: copy }, [copy.buffer]); });
 
   /* ---------------- state ---------------- */
   const S = { rng: G.makeRng((Date.now() & 0xffff) ^ 0x5eed), img: null, label: null, revealed: 0, model: 'compact', cycle: 0, timer: 0, raf: 0, running: false, params: {}, result: null, busy: false };
@@ -205,7 +209,7 @@
   /* ---------------- boot ---------------- */
   readColours();
   new MutationObserver(readColours).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  worker.addEventListener('message', e => { if (e.data.type === 'loaded') { S.params[e.data.name] = e.data.params; const b = root.querySelector(`[data-model="${e.data.name}"]`); if (b) b.textContent = `${e.data.name} · ${(e.data.params / 1000).toFixed(0)}k`; } });
+  if (worker) worker.addEventListener('message', e => { if (e.data.type === 'loaded') { S.params[e.data.name] = e.data.params; const b = root.querySelector(`[data-model="${e.data.name}"]`); if (b) b.textContent = `${e.data.name} · ${(e.data.params / 1000).toFixed(0)}k`; } });
   fetch('assets/models/csm-metrics.json').then(r => r.json()).then(m => {
     const k = m.lines.classical.knobs || {};
     classicalKnobs = { sigmaY: k.sigma_y, sigmaX: k.sigma_x, prominence: k.prominence, minSep: k.min_sep };
