@@ -1,0 +1,37 @@
+{
+ "generated": "2026-09-17",
+ "heldout": 2000,
+ "lines": {
+  "compact": {
+   "exact": 0.9965,
+   "pm1": 1.0,
+   "endpoint_px": 0.5392255187034607,
+   "params": 170787,
+   "eval_seconds": 2.7
+  },
+  "full": {
+   "exact": 0.999,
+   "pm1": 1.0,
+   "endpoint_px": 0.5399261116981506,
+   "params": 1505411,
+   "eval_seconds": 4.3
+  },
+  "classical": {
+   "exact": 0.754,
+   "pm1": 0.867,
+   "knobs": {
+    "sigma_y": 4,
+    "sigma_x": 2.5,
+    "prominence": 0.5,
+    "min_sep": 6
+   }
+  }
+ },
+ "classifier": {
+  "clean": 0.942,
+  "unstable": 0.9345,
+  "unclear": 0.989,
+  "macro": 0.9551666666666666,
+  "params": 304499
+ }
+}

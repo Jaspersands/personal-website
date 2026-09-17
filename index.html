@@ -27,11 +27,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2026-08">
+  <link rel="stylesheet" href="styles.css?v=2026-09-15-aplus">
 </head>
 
-<body>
+<body data-field="hero">
   <a class="skip" href="#main">Skip to content</a>
+  <canvas id="fabric" aria-hidden="true"></canvas>
   <div class="progress" id="progress"></div>
 
   <nav class="nav" id="nav">
@@ -51,13 +52,12 @@
 
   <header class="hero" id="top">
     <div class="wrap">
-      <div class="rv">
+      <div class="hero-content rv">
         <div class="eyebrow">Quantum algorithms &amp; machine learning</div>
         <h1>Jasper Sands</h1>
         <p class="lede">
           Master's student in computer science at <strong>Columbia</strong>, on the quantum computing track.
-          Starting September 2026 I'll be in Sydney for my thesis, working on automating silicon spin qubit
-          measurement with machine learning. It's co-supervised at Diraq/UNSW and Columbia.
+          Currently based in Sydney for my thesis, working on automating silicon spin qubit measurement with machine learning. It's co-supervised at Diraq/UNSW and Columbia.
         </p>
         <div class="cta">
           <a class="btn solid" href="assets/jaspersands_resume.pdf">Résumé</a>
@@ -67,27 +67,47 @@
           <a class="btn" href="mailto:jaspersands02@gmail.com">Email</a>
         </div>
       </div>
-      <div class="portrait rv"><img src="assets/web/profile.jpg" alt="Jasper Sands"></div>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-readout" id="hero-readout" aria-live="off">
+        <span class="hr-d-ctl">d = <b id="hr-d-val">27</b> <button id="hr-d-dec" type="button" aria-label="Decrease code distance" title="Decrease distance ([)">−</button><button id="hr-d-inc" type="button" aria-label="Increase code distance" title="Increase distance (])">+</button></span> · rounds <b id="hr-rounds">0</b> · physical errors <b id="hr-phys">0</b> · logical errors <b id="hr-logic">0</b>
+      </div>
+      <div class="hero-caption">
+        A distance-<span id="hero-d">27</span> rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise; a chain of errors across the whole width is a logical error — see if you can cause one. Scroll to zoom out to a fabric of 15 logical qubits. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>
+      </div>
     </div>
   </header>
+
+  <section class="fabric-window" aria-label="The fabric">
+    <p id="fabric-window-caption">
+      One logical qubit among many. Each patch is a distance-<span class="fabric-d">27</span> surface code with its own
+      decoder rounds. The merges between patches are lattice surgery — how logical gates are performed — illustrated
+      here, not simulated.
+    </p>
+  </section>
 
   <main id="main">
 
     <section class="section" id="about">
       <div class="wrap">
         <div class="shead rv"><h2>About</h2><span class="idx">01</span></div>
-        <div class="prose rv">
-          <p>
-            I work on quantum algorithms and machine learning. Most of my time goes into writing simulators,
-            fitting models to experimental data, and checking whether a speedup that works on paper still
-            holds up on real hardware.
-          </p>
-          <p>
-            Before I moved into quantum I spent a few years on applied ML and systems work: fine-tuning language
-            models for policy questions, building distributed data pipelines, and running security telemetry
-            at a fintech. I kept that range on purpose, since the problems I find interesting usually need
-            theory and engineering at the same time.
-          </p>
+        <div class="about-grid rv">
+          <div class="prose">
+            <p>
+              I work on quantum algorithms and machine learning. Most of my time goes into writing simulators,
+              fitting models to experimental data, and checking whether a speedup that works on paper still
+              holds up on real hardware.
+            </p>
+            <p>
+              Before I moved into quantum I spent a few years on applied ML and systems work: fine-tuning language
+              models for policy questions, building distributed data pipelines, and running security telemetry
+              at a fintech. I kept that range on purpose, since the problems I find interesting usually need
+              theory and engineering at the same time.
+            </p>
+          </div>
+          <div class="about-portrait">
+            <img src="assets/web/profile.jpg" alt="Jasper Sands">
+          </div>
         </div>
       </div>
     </section>
@@ -138,7 +158,7 @@
           <p class="hint">
             Click a qubit, or focus it and press Enter, to cycle through I, X, Z, Y.
             <span class="kz">Z-plaquettes</span> catch X errors and <span class="kx">X-plaquettes</span> catch Z.
-            The Match button pairs syndromes greedily. The real decoder uses minimum-weight perfect matching.
+            The Match button pairs syndromes with minimum-weight matching.
           </p>
         </div>
       </div>
@@ -534,7 +554,46 @@
             <div class="line">
               <b>Thesis.</b> Automation of silicon spin qubit measurements using machine learning. Based at Diraq
               and UNSW Sydney with Columbia, Sep 2026 to May 2027, co-supervised by Dr. Nard Dumoulin Stuyck
-              and Prof. Henry Yuen.
+              and Prof. Henry Yuen. The work continues
+              <a href="https://arxiv.org/abs/2607.20871">Vallabhapurapu et al., arXiv:2607.20871</a>, which reads
+              the electron occupancy of an isolated double dot from its charge-stability map with two small
+              convolutional networks. The demo below runs compact versions of both in your browser.
+            </div>
+            <div class="csm-demo" id="csm-demo">
+              <div class="csm-main">
+                <div class="csm-map-wrap">
+                  <canvas id="csm-map" width="128" height="128" aria-hidden="true"></canvas>
+                  <canvas id="csm-overlay" width="256" height="256" role="img" aria-label="Synthetic isolated-mode charge-stability map with the detected transition lines"></canvas>
+                  <span class="csm-axis csm-axis-x">P1 − P2</span>
+                  <span class="csm-axis csm-axis-y">ΔJ</span>
+                </div>
+                <div class="csm-side">
+                  <div class="csm-stage" id="csm-stage">starting…</div>
+                  <div class="csm-bars" aria-label="CSMClassifier probabilities">
+                    <div class="csm-bar"><span class="csm-bar-name">clean</span><span class="csm-bar-track"><span class="csm-bar-fill" id="csm-bar-clean"></span></span><span class="csm-bar-val">·</span></div>
+                    <div class="csm-bar"><span class="csm-bar-name">unstable</span><span class="csm-bar-track"><span class="csm-bar-fill" id="csm-bar-unstable"></span></span><span class="csm-bar-val">·</span></div>
+                    <div class="csm-bar"><span class="csm-bar-name">unclear</span><span class="csm-bar-track"><span class="csm-bar-fill" id="csm-bar-unclear"></span></span><span class="csm-bar-val">·</span></div>
+                  </div>
+                  <div class="csm-heat-wrap">
+                    <canvas id="csm-heat" width="128" height="128" aria-hidden="true"></canvas>
+                    <span>signed heatmap · ▲ start + / ▼ end −</span>
+                  </div>
+                  <div class="csm-readout" id="csm-readout" aria-live="off"></div>
+                  <div class="csm-models">
+                    <span>ChargeLineNet</span>
+                    <button type="button" data-model="compact" class="on">compact</button>
+                    <button type="button" data-model="full">full</button>
+                  </div>
+                </div>
+              </div>
+              <p class="csm-caption">
+                Compact reimplementations of the two networks from Vallabhapurapu et al., arXiv:2607.20871
+                (Diraq/UNSW, 2026) — the work my thesis continues — trained here on synthetic maps only and running
+                in your browser. The paper's models are trained and fine-tuned on 32 real SiMOS devices; the maps here
+                come from a parameterised generator modelled on the paper's Appendix I. Click the map to inject a
+                charge jump mid-scan.
+              </p>
+              <p class="csm-metrics" id="csm-metrics"></p>
             </div>
             <div class="line">
               <b>Coursework.</b> Quantum Error Correction · Quantum Engineering · Quantum Simulation &amp;
@@ -627,7 +686,7 @@
               </p>
             </div>
             <figure>
-              <img src="assets/web/biking.jpg" alt="Jasper competing on the still rings" loading="lazy">
+              <img src="assets/web/gymnastics.jpg" alt="Jasper competing on the still rings" loading="lazy">
               <figcaption>Still rings, collegiate meet</figcaption>
             </figure>
           </div>
@@ -687,7 +746,17 @@
     </div>
   </footer>
 
-  <script src="script.js?v=2026-08"></script>
+  <script src="assets/wasm-data.js" defer></script>
+  <script src="engine.js" defer></script>
+  <script src="hero-math.js" defer></script>
+  <script src="sessions.js" defer></script>
+  <script src="fabric-math.js" defer></script>
+  <script src="fabric.js" defer></script>
+  <script src="csm-gen.js" defer></script>
+  <script src="csm-decode.js" defer></script>
+  <script src="csm-view.js" defer></script>
+  <script src="surface-code.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 
 </html>

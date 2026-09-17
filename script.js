@@ -49,30 +49,13 @@
   const D = 5, SP = 46, PAD = 40;
   const px = c => PAD + c * SP, py = r => PAD + r * SP;
   const svg = $('sc');
-  const err = new Array(D * D).fill(0);          // 0=I 1=X 2=Z 3=Y
+  const err = new Array(D * D).fill(0); // 0=I 1=X 2=Z 3=Y
   const idx = (r, c) => r * D + c;
   const NAME = ['none', 'X', 'Z', 'Y'];
 
-  const stabs = [];
-  for (let r = 0; r < D - 1; r++) for (let c = 0; c < D - 1; c++) {
-    stabs.push({
-      type: (r + c) % 2 === 0 ? 'Z' : 'X',
-      q: [idx(r, c), idx(r, c + 1), idx(r + 1, c), idx(r + 1, c + 1)],
-      x: px(c) + SP / 2, y: py(r) + SP / 2, shape: 'face', r, c
-    });
-  }
-  stabs.push(
-    ...[0, 2].map(c => ({ type: 'X', q: [idx(0, c), idx(0, c + 1)], x: px(c) + SP / 2, y: py(0) - SP / 2.6, shape: 'top', c })),
-    ...[1, 3].map(c => ({ type: 'X', q: [idx(D - 1, c), idx(D - 1, c + 1)], x: px(c) + SP / 2, y: py(D - 1) + SP / 2.6, shape: 'bottom', c })),
-    ...[1, 3].map(r => ({ type: 'Z', q: [idx(r, 0), idx(r + 1, 0)], x: px(0) - SP / 2.6, y: py(r) + SP / 2, shape: 'left', r })),
-    ...[0, 2].map(r => ({ type: 'Z', q: [idx(r, D - 1), idx(r + 1, D - 1)], x: px(D - 1) + SP / 2.6, y: py(r) + SP / 2, shape: 'right', r })
-    ));
+  const bandLat = (typeof window !== 'undefined' && window.SC) ? window.SC.lattice(D) : null;
+  const stabs = bandLat ? bandLat.stabilizers : [];
   $('sc-d').textContent = stabs.length + ' stab.';
-
-  const fires = s => s.q.reduce((n, q) => {
-    const e = err[q];
-    return n + ((s.type === 'Z' ? (e === 1 || e === 3) : (e === 2 || e === 3)) ? 1 : 0);
-  }, 0) % 2 === 1;
 
   const gPlaq = el('g'), gLink = el('g'), gMatch = el('g'), gDot = el('g');
   svg.append(gPlaq, gLink, gMatch, gDot);
@@ -121,10 +104,12 @@
   let showMatch = false;
 
   function draw() {
-    const lit = [];
+    if (!bandLat) return;
+    const syn = window.SC.syndrome(bandLat, err);
+    const litSet = new Set(syn.litIds);
+
     stabs.forEach((s, i) => {
-      const on = fires(s);
-      if (on) lit.push(s);
+      const on = litSet.has(s.id);
       plaqNodes[i].setAttribute('fill-opacity', on ? .55 : .07);
       plaqNodes[i].setAttribute('stroke-opacity', on ? 1 : .35);
       plaqNodes[i].setAttribute('stroke-width', on ? 1.5 : 1);
@@ -142,31 +127,47 @@
 
     gMatch.replaceChildren();
     if (showMatch) {
-      ['X', 'Z'].forEach(t => {
-        const pool = lit.filter(s => s.type === t);
-        const used = new Set();
-        pool.forEach((a, i) => {
-          if (used.has(i)) return;
-          let best = -1, bd = Infinity;
-          pool.forEach((b, j) => {
-            if (j <= i || used.has(j)) return;
-            const d = Math.hypot(a.x - b.x, a.y - b.y);
-            if (d < bd) { bd = d; best = j; }
-          });
-          if (best >= 0) {
-            used.add(i); used.add(best);
-            const b = pool[best];
-            gMatch.append(el('line', {
-              x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: 'match ' + (t === 'Z' ? 'mz' : 'mx'),
-              'stroke-width': 1.75, 'stroke-dasharray': '3 2', 'stroke-linecap': 'round'
-            }));
+      const matchZ = window.SC.match(bandLat, syn.litZ, 'Z');
+      const matchX = window.SC.match(bandLat, syn.litX, 'X');
+      const allMatches = [
+        ...matchZ.pairs.map(p => ({ ...p, type: 'Z' })),
+        ...matchX.pairs.map(p => ({ ...p, type: 'X' }))
+      ];
+
+      allMatches.forEach(pair => {
+        const sA = bandLat.stabilizers[pair.a];
+        let x1 = px(sA.cx);
+        let y1 = py(sA.cy);
+        let x2, y2;
+
+        if (pair.b === -1) {
+          if (sA.shape === 'top') { x2 = x1; y2 = py(0) - SP / 2; }
+          else if (sA.shape === 'bottom') { x2 = x1; y2 = py(D - 1) + SP / 2; }
+          else if (sA.shape === 'left') { x2 = px(0) - SP / 2; y2 = y1; }
+          else if (sA.shape === 'right') { x2 = px(D - 1) + SP / 2; y2 = y1; }
+          else {
+            const dTop = sA.r, dBottom = D - 2 - sA.r, dLeft = sA.c, dRight = D - 2 - sA.c;
+            const min = Math.min(dTop, dBottom, dLeft, dRight);
+            if (min === dTop) { x2 = x1; y2 = py(0) - 8; }
+            else if (min === dBottom) { x2 = x1; y2 = py(D - 1) + 8; }
+            else if (min === dLeft) { x2 = px(0) - 8; y2 = y1; }
+            else { x2 = px(D - 1) + 8; y2 = y1; }
           }
-        });
+        } else {
+          const sB = bandLat.stabilizers[pair.b];
+          x2 = px(sB.cx);
+          y2 = py(sB.cy);
+        }
+
+        gMatch.append(el('line', {
+          x1, y1, x2, y2, class: 'match ' + (pair.type === 'Z' ? 'mz' : 'mx'),
+          'stroke-width': 1.75, 'stroke-dasharray': '3 2', 'stroke-linecap': 'round'
+        }));
       });
     }
 
     $('sc-e').textContent = err.filter(e => e).length;
-    $('sc-s').textContent = lit.length;
+    $('sc-s').textContent = syn.litIds.length;
   }
 
   $('sc-clear').onclick = () => { err.fill(0); draw(); };
