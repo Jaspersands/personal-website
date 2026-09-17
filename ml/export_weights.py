@@ -20,6 +20,7 @@ import torch.nn as nn
 
 sys.path.insert(0, os.path.dirname(__file__))
 from csm_generator import generate  # noqa: E402
+from decode import classical_count, decode_lines  # noqa: E402
 from train_csm import CKPT, MODELS, n_params  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "models")
@@ -104,14 +105,18 @@ def golden(models: dict):
     img, lab = generate(rng, "clean")
     q8 = np.clip(np.round(img * 255), 0, 255).astype(np.uint8)
     x = torch.from_numpy(q8.astype(np.float32) / 255.0)[None, None]   # exactly what the JS engine receives
-    fx = {"image": q8.ravel().tolist(), "n": lab.n}
+    fx = {"image": q8.ravel().tolist(), "n": lab.n,
+          "lines_true": [[ln.xs, ln.ys, ln.xe, ln.ye] for ln in lab.lines]}
+    cc, prof = classical_count(q8.astype(np.float32) / 255.0)
+    fx["classical"] = {"count": int(cc), "profile": [round(float(v), 4) for v in prof]}
     with torch.no_grad():
         probs = torch.sigmoid(models["classifier"](x))[0].numpy()
         fx["classifier"] = [round(float(p), 6) for p in probs]
         for name in ("compact", "full"):
             out = models[name](x)[0].numpy()
             fx[name] = {"heat": [round(float(v), 4) for v in out[0].ravel()],
-                        "offsets_sub8": [round(float(v), 4) for v in out[1:, ::8, ::8].ravel()]}
+                        "offsets_sub8": [round(float(v), 4) for v in out[1:, ::8, ::8].ravel()],
+                        "lines": decode_lines(out)}
     os.makedirs(FIX, exist_ok=True)
     json.dump(fx, open(os.path.join(FIX, "csm-golden.json"), "w"))
     print("golden fixture written; n =", lab.n)
