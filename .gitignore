@@ -3,3 +3,5 @@
 .claude/
 ml/data/
 ml/checkpoints/
+ml/__pycache__/
+ml/train.log

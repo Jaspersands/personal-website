@@ -123,5 +123,9 @@ def golden(models: dict):
 
 
 if __name__ == "__main__":
-    ms = {n: export(n) for n in ("classifier", "compact", "full")}
-    golden(ms)
+    names = sys.argv[1:] or ["classifier", "compact", "full"]
+    ms = {n: export(n) for n in names}
+    if all(n in ms for n in ("classifier", "compact", "full")):
+        golden(ms)
+    else:
+        print("golden fixture skipped (needs all three models)")

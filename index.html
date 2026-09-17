@@ -170,68 +170,6 @@
         <div class="shead rv"><h2>Selected work</h2><span class="idx">02</span></div>
         <div class="work">
 
-          <article class="piece ex-piece rv">
-            <div class="piece-body">
-              <h3>Auto-tuning a double quantum dot</h3>
-              <div class="where">a toy of what my thesis automates</div>
-              <p>
-                In silicon quantum computers, qubits are encoded in the spins of isolated single electrons.
-                Before you can compute, you have to initialize the system into the <strong>(1,1) charge state</strong>
-                (one electron in dot 1, one electron in dot 2). Doing this by hand is a bottleneck that takes hours.
-              </p>
-              <p>
-                This simulator models a double quantum dot read out via a nearby charge sensor.
-                <strong>The tuner is blind to the 2D honeycomb</strong>—it only measures 1D sensor blips.
-                It empties both dots down to (0,0), adds one electron to each dot using change-point detection,
-                and locks safely in the center of the (1,1) cell. Model parameters are illustrative; the thesis
-                works on real devices at Diraq and UNSW.
-              </p>
-              <div class="tags">
-                <span class="tag">Constant-interaction model</span><span class="tag">Charge sensing</span>
-                <span class="tag">Change-point detection</span><span class="tag">Auto-tuning</span>
-              </div>
-            </div>
-            <div class="demo">
-              <div class="demo-head"><span class="t">Charge stability · double dot</span><span class="t">sensor signal</span></div>
-              <div class="demo-body">
-                <div class="dqd-pipeline" aria-label="Auto-tuner progress">
-                  <div class="dqd-step" id="step-empty"><span class="step-num">1</span> Empty (0,0)</div>
-                  <div class="dqd-step" id="step-load1"><span class="step-num">2</span> Load Dot 1</div>
-                  <div class="dqd-step" id="step-load2"><span class="step-num">3</span> Load Dot 2</div>
-                  <div class="dqd-step" id="step-centre"><span class="step-num">4</span> Centre (1,1)</div>
-                  <div class="dqd-step" id="step-locked"><span class="step-num">5</span> Locked (1,1)</div>
-                </div>
-                <div class="dqd-status-desc" id="dqd-status-desc" aria-live="polite">Auto-tuner ready. Waiting to begin...</div>
-                <canvas id="dqd" width="480" height="400" role="img" aria-label="Charge stability diagram of a simulated double quantum dot with the auto-tuner's path"></canvas>
-                <div class="dqd-trace-wrap">
-                  <div class="dqd-trace-head">
-                    <span>1D Charge Sensor Trace S(t) — what the tuner measures</span>
-                    <span id="dqd-trace-step-indicator">detector: active</span>
-                  </div>
-                  <canvas id="dqd-sensor-trace" width="480" height="70" role="img" aria-label="Live 1D charge sensor oscilloscope trace showing step transitions"></canvas>
-                </div>
-                <div id="dqd-readout" aria-live="off">
-                  <span>V₁ <b id="dqd-v1">·</b> mV</span>
-                  <span>V₂ <b id="dqd-v2">·</b> mV</span>
-                  <span>Sensor S <b id="dqd-sensor">·</b></span>
-                  <span>(N₁, N₂) <b id="dqd-n">(?, ?)</b></span>
-                  <span>Drift ΔV <b id="dqd-offset">0.0, 0.0</b> mV</span>
-                  <span>retunes <b id="dqd-retunes">0</b> · recentres <b id="dqd-recentres">0</b></span>
-                </div>
-                <div class="dqd-buttons">
-                  <button type="button" class="btn small" id="dqd-reset-btn">↺ Re-tune from Scratch</button>
-                  <button type="button" class="btn small" id="dqd-drift-btn">⚡ Inject Drift Noise</button>
-                  <button type="button" class="btn small" id="dqd-speed-btn" title="Toggle measurement rate">Speed: 1×</button>
-                </div>
-                <p class="hint" id="dqd-hint">
-                  Drag on the diagram or click <strong>⚡ Inject Drift Noise</strong> to add electrostatic charge noise.
-                  Faint honeycomb lines and (N₁, N₂) labels are ground truth hidden from the tuner;
-                  the bottom oscilloscope trace shows the 1D sensor blips that the change-point algorithm measures to find and center the qubit.
-                </p>
-              </div>
-            </div>
-          </article>
-
           <article class="piece rv">
             <div class="piece-body">
               <h3>WhatTheDuck</h3>
@@ -616,7 +554,46 @@
             <div class="line">
               <b>Thesis.</b> Automation of silicon spin qubit measurements using machine learning. Based at Diraq
               and UNSW Sydney with Columbia, Sep 2026 to May 2027, co-supervised by Dr. Nard Dumoulin Stuyck
-              and Prof. Henry Yuen.
+              and Prof. Henry Yuen. The work continues
+              <a href="https://arxiv.org/abs/2607.20871">Vallabhapurapu et al., arXiv:2607.20871</a>, which reads
+              the electron occupancy of an isolated double dot from its charge-stability map with two small
+              convolutional networks. The demo below runs compact versions of both in your browser.
+            </div>
+            <div class="csm-demo" id="csm-demo">
+              <div class="csm-main">
+                <div class="csm-map-wrap">
+                  <canvas id="csm-map" width="128" height="128" aria-hidden="true"></canvas>
+                  <canvas id="csm-overlay" width="256" height="256" role="img" aria-label="Synthetic isolated-mode charge-stability map with the detected transition lines"></canvas>
+                  <span class="csm-axis csm-axis-x">P1 − P2</span>
+                  <span class="csm-axis csm-axis-y">ΔJ</span>
+                </div>
+                <div class="csm-side">
+                  <div class="csm-stage" id="csm-stage">starting…</div>
+                  <div class="csm-bars" aria-label="CSMClassifier probabilities">
+                    <div class="csm-bar"><span class="csm-bar-name">clean</span><span class="csm-bar-track"><span class="csm-bar-fill" id="csm-bar-clean"></span></span><span class="csm-bar-val">·</span></div>
+                    <div class="csm-bar"><span class="csm-bar-name">unstable</span><span class="csm-bar-track"><span class="csm-bar-fill" id="csm-bar-unstable"></span></span><span class="csm-bar-val">·</span></div>
+                    <div class="csm-bar"><span class="csm-bar-name">unclear</span><span class="csm-bar-track"><span class="csm-bar-fill" id="csm-bar-unclear"></span></span><span class="csm-bar-val">·</span></div>
+                  </div>
+                  <div class="csm-heat-wrap">
+                    <canvas id="csm-heat" width="128" height="128" aria-hidden="true"></canvas>
+                    <span>signed heatmap · ▲ start + / ▼ end −</span>
+                  </div>
+                  <div class="csm-readout" id="csm-readout" aria-live="off"></div>
+                  <div class="csm-models">
+                    <span>ChargeLineNet</span>
+                    <button type="button" data-model="compact" class="on">compact</button>
+                    <button type="button" data-model="full">full</button>
+                  </div>
+                </div>
+              </div>
+              <p class="csm-caption">
+                Compact reimplementations of the two networks from Vallabhapurapu et al., arXiv:2607.20871
+                (Diraq/UNSW, 2026) — the work my thesis continues — trained here on synthetic maps only and running
+                in your browser. The paper's models are trained and fine-tuned on 32 real SiMOS devices; the maps here
+                come from a parameterised generator modelled on the paper's Appendix I. Click the map to inject a
+                charge jump mid-scan.
+              </p>
+              <p class="csm-metrics" id="csm-metrics"></p>
             </div>
             <div class="line">
               <b>Coursework.</b> Quantum Error Correction · Quantum Engineering · Quantum Simulation &amp;
@@ -775,8 +752,9 @@
   <script src="sessions.js" defer></script>
   <script src="fabric-math.js" defer></script>
   <script src="fabric.js" defer></script>
-  <script src="dqd.js" defer></script>
-  <script src="tuner-view.js" defer></script>
+  <script src="csm-gen.js" defer></script>
+  <script src="csm-decode.js" defer></script>
+  <script src="csm-view.js" defer></script>
   <script src="surface-code.js" defer></script>
   <script src="script.js" defer></script>
 </body>
