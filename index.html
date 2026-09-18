@@ -19,7 +19,7 @@
     (() => {
       const r = document.documentElement;
       const t = localStorage.getItem('theme');
-      r.setAttribute('data-theme', t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+      r.setAttribute('data-theme', t || 'light');   // light by default; the toggle remembers a choice
     })();
   </script>
 
@@ -74,7 +74,7 @@
         <span class="hr-d-ctl">d = <b id="hr-d-val">27</b> <button id="hr-d-dec" type="button" aria-label="Decrease code distance" title="Decrease distance ([)">−</button><button id="hr-d-inc" type="button" aria-label="Increase code distance" title="Increase distance (])">+</button></span> · rounds <b id="hr-rounds">0</b> · physical errors <b id="hr-phys">0</b> · logical errors <b id="hr-logic">0</b>
       </div>
       <div class="hero-caption">
-        A distance-<span id="hero-d">27</span> rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise; a chain of errors across the whole width is a logical error — see if you can cause one. Scroll to zoom out to a fabric of <span id="hero-n-patches">15</span> logical qubits. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>
+        A distance-<span id="hero-d">27</span> rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise; a chain of errors across the whole width is a logical error — see if you can cause one. Scroll to zoom out to a fabric of <span id="hero-n-patches">15</span> logical qubits. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator&nbsp;→</a>
       </div>
     </div>
   </header>

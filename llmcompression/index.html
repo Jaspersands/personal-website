@@ -19,7 +19,7 @@
     (() => {
       const r = document.documentElement;
       const t = localStorage.getItem('theme');
-      r.setAttribute('data-theme', t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+      r.setAttribute('data-theme', t || 'light');   // light by default; the toggle remembers a choice
     })();
   </script>
 
