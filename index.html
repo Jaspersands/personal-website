@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jasper Sands | Quantum Algorithms and Machine Learning</title>
   <meta name="description"
-    content="Jasper Sands, MS student in computer science at Columbia on the quantum computing track. Thesis research on automating silicon spin qubit measurement with machine learning at Diraq and UNSW Sydney.">
+    content="Jasper Sands, MS student in computer science at Columbia on the quantum computing track. Thesis research on automating silicon spin-qubit measurement with machine learning at Diraq and UNSW Sydney.">
   <meta name="author" content="Jasper Sands">
   <meta property="og:title" content="Jasper Sands | Quantum Algorithms and Machine Learning">
   <meta property="og:description"
@@ -57,11 +57,12 @@
         <h1>Jasper Sands</h1>
         <p class="lede">
           Master's student in computer science at <strong>Columbia</strong>, on the quantum computing track.
-          Currently based in Sydney for my thesis, working on automating silicon spin qubit measurement with machine learning. It's co-supervised at Diraq/UNSW and Columbia.
+          Currently based in Sydney for my thesis, working on automating silicon spin-qubit measurement
+          with machine learning. It's co-supervised at Diraq/UNSW and Columbia.
         </p>
         <div class="cta">
-          <a class="btn solid" href="assets/jaspersands_resume.pdf">Résumé</a>
-          <a class="btn" href="assets/jaspersands_cv.pdf">CV</a>
+          <a class="btn solid" href="assets/jaspersands_resume.pdf?v=be103882">Résumé</a>
+          <a class="btn" href="assets/jaspersands_cv.pdf?v=076abe89">CV</a>
           <a class="btn" href="https://github.com/Jaspersands">GitHub</a>
           <a class="btn" href="https://www.linkedin.com/in/jaspersands">LinkedIn</a>
           <a class="btn" href="mailto:jaspersands02@gmail.com">Email</a>
@@ -292,7 +293,7 @@
                 </svg>
                 <p class="hint">
                   Phenomenological noise, T = d rounds, exact MWPM, measured on the simulator itself. A
-                  finite-size scaling fit puts the threshold at 3.2%: below it a bigger code wins, above it a
+                  finite-size scaling fit estimates the threshold at 3.2%: below it a bigger code wins, above it a
                   bigger code just gives noise more places to land. Union-Find on the same sweep thresholds at
                   2.7%, and code-capacity noise at 14.7%.
                 </p>
@@ -303,19 +304,24 @@
           <article class="piece rv">
             <div class="piece-body">
               <h3>Noise-Aware Adiabatic Simulation</h3>
-              <div class="where">IBM Heron hardware · transverse-field Ising model</div>
+              <div class="where">IBM Heron r2 · transverse-field Ising model</div>
               <p>
-                Digitized adiabatic ground state preparation for the 1D transverse-field Ising model. I used the Heron
-                processor's native fractional RZZ gates, which cut the logical-to-physical translation error
-                roughly in half, plus a palindromic Trotter step for second-order accuracy. The energy gap closes
-                near the critical point, so a linear sweep moves too quickly through the part that matters.
-                Flattening the schedule around s꜀ slows it down there instead.
+                Digitized adiabatic ground state preparation for the 1D transverse-field Ising model on IBM's
+                Heron r2. I used the processor's parameterised RZZ(θ) pulses rather than fixed two-qubit
+                decompositions, plus a palindromic Trotter step for second-order accuracy. The gap closes near the
+                critical point, so a linear sweep moves too quickly through the part that matters; flattening the
+                schedule around s꜀ slows it down there instead. Benchmarking eight ansatz variants gave the more
+                interesting result. A counterdiabatic correction that is exact in the closed-system limit is a net
+                loss under real noise: its threefold entangling-gate overhead admits more error per layer than the
+                correction removes. The best ansatz on hardware is not the best ansatz on a simulator.
               </p>
               <div class="tags">
-                <span class="tag">IBM Heron</span><span class="tag">Trotter–Suzuki</span>
+                <span class="tag">IBM Heron</span><span class="tag">Suzuki–Trotter</span>
                 <span class="tag">Counterdiabatic driving</span><span class="tag">Qiskit</span>
               </div>
               <div class="inline-links">
+                <a href="assets/noise-aware-adiabatic-ansatz.pdf">Paper</a>
+                <a href="assets/noise-aware-adiabatic-slides.pdf">Slides</a>
                 <a href="https://github.com/Jaspersands/digitized-adiabatic-tfim">GitHub</a>
               </div>
             </div>
@@ -340,28 +346,84 @@
           <article class="piece rv">
             <div class="piece-body">
               <h3>Q-Search</h3>
-              <div class="where">Multi-agent algorithm discovery engine</div>
+              <div class="where">Proof-gated quantum algorithm research &amp; verification engine</div>
               <p>
-                A set of Gemini-backed agents with separate roles (theorist, synthesizer, simulator, analyzer). The
-                system proposes candidate quantum problems, designs circuits for them, checks correctness with
-                stabilizer and oracle simulation, fits scaling models to query and gate complexity, and posts
-                what it finds to a live dashboard.
+                An automated research engine investigating structural quantum advantage for hard computational
+                problems (non-abelian HSP, dihedral cosets, and linear code equivalence). Rather than generating
+                toy circuits, the platform pairs frontier theoretical reasoning (GPT) with autonomous agentic
+                engineering (Gemini) to attack proposed quantum mechanisms against 1,200+ classical baselines,
+                enforcing formal proof gates and permanently indexing 800+ negative results across 720+ theorem
+                modules.
               </p>
               <div class="tags">
-                <span class="tag">Multi-agent</span><span class="tag">Gemini</span>
-                <span class="tag">Complexity analysis</span><span class="tag">Python</span>
+                <span class="tag">Quantum Computing</span><span class="tag">Complexity Theory</span>
+                <span class="tag">Automated Science</span><span class="tag">Python</span>
+                <span class="tag">Proof Gates</span>
               </div>
               <div class="inline-links">
                 <a href="https://github.com/Jaspersands/qsearch">GitHub</a>
                 <a href="https://qsearch.jaspersands.com/">Live engine</a>
               </div>
             </div>
-            <figure class="frame">
-              <img src="assets/web/qsearch_panel.png"
-                alt="Q-Search run log listing discovered algorithms with their measured speedups"
-                loading="lazy">
-              <figcaption>Discovered algorithms after 795 search runs</figcaption>
-            </figure>
+            <div class="demo">
+              <div class="demo-head">
+                <span class="t">Proof-gate pipeline</span>
+                <span class="t">720+ theorem modules</span>
+              </div>
+              <div class="demo-body">
+                <svg viewBox="0 0 300 208" role="img"
+                    aria-label="A candidate mechanism is proposed by GPT, built out by Gemini agents, then must clear a formal proof gate and beat 1,200 or more classical baselines. Anything that fails either gate is written to a permanent index of over 800 negative results.">
+                  <defs>
+                    <marker id="qs-a" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+                      <path class="qs-arrowhead" d="M0 0 L6 3 L0 6 Z"/>
+                    </marker>
+                    <marker id="qs-r" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+                      <path class="qs-rejhead" d="M0 0 L6 3 L0 6 Z"/>
+                    </marker>
+                  </defs>
+
+                  <rect class="qs-stage" x="4" y="6" width="170" height="30"/>
+                  <text class="qs-cap" x="12" y="18">PROPOSE</text>
+                  <text class="qs-sub" x="12" y="30">GPT, theoretical reasoning</text>
+
+                  <path class="qs-flow" d="M89 36 L89 48" marker-end="url(#qs-a)"/>
+
+                  <rect class="qs-stage" x="4" y="52" width="170" height="30"/>
+                  <text class="qs-cap" x="12" y="64">CONSTRUCT</text>
+                  <text class="qs-sub" x="12" y="76">Gemini, agentic engineering</text>
+
+                  <path class="qs-flow" d="M89 82 L89 94" marker-end="url(#qs-a)"/>
+
+                  <rect class="qs-stage gate" x="4" y="98" width="170" height="30"/>
+                  <text class="qs-cap on" x="12" y="110">PROOF GATE</text>
+                  <text class="qs-sub" x="12" y="122">formal verification</text>
+
+                  <path class="qs-flow" d="M89 128 L89 140" marker-end="url(#qs-a)"/>
+
+                  <rect class="qs-stage gate" x="4" y="144" width="170" height="30"/>
+                  <text class="qs-cap on" x="12" y="156">BENCHMARK</text>
+                  <text class="qs-sub" x="12" y="168">1,200+ classical baselines</text>
+
+                  <path class="qs-flow" d="M89 174 L89 190" marker-end="url(#qs-a)"/>
+                  <text class="qs-cap" x="89" y="196" text-anchor="middle">STRUCTURAL ADVANTAGE</text>
+
+                  <path class="qs-rej" d="M174 113 L204 113" marker-end="url(#qs-r)"/>
+                  <path class="qs-rej" d="M174 159 L204 159" marker-end="url(#qs-r)"/>
+
+                  <rect class="qs-sink" x="208" y="98" width="88" height="76"/>
+                  <text class="qs-cap" x="216" y="114">INDEXED</text>
+                  <text class="qs-num" x="216" y="134">800+</text>
+                  <text class="qs-sub" x="216" y="147">negative results,</text>
+                  <text class="qs-sub" x="216" y="159">never re-proposed</text>
+                </svg>
+                <p class="hint">
+                  Candidate mechanisms for <span class="kz">non-abelian HSP</span>, dihedral cosets and linear
+                  code equivalence have to clear a formal proof gate and then beat the classical baselines.
+                  Failures are not discarded: they are written to a permanent index, which is what stops the
+                  engine from re-proposing the same dead end.
+                </p>
+              </div>
+            </div>
           </article>
 
           <article class="piece rv">
@@ -414,6 +476,7 @@
                 <span class="tag">KV caching</span><span class="tag">CUDA graphs</span>
               </div>
               <div class="inline-links">
+                <a href="llmcompression/">Project page</a>
                 <a href="https://github.com/Jaspersands/LLMcompression">GitHub</a>
                 <a href="assets/practical-llm-based-lossless-compression.pdf">Write-up</a>
               </div>
@@ -428,6 +491,12 @@
           contigs and antimicrobial resistance annotations into a shared hyperbolic space
           (<a href="assets/hyperamr_paper.pdf">write-up</a>).
         </p>
+
+        <p class="also rv">
+          Other hackathons: <strong>Audience Favorite</strong> at the Harmoniqs Quantum Design Hackathon 2026,
+          and <strong>Runner-Up</strong> at the Qualcomm Snapdragon Hackathon 2026. The iQuHACK win also qualified
+          us for the NYU Abu Dhabi Quantum and AI Hackathon for Social Good 2027.
+        </p>
       </div>
     </section>
 
@@ -435,6 +504,17 @@
       <div class="wrap">
         <div class="shead rv"><h2>Research</h2><span class="idx">03</span></div>
         <div class="tl rv">
+          <div class="tl-item now">
+            <h3>Diraq / UNSW Sydney</h3>
+            <div class="where">MS Thesis Research · Sep 2026 – May 2027</div>
+            <p>
+              Automating silicon spin-qubit characterization under Dr. Nard Dumoulin Stuyck. Manual tuning and
+              interpretation of charge measurements is one of the real bottlenecks in scaling semiconductor
+              quantum hardware, so the work is to build pipelines that acquire charge data from cryogenic
+              probing, classify charge transitions and device states with machine learning, and measure that
+              automated reading against what an expert would call by hand.
+            </p>
+          </div>
           <div class="tl-item">
             <h3>Cidon Systems Research Lab</h3>
             <div class="where">Graduate Researcher · Columbia · Sep 2025 – Jun 2026</div>
@@ -465,7 +545,7 @@
           </div>
           <div class="tl-item">
             <h3>CRIS Lab</h3>
-            <div class="where">Graduate Researcher · Columbia · May – Aug 2025</div>
+            <div class="where">Graduate Researcher · Columbia · May – Dec 2025</div>
             <p>
               Work on reducing hallucination in generative protein modeling, under Dr. Venkat Venkatasubramanian.
               I built tooling that turns natural language pharmaceutical queries into graph-grounded molecular
@@ -474,7 +554,7 @@
           </div>
           <div class="tl-item">
             <h3>Foster Care Policy Database</h3>
-            <div class="where">Undergraduate Researcher · WashU · Sep 2024 – Jun 2025</div>
+            <div class="where">Undergraduate Researcher · WashU · Sep 2024 – May 2025</div>
             <p>
               I fine-tuned LLaMA-3 with Unsloth and Hugging Face to answer questions about foster care regulation
               across several states. The web interface used human-in-the-loop feedback to improve the answers
@@ -499,11 +579,31 @@
         <div class="shead rv"><h2>Experience</h2><span class="idx">04</span></div>
         <div class="tl rv">
           <div class="tl-item">
-            <h3>Smack Technologies · Software Engineer Intern</h3>
+            <h3>Smack Technologies · AI Intern</h3>
             <div class="where">May – Aug 2026</div>
             <p>
-              I wrote physics simulations and decision models for the core technology pipelines, along with state
-              transition mappings and simulation benchmarks used to validate the learned policies.
+              Three strands, which converged by the end. I built physics and sensor simulation, integrating
+              our knowledge graph into it so corpus generation could draw on everything the graph knew. I ran
+              head-to-head benchmarks across open-weight models on speed, intelligence and concurrency, which
+              ended in an evidence-based writeup and a 64x speedup in corpus generation. And I measured the
+              simulator itself against references chosen from outside it.
+            </p>
+            <p>
+              The last stretch has been measuring that core instead of extending it. The existing tests say the
+              sim still works. They don't say how far it sits from an independent answer, or whether that gap
+              ever turns a yes into a no. So each study takes one piece, gives it an answer that doesn't come
+              from the sim (a standard Earth, a conservation law, a halved time step), sweeps the real map
+              rather than a toy equator, and asks whether the difference is large enough to flip a cutoff the
+              sim already relies on. One command regenerates the report, and the suite fails until it is re-run
+              after a physics change.
+            </p>
+            <p>
+              First study is Earth shape. The sim treats Earth as a sphere and GPS uses a spheroid. Across 4,371
+              pairs the two answers differ by at most 13 km, about 0.55%, and roughly 4 km on average, with the
+              sign of the error depending on heading. Disagreement is confined to a narrow band around each
+              threshold that no live case falls inside, and the error is nowhere near large enough to reorder
+              the thresholds it feeds. That last sentence is the useful one, because it lets the team keep the
+              simple model on purpose rather than vaguely worrying about it.
             </p>
           </div>
           <div class="tl-item">
@@ -552,9 +652,9 @@
             <h3>Columbia University, MS in Computer Science</h3>
             <div class="where">Quantum computing track · Sep 2025 – May 2027</div>
             <div class="line">
-              <b>Thesis.</b> Automation of silicon spin qubit measurements using machine learning. Based at Diraq
-              and UNSW Sydney with Columbia, Sep 2026 to May 2027, co-supervised by Dr. Nard Dumoulin Stuyck
-              and Prof. Henry Yuen. The work continues
+              <b>Thesis.</b> Automation of silicon spin-qubit measurements using machine learning, co-supervised
+              by Dr. Nard Dumoulin Stuyck and Dr. Henry Yuen; described under <a href="#research">Research</a>.
+              The work continues
               <a href="https://arxiv.org/abs/2607.20871">Vallabhapurapu et al., arXiv:2607.20871</a>, which reads
               the electron occupancy of an isolated double dot from its charge-stability map with two small
               convolutional networks. The demo below runs compact versions of both in your browser.
