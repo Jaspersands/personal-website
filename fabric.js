@@ -53,23 +53,6 @@
     return pixels;
   }
 
-  function getWordBoxes(word, startR, startC) {
-    const boxes = [];
-    let c = startC;
-    for (const char of word) {
-      const glyph = FONT_3X5[char];
-      if (glyph) {
-        for (let r = 0; r < 5; r++) {
-          for (let col = 0; col < 3; col++) {
-            if (glyph[r][col]) boxes.push({ r: startR + r, c: c + col });
-          }
-        }
-      }
-      c += 4;
-    }
-    return boxes;
-  }
-
   function getWordSegments(word, startR, startC) {
     const segments = [];
     let c = startC;
@@ -97,8 +80,8 @@
   }
 
   const canvas = document.getElementById('fabric');
-  const hero = document.querySelector('.hero') || document.querySelector('.ex-hero');
-  const win = document.querySelector('.fabric-window') || document.querySelector('.ex-window');
+  const hero = document.querySelector('.hero');
+  const win = document.querySelector('.fabric-window');
   if (!canvas || !hero || !window.QEC || !window.QECSessions || !window.FabricMath || !window.HeroMath) return;
   const FM = window.FabricMath, HM = window.HeroMath;
   const ctx = canvas.getContext('2d');
@@ -225,7 +208,7 @@
     }));
     S.geom = { qubits: S.patches[0].s.qubits, stabs: S.patches[0].s.stabs };
     S.pairs = FM.neighbours(S.L);
-    document.querySelectorAll('#ex-d, .ex-d').forEach(el => { el.textContent = d; });
+    S.merge = null; S.nextMerge = 0;     // a merge in flight indexes the patch list just replaced
     updateReadout(S.patches[S.L.heroIndex]);
   }
 
@@ -249,15 +232,10 @@
     buildSprite();
     onScroll();
   }
-  let manualZoom = false;
   function onScroll() {
-    if (!manualZoom) {
-      S.p = clamp(scrollY / Math.max(1, hero.offsetHeight), 0, 1);
-      S.cell = FM.cellAt(S.p, S.cellMax, S.cellMin);
-      const zs = $('hero-zoom-slider') || $('ex-zoom-slider');
-      if (zs) zs.value = S.p;
-      S.dirty = true; requestFrame();
-    }
+    S.p = clamp(scrollY / Math.max(1, hero.offsetHeight), 0, 1);
+    S.cell = FM.cellAt(S.p, S.cellMax, S.cellMin);
+    S.dirty = true; requestFrame();
   }
 
   /* ---------------- noise ---------------- */
@@ -306,7 +284,7 @@
       if (patchRect(P, cam).visible) S.animUntil = Math.max(S.animUntil, t + C.T_CHAIN + C.T_HOLD + C.T_FADE + (logical ? C.T_FLASH : 0));
       S.dirty = true;
       if (isHero(i) && logical) {
-        const b = $('hr-logic') || $('ex-logical');
+        const b = $('hr-logic');
         if (b) { b.classList.add('flare'); setTimeout(() => b.classList.remove('flare'), C.T_FLASH); }
       }
     }
@@ -318,32 +296,13 @@
     if (!P) P = S.patches[S.L ? S.L.heroIndex : 0];
     if (!P) return;
     const d = S.L ? S.L.d : 27;
-    const dVal = $('hr-d-val') || $('ex-d');
-    if (dVal) dVal.textContent = d;
-    document.querySelectorAll('#hero-d, #ex-d, .ex-d, .fabric-d').forEach(el => { el.textContent = d; });
-    const rEl = $('hr-rounds') || $('ex-rounds');
-    if (rEl) rEl.textContent = P.rounds.toLocaleString();
-    const pEl = $('hr-phys') || $('ex-phys');
-    if (pEl) pEl.textContent = P.phys.toLocaleString();
-    const lEl = $('hr-logic') || $('ex-logical');
-    if (lEl) lEl.textContent = P.logical.toLocaleString();
+    document.querySelectorAll('#hr-d-val, #hero-d, .fabric-d').forEach(el => { el.textContent = d; });
+    const np = $('hero-n-patches'); if (np && S.L) np.textContent = S.L.patches.length;
+    const rEl = $('hr-rounds'); if (rEl) rEl.textContent = P.rounds.toLocaleString();
+    const pEl = $('hr-phys'); if (pEl) pEl.textContent = P.phys.toLocaleString();
+    const lEl = $('hr-logic'); if (lEl) lEl.textContent = P.logical.toLocaleString();
   }
 
-  function updateCaption() {
-    const d = S.L ? S.L.d : 27;
-    const heroCaption = document.querySelector('.hero-caption');
-    if (heroCaption) {
-      if (reduced()) {
-        heroCaption.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
-      } else {
-        heroCaption.innerHTML = `A distance-${d} rotated surface code, decoded live by my Rust simulator compiled to WebAssembly. Move the pointer to add noise; a chain of errors across the whole width is a logical error — see if you can cause one. Scroll to zoom out to a fabric of 15 logical qubits. <a href="https://qcompiler.jaspersands.com/" target="_blank" rel="noopener">Full simulator →</a>`;
-      }
-    }
-    const winCaption = $('fabric-window-caption') || $('ex-window-caption');
-    if (winCaption) {
-      winCaption.innerHTML = `One logical qubit among many. Each patch is a distance-<span class="fabric-d">${d}</span> surface code with its own decoder rounds. The merges between patches are lattice surgery — how logical gates are performed — illustrated here, not simulated.`;
-    }
-  }
 
   /* ---------------- hybrid opener ---------------- */
   function startOpeningSequence() {
@@ -368,28 +327,27 @@
     const d = H.s.d;
     const midRow = Math.floor(d / 2);
 
-    let boxesQueue = [];
-    let pixelsQueue = [];
+    let pixelsQueue = [];      // one glowing tile and one X error per lit pixel
     let segmentsQueue = [];
 
-    if (d >= 23) {
+    // 'JASPER' is 23 columns wide; below d = 25 it cannot sit inside the patch with a
+    // margin, and at d = 23 its last column would wrap onto the next row.
+    if (d >= 25) {
       const c1 = Math.max(1, Math.floor((d - 1 - 23) / 2));
       const c2 = Math.max(1, Math.floor((d - 1 - 19) / 2));
       let startR = Math.max(1, midRow - 5);
       if (startR + 11 >= d - 1) startR = Math.max(1, d - 13);
 
-      boxesQueue = [...getWordBoxes('JASPER', startR, c1), ...getWordBoxes('SANDS', startR + 6, c2)];
       pixelsQueue = [...getWordPixels('JASPER', startR, c1), ...getWordPixels('SANDS', startR + 6, c2)];
       segmentsQueue = [...getWordSegments('JASPER', startR, c1), ...getWordSegments('SANDS', startR + 6, c2)];
     } else {
       const c = Math.max(1, Math.floor((d - 1 - 7) / 2));
       const startR = Math.max(1, midRow - 2);
-      boxesQueue = getWordBoxes('JS', startR, c);
       pixelsQueue = getWordPixels('JS', startR, c);
       segmentsQueue = getWordSegments('JS', startR, c);
     }
 
-    const totalSteps = Math.max(boxesQueue.length, pixelsQueue.length);
+    const totalSteps = pixelsQueue.length;
     if (totalSteps === 0) {
       isTypingOpener = false;
       hero.classList.remove('hero--typing');
@@ -398,7 +356,7 @@
     }
 
     let stepIdx = 0;
-    const intervalMs = (d >= 23) ? 24 : 70;
+    const intervalMs = (d >= 25) ? 24 : 70;   // two words type fast, the short form slower
 
     const stale = () => !isTypingOpener || S.patches[S.L.heroIndex] !== H;
     function typeNext() {
@@ -406,18 +364,13 @@
       const t = now();
 
       if (stepIdx < totalSteps) {
-        if (stepIdx < boxesQueue.length) {
-          const b = boxesQueue[stepIdx];
-          openerBoxes.push({ r: b.r, c: b.c, t0: t });
-        }
-        if (stepIdx < pixelsQueue.length) {
-          const p = pixelsQueue[stepIdx];
-          const q = p.r * H.s.d + p.c;
-          H.s.toggle(q, 'X');
-          H.pending.push({ q, pauli: 'X', t0: t });
-          H.phys++;
-          refreshSyndrome(H, t);
-        }
+        const p = pixelsQueue[stepIdx];
+        openerBoxes.push({ r: p.r, c: p.c, t0: t });
+        const q = p.r * H.s.d + p.c;
+        H.s.toggle(q, 'X');
+        H.pending.push({ q, pauli: 'X', t0: t });
+        H.phys++;
+        refreshSyndrome(H, t);
 
         const activeCoordSet = new Set(H.pending.map(e => e.q));
         openerSegments = segmentsQueue.filter(seg => {
@@ -436,7 +389,7 @@
         openerTimer = setTimeout(() => {
           if (stale()) return;
           isTypingOpener = false;
-          openerFadeStart = now();
+          const fadeStart = openerFadeStart = now();
           hero.classList.remove('hero--typing');
 
           const { logical, cx, cz } = H.s.decode();
@@ -450,8 +403,11 @@
           S.dirty = true;
           requestFrame();
 
-          // Start ambient mode only after the MWPM erasure animation has completely finished
+          // Start ambient mode only after the MWPM erasure animation has completely finished.
+          // The fade is over by then: clear its timestamp, which drawDynamic reads as the
+          // hero's pending-error alpha and requestFrame reads as "keep rendering".
           setTimeout(() => {
+            if (openerFadeStart === fadeStart) openerFadeStart = null;
             start();
           }, C.T_CHAIN + C.T_HOLD + C.T_FADE);
         }, 1600);
@@ -477,11 +433,8 @@
       H.s.clear();
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    manualZoom = false;
     S.p = 0;
     S.cell = S.cellMax;
-    const zs = $('hero-zoom-slider') || $('ex-zoom-slider');
-    if (zs) zs.value = 0;
     S.dirty = true;
     requestFrame();
     startOpeningSequence();
@@ -503,11 +456,11 @@
   }
 
   function setDistance(newD) {
-    stop();
-    if (isTypingOpener) cancelOpener();
     newD = Math.max(15, Math.min(41, newD));
     if (newD % 2 === 0) newD += 1;
-    if (S.L && S.L.d === newD) return;
+    if (S.L && S.L.d === newD) return;   // at the limit: nothing to do, and nothing to stop
+    stop();
+    if (isTypingOpener) cancelOpener();
 
     S.customD = newD;
     resize();
@@ -987,44 +940,17 @@
     }).catch(err => { console.warn('fabric: engine unavailable', err); markStatic(); });
 
     addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('scroll', () => { manualZoom = false; }, { passive: true });
-    const zoomSlider = document.getElementById('hero-zoom-slider') || document.getElementById('ex-zoom-slider');
-    const zoomHeroBtn = document.getElementById('zoom-hero-btn');
-    const zoomFabricBtn = document.getElementById('zoom-fabric-btn');
-    if (zoomSlider) {
-      zoomSlider.addEventListener('input', e => {
-        manualZoom = true;
-        S.p = parseFloat(e.target.value);
-        S.cell = FM.cellAt(S.p, S.cellMax, S.cellMin);
-        S.dirty = true;
-        requestFrame();
-      });
-    }
-    if (zoomHeroBtn) {
-      zoomHeroBtn.addEventListener('click', () => {
-        manualZoom = false;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }
-    if (zoomFabricBtn) {
-      zoomFabricBtn.addEventListener('click', () => {
-        manualZoom = false;
-        const targetEl = win || document.querySelector('.fabric-window') || document.querySelector('.ex-window');
-        if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
-      });
-    }
 
-    // Replay button & distance controls
-    const replayBtn = document.getElementById('hr-replay');
-    if (replayBtn) replayBtn.addEventListener('click', replayOpener);
-    const dDecBtn = document.getElementById('hr-d-dec');
+    // Distance controls in the readout
+    const dDecBtn = $('hr-d-dec');
     if (dDecBtn) dDecBtn.addEventListener('click', () => setDistance(S.L.d - 2));
-    const dIncBtn = document.getElementById('hr-d-inc');
+    const dIncBtn = $('hr-d-inc');
     if (dIncBtn) dIncBtn.addEventListener('click', () => setDistance(S.L.d + 2));
 
     // Undocumented keys for anyone reading the source: r replay, [ ] distance, b burst, g matching graph
     window.addEventListener('keydown', e => {
-      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;   // browser shortcuts (Cmd+R, Cmd+[) are not ours
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
       if (e.key === 'r' || e.key === 'R') {
         replayOpener();
       } else if (e.key === '[') {

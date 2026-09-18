@@ -215,9 +215,12 @@
   }
 
   async function loadModel(manifestUrl) {
-    const manifest = await (await fetch(manifestUrl)).json();
+    const get = async url => { const r = await fetch(url); if (!r.ok) throw new Error(`HTTP ${r.status} for ${url}`); return r; };
+    const manifest = await (await get(manifestUrl)).json();
     const binUrl = manifestUrl.replace(/\.json$/, '.bin');
-    const buf = await (await fetch(binUrl)).arrayBuffer();
+    const buf = await (await get(binUrl)).arrayBuffer();
+    // A truncated or substituted blob would run silently and output nonsense: check its size.
+    if (manifest.elements && buf.byteLength !== 2 * manifest.elements) throw new Error(`${binUrl}: ${buf.byteLength} bytes, expected ${2 * manifest.elements}`);
     return buildModel(manifest, decodeFloat16(new Uint16Array(buf)));
   }
 
