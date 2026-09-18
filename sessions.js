@@ -31,6 +31,7 @@
       qubitAt: (col, row) => row * d + col,
       toggle(q, pauli) {
         alive();
+        if (!(q >= 0 && q < numQubits)) throw new RangeError(`qubit ${q} out of range [0, ${numQubits})`);
         const ts = PAULI[pauli];
         if (!ts) throw new Error(`unknown Pauli ${pauli}`);
         for (const t of ts) w.wasm_toggle_error(ptr, q, t, 0);

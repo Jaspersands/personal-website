@@ -145,13 +145,12 @@
           else if (sA.shape === 'bottom') { x2 = x1; y2 = py(D - 1) + SP / 2; }
           else if (sA.shape === 'left') { x2 = px(0) - SP / 2; y2 = y1; }
           else if (sA.shape === 'right') { x2 = px(D - 1) + SP / 2; y2 = y1; }
-          else {
-            const dTop = sA.r, dBottom = D - 2 - sA.r, dLeft = sA.c, dRight = D - 2 - sA.c;
-            const min = Math.min(dTop, dBottom, dLeft, dRight);
-            if (min === dTop) { x2 = x1; y2 = py(0) - 8; }
-            else if (min === dBottom) { x2 = x1; y2 = py(D - 1) + 8; }
-            else if (min === dLeft) { x2 = px(0) - 8; y2 = y1; }
-            else { x2 = px(D - 1) + 8; y2 = y1; }
+          else if (pair.type === 'Z') {
+            // X-error chains (seen by Z plaquettes) end on the top/bottom boundaries, where only X checks sit
+            if (sA.r <= D - 2 - sA.r) { x2 = x1; y2 = py(0) - 8; } else { x2 = x1; y2 = py(D - 1) + 8; }
+          } else {
+            // Z-error chains (seen by X plaquettes) end on the left/right boundaries
+            if (sA.c <= D - 2 - sA.c) { x2 = px(0) - 8; y2 = y1; } else { x2 = px(D - 1) + 8; y2 = y1; }
           }
         } else {
           const sB = bandLat.stabilizers[pair.b];

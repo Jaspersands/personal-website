@@ -15,7 +15,7 @@ async function runTests() {
     if (!condition) {
       console.error(`  ✗ FAIL: ${message}`);
       failed++;
-      throw new Error(message);
+      throw new Error('FAIL: ' + message);   // the prefix tells test() this failure is already counted
     }
   }
 
@@ -52,20 +52,22 @@ async function runTests() {
     });
   });
 
-  // 2. poisson()
+  // 2. poisson() — seeded draws, tolerance of five standard errors of the mean
   test('poisson(): empirical mean over 50,000 draws is within tolerance of lambda', () => {
     const lambdas = [0.05, 1.0, 4.0];
     const N = 50000;
+    let seed = 20260918;
+    const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
 
     lambdas.forEach(lambda => {
       let sum = 0;
       for (let i = 0; i < N; i++) {
-        sum += HeroMath.poisson(lambda);
+        sum += HeroMath.poisson(lambda, rand);
       }
       const mean = sum / N;
       const relDiff = Math.abs(mean - lambda) / lambda;
-      const tol = lambda < 0.1 ? 0.05 : 0.03;
-      assert(relDiff < tol, `poisson(${lambda}) mean was ${mean.toFixed(4)}, rel diff ${relDiff.toFixed(4)} >= ${tol}`);
+      const tol = 5 * Math.sqrt(1 / (lambda * N));
+      assert(relDiff < tol, `poisson(${lambda}) mean was ${mean.toFixed(4)}, rel diff ${relDiff.toFixed(4)} >= ${tol.toFixed(4)}`);
     });
   });
 

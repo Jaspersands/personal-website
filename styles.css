@@ -176,7 +176,9 @@ canvas#fabric,
 .hero-readout b {
   color: var(--fg);
   font-weight: 500;
+  transition: color .25s;
 }
+.hero-readout b.flare { color: var(--accent); }   /* the logical-error count, on a logical error */
 .hr-d-ctl {
   display: inline-flex;
   align-items: center;

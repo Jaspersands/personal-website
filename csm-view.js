@@ -209,7 +209,7 @@
   /* ---------------- boot ---------------- */
   readColours();
   new MutationObserver(readColours).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  if (worker) worker.addEventListener('message', e => { if (e.data.type === 'loaded') { S.params[e.data.name] = e.data.params; const b = root.querySelector(`[data-model="${e.data.name}"]`); if (b) b.textContent = `${e.data.name} · ${(e.data.params / 1000).toFixed(0)}k`; } });
+  if (worker) worker.addEventListener('message', e => { if (e.data.type === 'loaded') { S.params[e.data.name] = e.data.params; const b = root.querySelector(`[data-model="${e.data.name}"]`); if (b) b.textContent = `${e.data.name} · ${e.data.params >= 1e6 ? (e.data.params / 1e6).toFixed(1) + 'M' : (e.data.params / 1e3).toFixed(0) + 'k'}`; } });
   fetch('assets/models/csm-metrics.json').then(r => r.json()).then(m => {
     const k = m.lines.classical.knobs || {};
     classicalKnobs = { sigmaY: k.sigma_y, sigmaX: k.sigma_x, prominence: k.prominence, minSep: k.min_sep };
