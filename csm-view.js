@@ -16,7 +16,12 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const T = { ACQUIRE: 2500, HOLD_OK: 4500, HOLD_REJECT: 2600, JUMP_DX: [6, 11] };
   const CLASS_MIX = [['clean', .55], ['degraded', .15], ['unstable', .15], ['unclear', .15]];
-  const MODEL_URLS = { classifier: 'assets/models/classifier.json', compact: 'assets/models/compact.json', full: 'assets/models/full.json' };
+  // The ?v= stamped on this script's URL in index.html is passed on to the worker, its
+  // importScripts and the model files, so a deploy invalidates all of them together
+  // (the CDN caches .js and .bin for four hours, .json and HTML for ten minutes).
+  const V = (() => { try { return new URL(document.currentScript.src).searchParams.get('v') || ''; } catch (_) { return ''; } })();
+  const vq = V ? `?v=${encodeURIComponent(V)}` : '';
+  const MODEL_URLS = { classifier: 'assets/models/classifier.json' + vq, compact: 'assets/models/compact.json' + vq, full: 'assets/models/full.json' + vq };
   let classicalKnobs = {};   // the baseline's knobs as tuned by ml/eval.py, so the live count and the reported accuracy agree
 
   /* ---------------- colours ---------------- */
@@ -32,7 +37,7 @@
   // Opened from disk (file://), browsers block both Workers and fetch: the map still gets
   // acquired and drawn, but the networks are marked unavailable instead of failing later.
   let worker = null, workerError = null;
-  try { worker = new Worker('csm-worker.js'); } catch (err) { workerError = err; }
+  try { worker = new Worker('csm-worker.js' + vq); } catch (err) { workerError = err; }
   const pending = new Map(); let nextId = 1;
   const loaded = new Set(), loading = new Map();
   if (worker) worker.onmessage = e => {
@@ -210,7 +215,7 @@
   readColours();
   new MutationObserver(readColours).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   if (worker) worker.addEventListener('message', e => { if (e.data.type === 'loaded') { S.params[e.data.name] = e.data.params; const b = root.querySelector(`[data-model="${e.data.name}"]`); if (b) b.textContent = `${e.data.name} · ${e.data.params >= 1e6 ? (e.data.params / 1e6).toFixed(1) + 'M' : (e.data.params / 1e3).toFixed(0) + 'k'}`; } });
-  fetch('assets/models/csm-metrics.json').then(r => r.json()).then(m => {
+  fetch('assets/models/csm-metrics.json' + vq).then(r => r.json()).then(m => {
     const k = m.lines.classical.knobs || {};
     classicalKnobs = { sigmaY: k.sigma_y, sigmaX: k.sigma_x, prominence: k.prominence, minSep: k.min_sep };
     const pct = v => (v * 100).toFixed(1) + ' %';

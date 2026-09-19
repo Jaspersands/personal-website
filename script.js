@@ -28,12 +28,13 @@
   document.querySelectorAll('.rv').forEach(n => io.observe(n));
 
   const links = [...document.querySelectorAll('.nav .link')];
-  const spy = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return;
-    const href = '#' + e.target.id;
-    if (!links.some(l => l.getAttribute('href') === href)) return;   // ignore unlinked sections
-    links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === href));
-  }), { rootMargin: '-45% 0px -50% 0px' });
+  const linkFor = s => links.find(l => l.getAttribute('href') === '#' + s.id) || null;
+  const inView = new Set();   // sections currently crossing the spy band, so leaving one clears its link
+  const spy = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target); });
+    const cur = [...inView].map(linkFor).find(Boolean) || null;   // unlinked sections (Skills, Outside) highlight nothing
+    links.forEach(l => l.classList.toggle('on', l === cur));
+  }, { rootMargin: '-45% 0px -50% 0px' });
   document.querySelectorAll('main section[id]').forEach(s => spy.observe(s));
 
   /* ================================================================
@@ -146,11 +147,11 @@
           else if (sA.shape === 'left') { x2 = px(0) - SP / 2; y2 = y1; }
           else if (sA.shape === 'right') { x2 = px(D - 1) + SP / 2; y2 = y1; }
           else if (pair.type === 'Z') {
-            // X-error chains (seen by Z plaquettes) end on the top/bottom boundaries, where only X checks sit
-            if (sA.r <= D - 2 - sA.r) { x2 = x1; y2 = py(0) - 8; } else { x2 = x1; y2 = py(D - 1) + 8; }
-          } else {
-            // Z-error chains (seen by X plaquettes) end on the left/right boundaries
+            // X-error chains (seen by Z plaquettes) end on the left/right boundaries, where only X checks sit
             if (sA.c <= D - 2 - sA.c) { x2 = px(0) - 8; y2 = y1; } else { x2 = px(D - 1) + 8; y2 = y1; }
+          } else {
+            // Z-error chains (seen by X plaquettes) end on the top/bottom boundaries
+            if (sA.r <= D - 2 - sA.r) { x2 = x1; y2 = py(0) - 8; } else { x2 = x1; y2 = py(D - 1) + 8; }
           }
         } else {
           const sB = bandLat.stabilizers[pair.b];

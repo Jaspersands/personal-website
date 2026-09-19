@@ -39,7 +39,7 @@
     // 1. Bulk (face) stabilizers: (d-1) x (d-1)
     for (let r = 0; r < d - 1; r++) {
       for (let c = 0; c < d - 1; c++) {
-        const type = (r + c) % 2 === 0 ? 'Z' : 'X';
+        const type = (r + c) % 2 === 0 ? 'X' : 'Z';
         const q = [idx(r, c), idx(r, c + 1), idx(r + 1, c), idx(r + 1, c + 1)];
         stabilizers.push({
           id: stabId++,
@@ -54,12 +54,14 @@
       }
     }
 
-    // 2. Boundary half-plaquettes:
-    // Top boundary (X): even columns in row -1
+    // 2. Boundary half-plaquettes. Z checks sit on the top and bottom edges and X checks
+    //    on the left and right, so an X-error chain across the width is the logical X —
+    //    the same orientation as the wasm lattice in the hero.
+    // Top boundary (Z): even columns in row -1
     for (let c = 0; c < d - 1; c += 2) {
       stabilizers.push({
         id: stabId++,
-        type: 'X',
+        type: 'Z',
         shape: 'top',
         r: -1,
         c,
@@ -69,11 +71,11 @@
       });
     }
 
-    // Bottom boundary (X): odd columns in row d-1
+    // Bottom boundary (Z): odd columns in row d-1
     for (let c = 1; c < d - 1; c += 2) {
       stabilizers.push({
         id: stabId++,
-        type: 'X',
+        type: 'Z',
         shape: 'bottom',
         r: d - 1,
         c,
@@ -83,11 +85,11 @@
       });
     }
 
-    // Left boundary (Z): odd rows in col -1
+    // Left boundary (X): odd rows in col -1
     for (let r = 1; r < d - 1; r += 2) {
       stabilizers.push({
         id: stabId++,
-        type: 'Z',
+        type: 'X',
         shape: 'left',
         r,
         c: -1,
@@ -97,11 +99,11 @@
       });
     }
 
-    // Right boundary (Z): even rows in col d-1
+    // Right boundary (X): even rows in col d-1
     for (let r = 0; r < d - 1; r += 2) {
       stabilizers.push({
         id: stabId++,
-        type: 'Z',
+        type: 'X',
         shape: 'right',
         r,
         c: d - 1,

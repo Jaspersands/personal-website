@@ -170,5 +170,22 @@ test('Correction completely clears syndrome across 500 random error patterns at 
   assert.strictEqual(totalTrials, 500, `Expected 500 total trials, ran ${totalTrials}`);
 });
 
+// 7. Orientation matches the hero: X errors across the whole width are a logical
+//    (no syndrome), so Z half-plaquettes sit on the top and bottom boundaries.
+test('A full-width row of X errors is syndrome-free and a full-height column is not', () => {
+  [5, 7].forEach(d => {
+    const lat = SC.lattice(d);
+    const mid = (d - 1) / 2;
+    const row = new Array(lat.numQubits).fill(0);
+    for (let c = 0; c < d; c++) row[lat.idx(mid, c)] = 1;
+    assert.strictEqual(SC.syndrome(lat, row).litIds.length, 0, `d=${d}: X row lit ${SC.syndrome(lat, row).litIds.length} stabilizers`);
+    const col = new Array(lat.numQubits).fill(0);
+    for (let r = 0; r < d; r++) col[lat.idx(r, mid)] = 1;
+    assert.strictEqual(SC.syndrome(lat, col).litIds.length, 2, `d=${d}: X column lit ${SC.syndrome(lat, col).litIds.length} stabilizers`);
+    lat.stabilizers.filter(s => s.shape === 'top' || s.shape === 'bottom').forEach(s => assert.strictEqual(s.type, 'Z', `${s.shape} half-plaquette is ${s.type}`));
+    lat.stabilizers.filter(s => s.shape === 'left' || s.shape === 'right').forEach(s => assert.strictEqual(s.type, 'X', `${s.shape} half-plaquette is ${s.type}`));
+  });
+});
+
 console.log(`\nResults: ${passed} passed, ${failed} failed.`);
 if (failed > 0) process.exit(1);

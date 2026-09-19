@@ -1,7 +1,7 @@
 /* csm-worker.js — runs the CSM networks off the main thread.
    Messages in:  {type:'load', name, url}   {type:'run', name, id, img: Float32Array}
    Messages out: {type:'loaded', name, params, ms}  {type:'result', name, id, out, ms}  {type:'error', name, id, message} */
-importScripts('csm-nn.js');
+importScripts('csm-nn.js' + self.location.search);   // same ?v= as the page gave this worker
 const models = {};
 self.onmessage = async (e) => {
   const m = e.data;

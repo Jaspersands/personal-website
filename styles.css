@@ -17,6 +17,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+h2[id] { scroll-margin-top: 5rem; }   /* in-page links to a heading clear the sticky nav */
 
 body {
   font-family: var(--sans); font-size: .9375rem; line-height: 1.65;
@@ -137,8 +138,7 @@ img { display: block; max-width: 100%; }
   opacity: 0.05;
 }
 
-canvas#fabric,
-.hero canvas.field {
+canvas#fabric {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -203,16 +203,23 @@ canvas#fabric,
 .hr-d-ctl button:active {
   background: var(--rule);
 }
-#hr-logic.flash {
-  color: var(--accent);
-  text-shadow: 0 0 8px var(--accent);
-  transition: none;
-}
 .hero-caption {
   font-family: var(--mono);
   font-size: 0.6875rem;
-  color: var(--fg-3);
+  color: var(--fg-2);
   line-height: 1.4;
+  background: color-mix(in srgb, var(--bg) 75%, transparent);   /* the same plate as the readout: it sits on the lattice */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+/* Engine unavailable (fabric.js adds .static): nothing is decoded, so say nothing about it. */
+.hero.static .hero-meta { display: none; }
+/* Reduced motion shows one frozen frame with no rounds and no pointer noise. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-readout, .hero-live { display: none; }
 }
 .hero-caption a {
   color: var(--fg-2);
@@ -244,6 +251,7 @@ canvas#fabric,
   border: 1px solid var(--rule);
   border-radius: 3px;
 }
+.fabric-window.static { min-height: 0; }
 .fabric-window.static p { display: none; }
 
 nav, .hero, .fabric-window, main, footer {
@@ -255,11 +263,6 @@ main .section, footer {
 }
 .band {
   background: color-mix(in srgb, var(--bg-2) 92%, transparent);
-}
-
-/* ---------------- D: Double-Dot Auto-Tuner ---------------- */
-
-@media (max-width: 960px) {
 }
 
 .eyebrow {
@@ -304,13 +307,6 @@ main .section, footer {
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.qdot-hero { cursor: pointer; }
-.flash-correct { animation: qd-flash 0.3s ease-in-out; }
-@keyframes qd-flash {
-  0%, 100% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.4); filter: brightness(1.8); }
 }
 
 /* ---------------- Demo band ---------------- */
@@ -386,7 +382,6 @@ main .section, footer {
 .qs-rej { stroke: var(--accent); fill: none; stroke-dasharray: 2.5 2.5; }
 .qs-cap { font-family: var(--mono); font-size: 6.5px; letter-spacing: .1em; fill: var(--fg-3); }
 .qs-cap.on { fill: var(--accent); }
-.qs-name { font-family: var(--sans); font-size: 9px; font-weight: 500; fill: var(--fg); }
 .qs-sub { font-family: var(--sans); font-size: 7.5px; fill: var(--fg-2); }
 .qs-num { font-family: var(--mono); font-size: 9px; fill: var(--fg); }
 .qs-arrowhead { fill: var(--fg-3); }
@@ -422,8 +417,6 @@ main .section, footer {
 }
 .piece:first-child { padding-top: 0; }
 .piece:last-child { border-bottom: none; }
-.piece.nomedia { grid-template-columns: 1fr; }
-.piece.nomedia .piece-body { max-width: 42rem; }
 
 .piece h3 { font-family: var(--serif); font-size: 1.625rem; font-weight: 600; letter-spacing: -.01em; margin-bottom: .1875rem; }
 .piece .where { font-size: .8125rem; color: var(--accent); margin-bottom: .875rem; }
@@ -440,15 +433,6 @@ main .section, footer {
 .inline-links { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .8125rem; margin-top: .75rem; }
 .inline-links a { color: var(--accent); border-bottom: 1px solid transparent; padding-bottom: 1px; }
 .inline-links a:hover { border-bottom-color: var(--accent); }
-
-.frame { border: 1px solid var(--rule); overflow: hidden; background: var(--bg-2); }
-.frame img { width: 100%; transition: transform .5s cubic-bezier(.4,0,.2,1); }
-.frame:hover img { transform: scale(1.03); }
-.frame.pad img { background: #fff; padding: .375rem; }
-.frame figcaption {
-  font-size: .6875rem; color: var(--fg-3); padding: .4375rem .625rem;
-  border-top: 1px solid var(--rule); background: var(--bg);
-}
 
 /* ---------------- Outside work ----------------
    Touring leads on data rather than a photograph, reusing the .demo panel from
@@ -484,9 +468,6 @@ main .section, footer {
 .also a { color: var(--accent); border-bottom: 1px solid currentColor; padding-bottom: 1px; }
 .also a:hover { color: var(--fg); }
 
-/* Matches the .piece breakpoint: the feature stacks before its prose gets narrow. */
-@media (max-width: 960px) {
-}
 /* Below 900 the three cards become full-width strips rather than a 2 + 1 row. */
 @media (max-width: 900px) {
   #outside .list { grid-template-columns: 1fr; gap: 2rem; }
@@ -529,7 +510,15 @@ footer { border-top: 1px solid var(--rule); padding: 2rem 0; font-size: .8125rem
 footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 footer a:hover { color: var(--fg); }
 
-@media (max-width: 1040px) { .nav ul li.n { display: none; } }
+@media (max-width: 1040px) { .nav ul { gap: 1rem; } }
+@media (max-width: 760px) { .nav ul li.n { display: none; } }
+
+/* Narrower than the text column plus the readout: put the text in the lower part
+   of the hero and reserve the bottom for the readout, so the two never overlap. */
+@media (max-width: 1180px) {
+  body[data-field="hero"] .hero { align-items: flex-end; }
+  body[data-field="hero"] .hero .wrap { padding-bottom: 9rem; }
+}
 
 @media (max-width: 960px) {
   .band .wrap { grid-template-columns: 1fr; gap: 2rem; }
@@ -541,9 +530,12 @@ footer a:hover { color: var(--fg); }
   .hero {
     min-height: min(100vh, 44rem);
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;      /* .wrap, then .hero-meta below it — never side by side */
+    justify-content: flex-end;
+    align-items: stretch;
     padding: 4.5rem 0 2rem;
   }
+  body[data-field="hero"] .hero .wrap { padding-bottom: 0; }
   .hero::before {
     display: none;
   }
@@ -555,6 +547,7 @@ footer a:hover { color: var(--fg); }
   .hero-meta {
     position: static;
     margin-top: 1.5rem;
+    padding: 0 2.5rem;           /* the same gutter as .wrap */
     align-items: flex-start;
     text-align: left;
     max-width: 100%;
@@ -570,6 +563,7 @@ footer a:hover { color: var(--fg); }
 
 @media (max-width: 560px) {
   .wrap { padding: 0 1.25rem; }
+  .hero-meta { padding: 0 1.25rem; }
   .section { padding: 3rem 0; }
   .mark { font-size: 1.0625rem; }
 }
@@ -606,4 +600,11 @@ footer a:hover { color: var(--fg); }
 @media (max-width: 720px) {
   .csm-main { grid-template-columns: 1fr; }
   .csm-map-wrap { width: 100%; max-width: 20rem; height: auto; aspect-ratio: 1; }
+}
+
+/* ---------------- Print ---------------- */
+@media print {
+  .rv, .hero.hero--typing .hero-content { opacity: 1; transform: none; }
+  canvas#fabric, .fabric-window, .progress, .nav .theme, .hero-meta { display: none; }
+  .hero { min-height: 0; }
 }
