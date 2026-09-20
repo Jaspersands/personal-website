@@ -40,7 +40,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2026-09-19">
+  <link rel="stylesheet" href="styles.css?v=2026-09-21">
   <!-- Sections reveal on scroll via script.js; without JavaScript they must simply be visible. -->
   <noscript><style>.rv { opacity: 1; transform: none; }</style></noscript>
 </head>
@@ -128,59 +128,6 @@
       </div>
     </section>
 
-  <!-- ============ Interactive band: surface code ============ -->
-  <section class="band" aria-labelledby="band-h">
-    <div class="wrap">
-      <div class="rv">
-        <h2 id="band-h">Error correction, in your browser</h2>
-        <p>
-          A distance-5 rotated surface code with 25 data qubits and 24 stabilizers. Click a qubit to put an
-          error on it. Stabilizers light up when they anticommute with that error. That pattern of lit
-          stabilizers is all a real quantum computer gets to see, because measuring the error directly would
-          collapse the state.
-        </p>
-        <p>
-          Decoding means working backwards from that pattern to a likely error. This is a small version of the
-          Rust and WebAssembly simulator I built, which does the decoding properly with minimum-weight
-          perfect matching.
-        </p>
-        <div class="inline-links">
-          <a href="https://github.com/Jaspersands/quantum-simulator-qec">GitHub</a>
-          <a href="https://qcompiler.jaspersands.com/">Full simulator</a>
-        </div>
-      </div>
-
-      <div class="demo rv">
-        <div class="demo-head">
-          <span class="t">Surface code · d=5</span>
-          <span class="t" id="sc-d">24 stab.</span>
-        </div>
-        <div class="demo-body">
-          <svg id="sc" viewBox="0 0 264 264" role="group" aria-label="Interactive distance-5 surface code lattice"></svg>
-          <div class="ctl">
-            <button id="sc-clear" type="button">Clear</button>
-            <button id="sc-rand" type="button">Inject errors</button>
-            <button id="sc-match" type="button" aria-pressed="false">Match</button>
-          </div>
-          <div class="ctl">
-            <label for="sc-p">p</label>
-            <input type="range" id="sc-p" min="1" max="25" value="8" aria-label="Physical error rate">
-            <span class="val" id="sc-pv">0.08</span>
-          </div>
-          <div class="readout" aria-live="polite">
-            <span>errors <b id="sc-e">0</b></span>
-            <span>syndromes <b id="sc-s">0</b></span>
-          </div>
-          <p class="hint">
-            Click a qubit, or focus it and press Enter, to cycle through I, X, Z, Y.
-            <span class="kz">Z-plaquettes</span> catch X errors and <span class="kx">X-plaquettes</span> catch Z.
-            The Match button pairs syndromes with minimum-weight matching.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
     <section class="section" id="work">
       <div class="wrap">
         <div class="shead rv"><h2>Selected work</h2><span class="idx">02</span></div>
@@ -229,9 +176,13 @@
               <h3>WASM QEC Simulator</h3>
               <div class="where">Rust → WebAssembly · surface code decoding in the browser</div>
               <p>
-                A symplectic stabilizer simulator written in Rust and compiled to WebAssembly. It handles real-time
-                error injection, syndrome visualization, and logical error benchmarking for rotated and XZZX
-                surface codes. The decoders, including minimum-weight perfect matching, all run in the browser.
+                A symplectic stabilizer simulator written in Rust and compiled to WebAssembly, for rotated and XZZX
+                surface codes. It is the engine behind the lattice at the top of this page. An error on a data
+                qubit lights the stabilizers that anticommute with it, and that pattern of lit stabilizers is all
+                a real quantum computer gets to see, because measuring the error directly would collapse the
+                state. Decoding works backwards from the pattern to a likely error; the decoders here, including
+                minimum-weight perfect matching, do it properly and run entirely in the browser, with live error
+                injection and logical error benchmarking.
               </p>
               <div class="tags">
                 <span class="tag">Rust</span><span class="tag">WebAssembly</span>
@@ -240,7 +191,7 @@
               <div class="inline-links">
                 <a href="https://github.com/Jaspersands/quantum-simulator-qec">GitHub</a>
                 <a href="https://qcompiler.jaspersands.com/">Live dashboard</a>
-                <a href="#band-h">↑ Try the lattice</a>
+                <a href="#top">↑ Try the lattice</a>
               </div>
             </div>
             <div class="demo">
@@ -905,8 +856,7 @@
   <script src="csm-gen.js?v=2026-09-19" defer></script>
   <script src="csm-decode.js?v=2026-09-19" defer></script>
   <script src="csm-view.js?v=2026-09-19" defer></script>
-  <script src="surface-code.js?v=2026-09-19" defer></script>
-  <script src="script.js?v=2026-09-19" defer></script>
+  <script src="script.js?v=2026-09-21" defer></script>
 </body>
 
 </html>

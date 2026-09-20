@@ -346,27 +346,12 @@ main .section, footer {
 }
 .readout b { color: var(--fg); font-weight: 500; }
 .hint { font-size: .6875rem; color: var(--fg-3); margin-top: .625rem; line-height: 1.5; }
-.hint .kx { color: var(--x); }
-.hint .kz { color: var(--z); }
 
 /* --- SVG colour is driven by CLASSES, never by transitioned var() --- */
-.plaq { transition: fill-opacity .25s, stroke-opacity .25s, stroke-width .25s; }
-.plaq.z { stroke: var(--z); fill: var(--z); }
-.plaq.x { stroke: var(--x); fill: var(--x); }
-.latt  { stroke: var(--rule); }
-.qd    { fill: var(--bg); stroke: var(--fg-3); }
-.qd.ex { fill: var(--x); stroke: var(--x); }
-.qd.ez { fill: var(--z); stroke: var(--z); }
-.qd.ey { fill: var(--y); stroke: var(--y); }
-.qdot { cursor: pointer; }
-.qdot:hover .qd { stroke: var(--fg); stroke-width: 1.75; }
-.match.mx { stroke: var(--x); }
-.match.mz { stroke: var(--z); }
 .axis { stroke: var(--rule); }
 .gridline { stroke: var(--rule); stroke-dasharray: 2 3; }
 .tick { font-family: var(--mono); font-size: 8px; fill: var(--fg-3); }
 .lbl  { font-family: var(--mono); font-size: 8.5px; fill: var(--fg-2); }
-.qlbl { font-family: var(--mono); font-size: 8px; font-weight: 500; fill: var(--bg); }
 .s-a { stroke: var(--fg-3); }
 .s-b { stroke: var(--accent); }
 .m-a { fill: var(--fg-3); }
