@@ -583,34 +583,22 @@
         <div class="shead rv"><h2>Experience</h2><span class="idx">04</span></div>
         <div class="tl rv">
           <div class="tl-item">
-            <h3>Smack Technologies · AI Intern</h3>
-            <div class="where">May – Aug 2026</div>
+            <h3>Smack Technologies &middot; AI Intern</h3>
+            <div class="where">May &ndash; Aug 2026</div>
             <p>
-              I worked on the simulation underneath Smack's AI pipelines. Three strands, and they ended up
-              feeding each other. I built the physics and sensor simulation and wired our knowledge graph into
-              it, so corpus generation could draw on everything the graph already held instead of a
-              hand-maintained subset of it. I benchmarked open-weight models head to head on speed,
-              intelligence and concurrency, which ended in an evidence-based write-up and a 64&times; speedup
-              in corpus generation. And I built the validation that measures the simulator against answers it
-              did not produce itself.
+              I built the physics and sensor simulation underneath Smack's AI pipelines, then expanded it by
+              pulling in everything our knowledge graph held and a good deal it didn't, so corpus generation
+              had a far wider world to draw on. Alongside that I benchmarked open-weight models head to head on
+              speed, intelligence and concurrency, which ended in an evidence-based write-up and a 64&times;
+              speedup in corpus generation.
             </p>
             <p>
-              That last strand became the main one, because it asks a different question from the test suite.
-              The tests said the simulator still did what it did yesterday. They said nothing about how far its
-              answers sat from an independent one, or whether that distance was ever large enough to change a
-              decision made downstream. So each study took a single modelling assumption, recomputed the same
-              quantity from a source outside the simulator, whether that was a standard reference model, a
-              conservation law, or a halved time step, and swept the whole domain rather than a convenient
-              slice of it.
-            </p>
-            <p>
-              The first study took a geometric simplification. The simulator treats the Earth as a sphere,
-              where the standard reference model uses a spheroid. The two answers differ by at most 0.55%, with
-              the sign of the error depending on heading, and never by enough to change a downstream decision.
-              That last part is the useful one, because it let the team keep the simple model deliberately,
-              with a number attached, rather than carrying a vague worry about it. One command regenerates the
-              report, and the suite fails until it has been re-run after a change to the physics, so the bound
-              cannot quietly go stale.
+              The last piece was measuring the simulator against answers it did not produce itself. Each study
+              takes one quantity, recomputes it from an independent source, and sweeps the whole domain rather
+              than a convenient slice. The first bounded the error from a geometric simplification at 0.55%,
+              small enough that the team could keep the simple model deliberately rather than worrying about
+              it. One command regenerates the report, and the suite fails until it has been re-run after a
+              physics change.
             </p>
           </div>
           <div class="tl-item">
