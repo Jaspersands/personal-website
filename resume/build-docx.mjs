@@ -249,7 +249,7 @@ const doc = new Document({
       heading('Experience'),
       entryLine([b('Smack Technologies'), DOT(), i('AI Intern')], 'May – Aug 2026', 42),
       bullet([run(
-        'Built physics and sensor simulation, integrating the knowledge graph to expand corpus ' +
+        'Built and expanded physics and sensor simulation, integrating the knowledge graph to widen corpus ' +
         'generation.'
       )]),
       bullet([run(
