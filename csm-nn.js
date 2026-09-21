@@ -217,7 +217,7 @@
   async function loadModel(manifestUrl) {
     const get = async url => { const r = await fetch(url); if (!r.ok) throw new Error(`HTTP ${r.status} for ${url}`); return r; };
     const manifest = await (await get(manifestUrl)).json();
-    const binUrl = manifestUrl.replace(/\.json$/, '.bin');
+    const binUrl = manifestUrl.replace(/\.json(\?[^#]*)?$/, '.bin$1');   // keep a ?v= cache key
     const buf = await (await get(binUrl)).arrayBuffer();
     // A truncated or substituted blob would run silently and output nonsense: check its size.
     if (manifest.elements && buf.byteLength !== 2 * manifest.elements) throw new Error(`${binUrl}: ${buf.byteLength} bytes, expected ${2 * manifest.elements}`);

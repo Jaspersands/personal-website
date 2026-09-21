@@ -95,7 +95,8 @@
     colours: null, sprite: null, dpr: 1, W: 0, H: 0,
     dirty: true, raf: 0, animUntil: 0, liveAnims: 0, frames: 0, running: false, readyAt: 0,
     pointer: { x: 0, y: 0, t: -Infinity }, merge: null, nextMerge: 0, tickTimer: 0, lastTick: 0,
-    forceReduced: false, static: false, customD: null
+    forceReduced: false, static: false, customD: null,
+    scrolledPast: false                  // the fabric window is above the viewport: nothing to animate for
   };
 
   let isTypingOpener = false;
@@ -549,7 +550,7 @@
     S.tickTimer = setTimeout(tick, C.TICK);
   }
   function start() {
-    if (S.running || reduced() || S.static || !S.engine || document.hidden || isTypingOpener) return;
+    if (S.running || reduced() || S.static || !S.engine || document.hidden || isTypingOpener || S.scrolledPast) return;
     S.running = true;
     S.lastTick = now();
     const t0 = now();
@@ -970,11 +971,18 @@
     addEventListener('pointermove', e => { S.pointer = { x: e.clientX, y: e.clientY, t: now() }; }, { passive: true });
     document.addEventListener('pointerleave', () => { S.pointer.t = -Infinity; });
     document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
+    // Below the fabric window the canvas only shows through the sections at 8 %, so the
+    // scheduler (and with it the frame loop) stops there and resumes when it scrolls back in.
+    if (win) new IntersectionObserver(es => {
+      const e = es[es.length - 1];
+      S.scrolledPast = !e.isIntersecting && e.boundingClientRect.bottom <= 0;
+      if (S.scrolledPast) stop(); else start();
+    }).observe(win);
     new MutationObserver(() => { readColours(); buildSprite(); S.dirty = true; requestFrame(); })
       .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     function onReduced() {
       if (!S.engine) return;
-      if (reduced()) { stop(); S.patches.forEach(P => { P.anim = null; P.frozen = null; }); composeFrozen(); }
+      if (reduced()) { stop(); abortOpener(); S.patches.forEach(P => { P.anim = null; P.frozen = null; }); composeFrozen(); }
       else { S.patches.forEach(P => { P.frozen = null; }); start(); }
       S.dirty = true; requestFrame();
     }
