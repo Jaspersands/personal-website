@@ -583,26 +583,20 @@
         <div class="shead rv"><h2>Experience</h2><span class="idx">04</span></div>
         <div class="tl rv">
           <div class="tl-item">
-            <h3>Smack Technologies · AI Intern</h3>
-            <div class="where">May – Aug 2026</div>
+            <h3>Smack Technologies &middot; AI Intern</h3>
+            <div class="where">May &ndash; Aug 2026</div>
             <p>
-              Three strands that converged by the end. I built the physics and sensor simulation and wired our
-              knowledge graph into it, so corpus generation could draw on everything the graph knew. I
-              benchmarked open-weight models head to head on speed, intelligence and concurrency, which ended
-              in an evidence-based write-up and a 64× speedup in corpus generation. And I measured the
-              simulator against references chosen from outside it.
+              I built the physics and sensor simulation underneath Smack's AI pipelines, then expanded it by
+              pulling in everything our knowledge graph held and a good deal it didn't, so corpus generation
+              had a far wider world to draw on. Alongside that I benchmarked open-weight models head to head on
+              speed, intelligence and concurrency, which ended in an evidence-based write-up and a 64&times;
+              speedup in corpus generation.
             </p>
             <p>
-              That last strand became the main one. The existing tests said the sim still worked; they didn't
-              say how far it sat from an independent answer, or whether that gap ever turned a yes into a no.
-              So each study takes one piece, gives it an answer that doesn't come from the sim (a standard
-              Earth, a conservation law, a halved time step), sweeps the real map, and asks whether the
-              difference is large enough to flip a cutoff the sim relies on. First study, Earth shape: the sim
-              uses a sphere, GPS a spheroid. Across 4,371 pairs the answers differ by at most 13 km, about
-              0.55%, and roughly 4 km on average, confined to a narrow band around each threshold that no live
-              case falls inside. That lets the team keep the simple model on purpose rather than worrying
-              about it. One command regenerates the report, and the suite fails until it is re-run after a
-              physics change.
+              The last piece was measuring the simulator against answers it did not produce itself. The first
+              study recomputed one quantity from an independent source and bounded the error from a geometric
+              simplification at 0.55%, small enough to keep the simple model on purpose, with one command to
+              regenerate the whole report.
             </p>
           </div>
           <div class="tl-item">
