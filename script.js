@@ -114,77 +114,44 @@
     $('eps').oninput = upd; upd();
   }
 
-  /* ============ DEMO 3 — anneal schedule ============
-     s(t) = 0.5 + 0.5·sign(u)·|u|^k with u = 2t-1.
-     k = 1 is exactly linear; k > 1 flattens the sweep through s꜀,
-     where the gap closes and adiabaticity is hardest to hold.      */
+  /* ============ DEMO 3 — Shor on the simulated machine ============
+     ft-algorithms data/results/shor, N = 35, p = 0.1%: share of runs landing
+     on an ideal peak at each code distance, with cultivated and injected magic
+     states. Measured on the simulated machine, not extrapolated.            */
   {
-    const g = axes($('sweep'), {
-      xlab: 'normalized time  t', ylab: 's(t)',
-      xticks: [[0, '0'], [.5, '0.5'], [1, '1']],
-      yticks: [[0, '0'], [.5, 's꜀'], [1, '1']]
+    const D = [9, 11, 13, 15, 17, 19];
+    const cult = [0.006, 0.288, 0.703, 0.775, 0.794, 0.790];
+    const inj = [0.003, 0.222, 0.549, 0.607, 0.612, null];   // d = 19 not run: the floor is reached
+    const faults = [20.7, 2.48, 0.289, 0.033, 0.004, 0.0004];
+    const NOISELESS = 0.79;
+    const g = axes($('shor'), {
+      xlab: 'code distance  d', ylab: 'peak probability',
+      xticks: D.map((d, i) => [i / (D.length - 1), String(d)]),
+      yticks: [[0, '0'], [.5, '0.5'], [1, '1']]
     });
-    const X = t => L + t * iw, Y = s => T + ih - s * ih;
-    g.append(el('rect', { x: L, y: Y(.55), width: iw, height: Y(.45) - Y(.55), class: 'critband' }));
-    g.append(line(Array.from({ length: 81 }, (_, i) => { const t = i / 80; return [X(t), Y(t)]; }), 's-a', { 'stroke-dasharray': '4 3' }));
-    const curve = line([[0, 0]], 's-b');
-    g.append(curve);
-    legend(g, [['linear', 's-a'], ['flattened', 's-b']], L + 8, T + 10);
-
-    const s_of = (t, k) => { const u = 2 * t - 1; return .5 + .5 * Math.sign(u) * Math.abs(u) ** k; };
-    const frac = k => { let n = 0; const N = 2000; for (let i = 0; i <= N; i++) if (Math.abs(s_of(i / N, k) - .5) <= .05) n++; return n / (N + 1); };
-    const linShare = (frac(1) * 100).toFixed(0) + '%';
-
+    const X = i => L + (i / (D.length - 1)) * iw, Y = v => T + ih - v * ih;
+    g.append(el('line', { x1: L, y1: Y(NOISELESS), x2: L + iw, y2: Y(NOISELESS), class: 'axis', 'stroke-width': 1, 'stroke-dasharray': '2 3' }));
+    const nl = el('text', { x: L + iw - 2, y: Y(NOISELESS) - 4, 'text-anchor': 'end', class: 'tick' });
+    nl.textContent = 'noiseless 0.79'; g.append(nl);
+    const pts = vals => vals.map((v, i) => v == null ? null : [X(i), Y(v)]).filter(Boolean);
+    g.append(line(pts(inj), 's-a', { 'stroke-dasharray': '4 3' }));
+    g.append(line(pts(cult), 's-b'));
+    legend(g, [['cultivated', 's-b'], ['injected', 's-a']], L + 8, T + 10);
+    const rule = el('line', { class: 'axis', 'stroke-width': 1, 'stroke-dasharray': '2 2', y1: T, y2: T + ih });
+    const mc = el('circle', { r: 3.5, class: 'm-b' });
+    const mi = el('circle', { r: 3.5, class: 'm-a' });
+    g.append(rule, mc, mi);
     const upd = () => {
-      const k = +$('swk').value / 10;
-      $('swkv').textContent = k.toFixed(1);
-      curve.setAttribute('d', dOf(Array.from({ length: 161 }, (_, i) => { const t = i / 160; return [X(t), Y(s_of(t, k))]; })));
-      $('sw-a').textContent = linShare;
-      $('sw-b').textContent = (frac(k) * 100).toFixed(0) + '%';
+      const d = +$('shd').value, i = D.indexOf(d), x = X(i);
+      rule.setAttribute('x1', x); rule.setAttribute('x2', x);
+      mc.setAttribute('cx', x); mc.setAttribute('cy', Y(cult[i]));
+      const j = inj[i] == null ? i - 1 : i;
+      mi.setAttribute('cx', X(j)); mi.setAttribute('cy', Y(inj[j]));
+      $('shdv').textContent = d;
+      $('sh-c').textContent = cult[i].toFixed(2);
+      $('sh-i').textContent = inj[i] == null ? '≈ ' + inj[j].toFixed(2) : inj[i].toFixed(2);
+      $('sh-f').textContent = faults[i] >= 1 ? faults[i].toFixed(1) : faults[i].toPrecision(1);
     };
-    $('swk').oninput = upd; upd();
-  }
-
-  /* ============ DEMO 4 — entanglement entropy across cuts ============
-     product S=0 · GHZ S=1 · Ising at criticality (c=1/2) log law ·
-     Haar volume law at the Page value min(l,n-l) - 1/(2 ln2).
-     Bars are built once and only their geometry animates.          */
-  {
-    const N_Q = 12, MAXS = 6;
-    const fam = {
-      product: () => 0,
-      ghz: () => 1,
-      ising: l => Math.max(0, (0.5 / 3) * Math.log2((N_Q / Math.PI) * Math.sin(Math.PI * l / N_Q)) + 0.85),
-      haar: l => Math.max(0, Math.min(l, N_Q - l) - 1 / (2 * Math.LN2))
-    };
-    const g = axes($('ent'), {
-      xlab: 'cut position  ℓ', ylab: 'S(ℓ)  bits',
-      xticks: [[0, '1'], [.5, '6'], [1, '11']],
-      yticks: [[0, '0'], [.5, '3'], [1, '6']]
-    });
-    const bw = iw / (N_Q - 1);
-    const bars = Array.from({ length: N_Q - 1 }, (_, i) => {
-      const b = el('rect', { x: L + i * bw + bw * .18, y: T + ih, width: bw * .64, height: 0, class: 'bar' });
-      g.append(b); return b;
-    });
-    const render = which => {
-      const f = fam[which];
-      const vals = bars.map((_, i) => f(i + 1));
-      vals.forEach((v, i) => {
-        const h = Math.max(0, Math.min(v / MAXS, 1)) * ih;
-        bars[i].setAttribute('y', T + ih - h);
-        bars[i].setAttribute('height', h);
-      });
-      const mx = Math.max(...vals);
-      $('ent-max').textContent = mx.toFixed(2);
-      const chi = Math.round(2 ** mx);
-      $('ent-chi').textContent = chi >= 1000 ? chi.toExponential(1) : chi;
-    };
-    $('ent-ctl').addEventListener('click', e => {
-      const b = e.target.closest('button'); if (!b) return;
-      $('ent-ctl').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
-      render(b.dataset.s);
-    });
-    render('ising');
+    $('shd').oninput = upd; upd();
   }
 })();

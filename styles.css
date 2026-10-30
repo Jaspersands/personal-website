@@ -131,7 +131,9 @@ img { display: block; max-width: 100%; }
 .hero-content h1 {
   text-shadow: 0 1px 3px var(--bg);
 }
-.hero.hero--typing .hero-content {
+/* While the lattice spells the name, the text dims but the links stay readable. */
+.hero-content > * { transition: opacity 0.8s ease; }
+.hero.hero--typing .hero-content > :not(.cta) {
   opacity: 0.2;
 }
 .hero.hero--typing .hero-content::before {
@@ -282,7 +284,9 @@ main .section, footer {
 .btn {
   display: inline-flex; align-items: center; font-size: .8125rem; font-weight: 500;
   padding: .5rem .875rem; border: 1px solid var(--rule); transition: all .2s;
+  background: var(--bg);   /* opaque: the lattice behind the hero must not show through */
 }
+.btn.strong { border-color: var(--fg); }
 .btn.solid { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .btn.solid:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 .btn:hover { border-color: var(--fg); }
@@ -356,7 +360,6 @@ main .section, footer {
 .s-b { stroke: var(--accent); }
 .m-a { fill: var(--fg-3); }
 .m-b { fill: var(--accent); }
-.critband { fill: var(--accent); fill-opacity: .09; }
 .thrband { fill: var(--accent); fill-opacity: .10; }
 
 /* --- Q-Search proof-gate pipeline --- */
@@ -377,7 +380,6 @@ main .section, footer {
 .s-d3-m { fill: var(--fg-3); }
 .s-d5-m { fill: var(--x); }
 .s-d7-m { fill: var(--accent); }
-.bar { fill: var(--accent); fill-opacity: .75; transition: y .35s cubic-bezier(.4,0,.2,1), height .35s cubic-bezier(.4,0,.2,1); }
 
 /* ---------------- Sections ---------------- */
 .section { padding: 4.5rem 0; border-top: 1px solid var(--rule); }
@@ -589,7 +591,7 @@ footer a:hover { color: var(--fg); }
 
 /* ---------------- Print ---------------- */
 @media print {
-  .rv, .hero.hero--typing .hero-content { opacity: 1; transform: none; }
+  .rv, .hero.hero--typing .hero-content > * { opacity: 1; transform: none; }
   canvas#fabric, .fabric-window, .progress, .nav .theme, .hero-meta { display: none; }
   .hero { min-height: 0; }
 }

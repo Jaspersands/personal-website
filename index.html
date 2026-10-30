@@ -40,7 +40,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2026-09-21">
+  <link rel="stylesheet" href="styles.css?v=2026-10-29">
   <!-- Sections reveal on scroll via script.js; without JavaScript they must simply be visible. -->
   <noscript><style>.rv { opacity: 1; transform: none; }</style></noscript>
 </head>
@@ -68,7 +68,7 @@
   <header class="hero" id="top">
     <div class="wrap">
       <div class="hero-content rv">
-        <div class="eyebrow">Quantum algorithms &amp; machine learning</div>
+        <div class="eyebrow">Quantum algorithms, error correction &amp; ML</div>
         <h1>Jasper Sands</h1>
         <p class="lede">
           Master's student in computer science at <strong>Columbia</strong>, on the quantum computing track.
@@ -76,8 +76,8 @@
           with machine learning. It's co-supervised at Diraq/UNSW and Columbia.
         </p>
         <div class="cta">
-          <a class="btn solid" href="assets/jaspersands_resume.pdf?v=be103882">Résumé</a>
-          <a class="btn" href="assets/jaspersands_cv.pdf?v=076abe89">CV</a>
+          <a class="btn solid" href="assets/jaspersands_resume.pdf?v=ee74960a">Résumé</a>
+          <a class="btn strong" href="assets/jaspersands_cv.pdf?v=75309ddb">CV</a>
           <a class="btn" href="https://github.com/Jaspersands">GitHub</a>
           <a class="btn" href="https://www.linkedin.com/in/jaspersands">LinkedIn</a>
           <a class="btn" href="mailto:jaspersands02@gmail.com">Email</a>
@@ -110,9 +110,9 @@
         <div class="about-grid rv">
           <div class="prose">
             <p>
-              I work on quantum algorithms and machine learning. Most of my time goes into writing simulators,
-              fitting models to experimental data, and checking whether a speedup that works on paper still
-              holds up on real hardware.
+              I work on quantum algorithms, error correction, and machine learning for quantum hardware. Most of
+              my time goes into writing simulators, fitting models to experimental data, and checking whether an
+              algorithm that works on paper still holds up once error correction and real noise are counted.
             </p>
             <p>
               Before I moved into quantum I spent a few years on applied ML and systems work: fine-tuning language
@@ -132,66 +132,27 @@
       <div class="wrap">
         <div class="shead rv"><h2>Selected work</h2><span class="idx">02</span></div>
         <div class="work">
-
           <article class="piece rv">
             <div class="piece-body">
-              <h3>WhatTheDuck</h3>
-              <div class="where">State Street × Classiq challenge · iQuHACK 2026</div>
-              <span class="badge">Overall winner · NVIDIA Ecosystem Award</span>
+              <h3>stabilizer-qec</h3>
+              <div class="where">Rust → Python and WebAssembly · surface-code simulator and decoder</div>
               <p>
-                Quantum Iterative Amplitude Estimation for financial Value at Risk, benchmarked against a classical
-                quasi-Monte Carlo baseline. I wrote the GPU-accelerated state preparation, the threshold oracle,
-                and the bisection search in CUDA-Q. Classical sampling needs O(1/ε²) samples to reach precision ε
-                and IQAE needs O(1/ε) oracle calls, and the measured scaling matched that.
-              </p>
-              <div class="tags">
-                <span class="tag">CUDA-Q</span><span class="tag">Amplitude estimation</span>
-                <span class="tag">Monte Carlo</span><span class="tag">C++</span>
-              </div>
-              <div class="inline-links">
-                <a href="https://github.com/ShayManor/WhatTheDuck">GitHub</a>
-                <a href="https://github.com/ShayManor/WhatTheDuck/blob/main/docs/iQuHack_2026_presentation.pdf">Slides</a>
-              </div>
-            </div>
-            <div class="demo">
-              <div class="demo-head"><span class="t">Query scaling</span><span class="t">log–log</span></div>
-              <div class="demo-body">
-                <svg id="scale" viewBox="0 0 300 190" role="img" aria-label="Log-log plot: classical queries scale as one over epsilon squared, IQAE as one over epsilon"></svg>
-                <div class="ctl">
-                  <label for="eps">ε</label>
-                  <input type="range" id="eps" min="10" max="40" value="25" aria-label="Target precision">
-                  <span class="val" id="epsv">1e-2.5</span>
-                </div>
-                <div class="readout" aria-live="polite">
-                  <span>classical <b id="r-c">·</b></span>
-                  <span>quantum <b id="r-q">·</b></span>
-                  <span>speedup <b id="r-s">·</b></span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="piece rv">
-            <div class="piece-body">
-              <h3>WASM QEC Simulator</h3>
-              <div class="where">Rust → WebAssembly · surface code decoding in the browser</div>
-              <p>
-                A symplectic stabilizer simulator written in Rust and compiled to WebAssembly, for rotated and XZZX
-                surface codes. It is the engine behind the lattice at the top of this page. An error on a data
-                qubit lights the stabilizers that anticommute with it, and that pattern of lit stabilizers is all
-                a real quantum computer gets to see, because measuring the error directly would collapse the
-                state. Decoding works backwards from the pattern to a likely error; the decoders here, including
-                minimum-weight perfect matching, do it properly and run entirely in the browser, with live error
-                injection and logical error benchmarking.
+                A stabilizer circuit simulator and decoder suite in Rust, shipped as a Python package and compiled
+                to WebAssembly: it is the engine behind the lattice at the top of this page. It covers rotated and
+                XZZX surface codes, IBM's gross code and lattice surgery, reads and writes Stim's formats, and decodes
+                with sparse-blossom matching (plain and correlated), BP+OSD and Union-Find. It agrees with Stim and
+                PyMatching edge for edge and shot for shot, and it rebuilds every one of Google's Willow and Sycamore
+                memory experiments (27.5 million shots) from the raw measurements, bit for bit.
               </p>
               <div class="tags">
                 <span class="tag">Rust</span><span class="tag">WebAssembly</span>
-                <span class="tag">Surface codes</span><span class="tag">MWPM</span>
+                <span class="tag">Surface codes</span><span class="tag">Decoding</span>
               </div>
               <div class="inline-links">
                 <a href="https://github.com/Jaspersands/quantum-simulator-qec">GitHub</a>
-                <a href="https://qcompiler.jaspersands.com/">Live dashboard</a>
-                <a href="#top">↑ Try the lattice</a>
+                <a href="https://qcompiler.jaspersands.com/">Live site</a>
+                <a href="https://qcompiler.jaspersands.com/report/report.html">Report</a>
+                <a href="https://pypi.org/project/stabilizer-qec/">PyPI</a>
               </div>
             </div>
             <div class="demo">
@@ -269,42 +230,45 @@
 
           <article class="piece rv">
             <div class="piece-body">
-              <h3>Noise-Aware Adiabatic Simulation</h3>
-              <div class="where">IBM Heron r2 · transverse-field Ising model</div>
+              <h3>ft-algorithms</h3>
+              <div class="where">Algorithms on a simulated fault-tolerant quantum computer</div>
               <p>
-                Digitized adiabatic ground state preparation for the 1D transverse-field Ising model on IBM's
-                Heron r2. I used the processor's parameterised RZZ(θ) pulses rather than fixed two-qubit
-                decompositions, plus a palindromic Trotter step for second-order accuracy. The gap closes near the
-                critical point, so a linear sweep moves too quickly through the part that matters; flattening the
-                schedule around s꜀ slows it down there instead. Benchmarking eight ansatz variants gave the more
-                interesting result. A counterdiabatic correction that is exact in the closed-system limit is a net
-                loss under real noise: its threefold entangling-gate overhead admits more error per layer than the
-                correction removes. The best ansatz on hardware is not the best ansatz on a simulator.
+                What does it take to run an algorithm on an error-corrected machine? I fitted the logical operations
+                of a lattice-surgery machine (idling, merges, CNOTs) to 316 circuit-level surface-code experiments run
+                on stabilizer-qec, then ran Shor's algorithm (N up to 143) and phase estimation for H₂, HeH⁺ and LiH
+                on that machine, fault by fault, with magic-state factories. Used as a resource estimator, the same
+                model reproduces Gidney's 2025 RSA-2048 distance of 25 under his noise projection and Lee et al.'s
+                FeMoco distance of 31; with the noise actually measured, one RSA-2048 shot needs d = 27–29.
               </p>
               <div class="tags">
-                <span class="tag">IBM Heron</span><span class="tag">Suzuki–Trotter</span>
-                <span class="tag">Counterdiabatic driving</span><span class="tag">Qiskit</span>
+                <span class="tag">Lattice surgery</span><span class="tag">Resource estimation</span>
+                <span class="tag">Shor</span><span class="tag">Phase estimation</span>
               </div>
               <div class="inline-links">
-                <a href="assets/noise-aware-adiabatic-ansatz.pdf">Paper</a>
-                <a href="assets/noise-aware-adiabatic-slides.pdf">Slides</a>
-                <a href="https://github.com/Jaspersands/digitized-adiabatic-tfim">GitHub</a>
+                <a href="https://github.com/Jaspersands/ft-algorithms">GitHub</a>
+                <a href="https://ft.jaspersands.com/">Live site</a>
+                <a href="https://ft.jaspersands.com/report/report.html">Report</a>
               </div>
             </div>
             <div class="demo">
-              <div class="demo-head"><span class="t">Anneal schedule s(t)</span><span class="t">s꜀ = 0.5</span></div>
+              <div class="demo-head"><span class="t">Shor, N = 35</span><span class="t">p = 0.1%</span></div>
               <div class="demo-body">
-                <svg id="sweep" viewBox="0 0 300 190" role="img" aria-label="Linear versus flattened anneal schedule through the critical point"></svg>
+                <svg id="shor" viewBox="0 0 300 190" role="img" aria-label="Share of Shor runs for N = 35 landing on an ideal peak, against code distance, for cultivated and injected magic states"></svg>
                 <div class="ctl">
-                  <label for="swk">flatten</label>
-                  <input type="range" id="swk" min="10" max="45" value="25" aria-label="Flattening exponent">
-                  <span class="val" id="swkv">2.5</span>
+                  <label for="shd">d</label>
+                  <input type="range" id="shd" min="9" max="19" step="2" value="13" aria-label="Code distance">
+                  <span class="val" id="shdv">13</span>
                 </div>
                 <div class="readout" aria-live="polite">
-                  <span>near s꜀ linear <b id="sw-a">·</b></span>
-                  <span>flattened <b id="sw-b">·</b></span>
+                  <span>cultivated <b id="sh-c">·</b></span>
+                  <span>injected <b id="sh-i">·</b></span>
+                  <span>E[faults] <b id="sh-f">·</b></span>
                 </div>
-                <p class="hint">Share of the total anneal time spent within 0.05 of the critical point.</p>
+                <p class="hint">
+                  Share of runs landing on one of the ideal peaks (24 logical qubits, 10,440 Toffolis), simulated on
+                  the machine. Below d = 11 logical errors wash the answer out. From d = 15 cultivated magic states
+                  reach the noiseless 0.79, while injected ones stall near 0.61: no distance fixes the factory.
+                </p>
               </div>
             </div>
           </article>
@@ -394,35 +358,38 @@
 
           <article class="piece rv">
             <div class="piece-body">
-              <h3>Entanglement &amp; Matrix Product States</h3>
-              <div class="where">Many-body systems · theoretical study</div>
+              <h3>WhatTheDuck</h3>
+              <div class="where">State Street × Classiq challenge · iQuHACK 2026</div>
+              <span class="badge">Overall winner · NVIDIA Ecosystem Award</span>
               <p>
-                A study of how bipartite entanglement structure controls MPS compression. I wrote a sequential SVD
-                wavefunction decomposition in Python and measured Schmidt spectra, entanglement entropy at every
-                cut, and fidelity under truncation. A product state needs bond dimension 1 and a Haar-random
-                state needs exponentially many, so the useful cases fall somewhere between the two.
+                Quantum Iterative Amplitude Estimation for financial Value at Risk, benchmarked against a classical
+                quasi-Monte Carlo baseline. I wrote the GPU-accelerated state preparation, the threshold oracle,
+                and the bisection search in CUDA-Q. Classical sampling needs O(1/ε²) samples to reach precision ε
+                and IQAE needs O(1/ε) oracle calls, and the measured scaling matched that.
               </p>
               <div class="tags">
-                <span class="tag">Tensor networks</span><span class="tag">Schmidt decomposition</span>
-                <span class="tag">SVD compression</span>
+                <span class="tag">CUDA-Q</span><span class="tag">Amplitude estimation</span>
+                <span class="tag">Monte Carlo</span><span class="tag">C++</span>
               </div>
-              <div class="inline-links"><a href="assets/mps_presentation.pdf">Slides</a></div>
+              <div class="inline-links">
+                <a href="https://github.com/ShayManor/WhatTheDuck">GitHub</a>
+                <a href="https://github.com/ShayManor/WhatTheDuck/blob/main/docs/iQuHack_2026_presentation.pdf">Slides</a>
+              </div>
             </div>
             <div class="demo">
-              <div class="demo-head"><span class="t">Entropy across cuts</span><span class="t">n = 12</span></div>
+              <div class="demo-head"><span class="t">Query scaling</span><span class="t">log–log</span></div>
               <div class="demo-body">
-                <svg id="ent" viewBox="0 0 300 190" role="img" aria-label="Entanglement entropy across every bipartition of a 12-qubit chain"></svg>
-                <div class="ctl" id="ent-ctl" role="group" aria-label="State family">
-                  <button type="button" data-s="product">Product</button>
-                  <button type="button" data-s="ghz">GHZ</button>
-                  <button type="button" class="on" data-s="ising">Ising</button>
-                  <button type="button" data-s="haar">Haar</button>
+                <svg id="scale" viewBox="0 0 300 190" role="img" aria-label="Log-log plot: classical queries scale as one over epsilon squared, IQAE as one over epsilon"></svg>
+                <div class="ctl">
+                  <label for="eps">ε</label>
+                  <input type="range" id="eps" min="10" max="40" value="25" aria-label="Target precision">
+                  <span class="val" id="epsv">1e-2.5</span>
                 </div>
                 <div class="readout" aria-live="polite">
-                  <span>max S <b id="ent-max">·</b> bits</span>
-                  <span>bond dim χ ≈ <b id="ent-chi">·</b></span>
+                  <span>classical <b id="r-c">·</b></span>
+                  <span>quantum <b id="r-q">·</b></span>
+                  <span>speedup <b id="r-s">·</b></span>
                 </div>
-                <p class="hint">How the entropy scales sets the cost. Area law scaling stays cheap to simulate, volume law scaling does not.</p>
               </div>
             </div>
           </article>
@@ -489,8 +456,14 @@
         </div>
 
         <p class="also rv">
-          Examples of other work: <strong>QSVT Spectrum Transformations</strong>, using quantum signal
-          processing to transform a matrix spectrum directly
+          Examples of other work: <strong>Noise-Aware Adiabatic Simulation</strong> on IBM Heron r2, where a
+          counterdiabatic correction that is exact in the closed-system limit turned out to be a net loss under
+          real noise (<a href="assets/noise-aware-adiabatic-ansatz.pdf">paper</a>,
+          <a href="assets/noise-aware-adiabatic-slides.pdf">slides</a>,
+          <a href="https://github.com/Jaspersands/digitized-adiabatic-tfim">GitHub</a>).
+          <strong>Entanglement and Matrix Product States</strong>, relating Schmidt spectra to MPS compressibility
+          (<a href="assets/mps_presentation.pdf">slides</a>). <strong>QSVT Spectrum Transformations</strong>, using
+          quantum signal processing to transform a matrix spectrum directly
           (<a href="assets/qsvt_presentation.pdf">slides</a>). <strong>HyperAMR</strong>, mapping metagenomic
           contigs and antimicrobial resistance annotations into a shared hyperbolic space
           (<a href="assets/hyperamr_paper.pdf">write-up</a>).
@@ -727,9 +700,10 @@
           <div class="rv">
             <h3>Quantum</h3>
             <p>
-              Qiskit, Cirq, PennyLane, CUDA-Q · Hamiltonian simulation, phase estimation, amplitude
-              amplification and estimation, QSVT and block encoding, LCU · surface codes and MWPM decoding ·
-              VQE, QAOA · noise modeling and transpilation
+              Qiskit, Cirq, PennyLane, CUDA-Q, Stim, PyMatching · Hamiltonian simulation, phase estimation,
+              amplitude amplification and estimation, QSVT and block encoding, LCU · surface and gross codes,
+              matching and BP+OSD decoding, lattice surgery, magic states, resource estimation · VQE, QAOA ·
+              noise modeling and transpilation
             </p>
           </div>
           <div class="rv"><h3>Machine learning</h3><p>PyTorch, TensorFlow, scikit-learn, Hugging Face, CUDA</p></div>

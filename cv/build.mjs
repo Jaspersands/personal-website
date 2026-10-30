@@ -3,17 +3,10 @@
 //
 //   npm i -D playwright && npx playwright install chromium
 //   node cv/build.mjs          # the two-page CV -> assets/jaspersands_cv.pdf
-//   node cv/build.mjs --full   # the long one, kept for the record
 //
-// Both come out of the one source file. cv.html marks the long-only material
-// data-t="3" and its short replacements data-t="2"; the two-page build sets
-// class="two" on <html>, which hides the first set and reveals the second. Keeping
-// them in one file is the whole point: two copies of a CV drift, and the version
-// you did not update is the one that gets sent.
-//
-// Unlike the résumé this is deliberately multi-page, so there is no one-page guard.
-// Each variant declares the page count it is named for and the build fails if the
-// render misses it, or if the last page is too empty to look deliberate.
+// Unlike the résumé this is deliberately two pages, so there is no one-page guard.
+// The build fails if the render is not exactly two pages, or if the last page is too
+// empty to look deliberate.
 
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -24,13 +17,8 @@ import { createRequire } from 'node:module';
 const here = dirname(fileURLToPath(import.meta.url));
 const src = resolve(here, 'cv.html');
 
-// The two-page cut is the CV: it takes the plain filename and it is what the site
-// links. The long one is kept for the record under its own name. The class is still
-// called "two" because data-t="2"/"3" name page counts, not which variant is default.
-export const VARIANTS = {
-  two: { pdf: 'jaspersands_cv.pdf', pages: 2, two: true, stamps: true },
-  full: { pdf: 'jaspersands_cv_3page.pdf', pages: 3, two: false, stamps: false },
-};
+export const PDF = 'jaspersands_cv.pdf';
+export const PAGES = 2;
 
 export const DPI = 96;
 export const MARGIN = { top: 0.55, bottom: 0.5, left: 0.7, right: 0.7 }; // inches
@@ -66,23 +54,21 @@ export async function contentHeight(page) {
   });
 }
 
-export async function openCV(browser, { two = false } = {}) {
+export async function openCV(browser) {
   const page = await browser.newPage({
     viewport: { width: Math.round(CONTENT_W), height: 3000 },
   });
   await page.goto('file://' + src, { waitUntil: 'load' });
-  if (two) await page.evaluate(() => document.documentElement.classList.add('two'));
   await page.emulateMedia({ media: 'print' });
   return page;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
-  const variant = process.argv.includes('--full') ? VARIANTS.full : VARIANTS.two;
-  const out = resolve(here, '..', 'assets', variant.pdf);
+  const out = resolve(here, '..', 'assets', PDF);
 
   const chromium = await loadChromium();
   const browser = await chromium.launch();
-  const page = await openCV(browser, { two: variant.two });
+  const page = await openCV(browser);
 
   const buf = await page.pdf({
     path: out,
@@ -110,10 +96,10 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     `wrote ${out} — ${height.toFixed(0)}px of flow, ${pages} rendered page(s), ` +
     `last page ${(Math.max(lastPageFill, 0) * 100).toFixed(0)}% full`
   );
-  if (pages !== variant.pages) {
+  if (pages !== PAGES) {
     console.error(
-      `ERROR: this variant is the ${variant.pages}-page CV but rendered ${pages}. ` +
-      `Run cv/measure.mjs${variant.two ? '' : ' --full'} to see where the breaks fall.`
+      `ERROR: the CV is ${PAGES} pages but rendered ${pages}. ` +
+      `Run cv/measure.mjs to see where the breaks fall.`
     );
     process.exit(1);
   }
@@ -123,15 +109,9 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     process.exit(1);
   }
 
-  if (!variant.stamps) process.exit(0);
-
   const idx = resolve(here, '..', 'index.html');
-  // Hash the source and the variant identity. Hashing the source alone missed the day
-  // the two-page cut took over this filename: cv.html had not changed, so the key
-  // stayed put while the bytes behind it became a different document.
-  const hash = createHash('sha256')
-    .update(readFileSync(src)).update(`\0${variant.pdf}:${variant.pages}`)
-    .digest('hex').slice(0, 8);
+  // Hash the source, not the PDF: Chromium writes a creation time into every render.
+  const hash = createHash('sha256').update(readFileSync(src)).digest('hex').slice(0, 8);
   const html = readFileSync(idx, 'utf8');
   const re = /(href="assets\/jaspersands_cv\.pdf)(\?v=[^"]*)?"/;
   if (!re.test(html)) {

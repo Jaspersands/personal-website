@@ -127,7 +127,7 @@ const doc = new Document({
         alignment: AlignmentType.CENTER,
         spacing: { before: 60, ...LINE },
         children: [run(
-          'Quantum error correction, quantum algorithms, and machine learning for ' +
+          'Quantum error correction, fault-tolerant quantum algorithms, and machine learning for ' +
           'quantum-device characterization. ' +
           'MS in Computer Science at Columbia. Thesis at Diraq and UNSW Sydney on ' +
           'automating silicon spin qubit measurement.'
@@ -156,30 +156,30 @@ const doc = new Document({
       // ---------- projects ----------
       heading('Selected Projects'),
       entryLine(
-        [link('WhatTheDuck', 'https://github.com/ShayManor/WhatTheDuck', { bold: true }), run(': quantum amplitude estimation for financial Value at Risk'),
-         DOT(), i('CUDA-Q, C++')],
-        '', 0
+        [link('stabilizer-qec', 'https://github.com/Jaspersands/quantum-simulator-qec', { bold: true }), run(': surface-code simulator and decoder'),
+         DOT(), i('Rust, Python, WebAssembly')],
+        [link('qcompiler.jaspersands.com', 'https://qcompiler.jaspersands.com/')], 42
       ),
       bullet([run(
-        'Wrote the GPU-accelerated state prep, threshold oracle, and bisection search driving ' +
-        'Iterative Quantum Amplitude Estimation.'
+        'Circuit-level simulator and decoders for surface, XZZX and IBM gross codes; matches Stim and ' +
+        'PyMatching shot for shot.'
       )]),
       bullet([run(
-        'Measured query scaling matched the O(1/ε) bound against an O(1/ε²) quasi-Monte Carlo ' +
-        'classical baseline.'
+        "Rebuilt Google's Willow and Sycamore experiments (27.5M shots) from raw measurements bit for " +
+        'bit and fitted Λ as Google does.'
       )]),
       entryLine(
-        [link('WASM QEC Simulator', 'https://github.com/Jaspersands/quantum-simulator-qec', { bold: true }), run(': surface-code decoding in the browser'),
-         DOT(), i('Rust, WebAssembly')],
-        [link('qcompiler.jaspersands.com', 'https://qcompiler.jaspersands.com/')]
+        [link('ft-algorithms', 'https://github.com/Jaspersands/ft-algorithms', { bold: true }), run(': algorithms on a simulated fault-tolerant quantum computer'),
+         DOT(), i('Rust, Python')],
+        [link('ft.jaspersands.com', 'https://ft.jaspersands.com/')]
       ),
       bullet([run(
-        'Symplectic stabilizer simulator for rotated and XZZX surface codes, with exact MWPM and ' +
-        'Union-Find decoding client-side.'
+        'Runs Shor (N ≤ 143) and H₂/LiH phase estimation on a lattice-surgery machine fitted to 316 ' +
+        'circuit-level QEC experiments.'
       )]),
       bullet([run(
-        'Finite-size scaling puts the threshold at 3.2% with MWPM, 2.7% with Union-Find, and ' +
-        '14.7% under code-capacity noise.'
+        "Reproduces Gidney's 2025 RSA-2048 distance (d = 25) under his noise projection; measured " +
+        'noise needs d = 27–29.'
       )]),
       entryLine(
         [link('Q-Search', 'https://github.com/Jaspersands/qsearch', { bold: true }), run(': proof-gated quantum algorithm research and verification engine')],
@@ -194,12 +194,17 @@ const doc = new Document({
         'theorem modules, indexing negative results.'
       )]),
       entryLine(
-        [link('LLM-Based Lossless Text Compression', 'https://github.com/Jaspersands/LLMcompression', { bold: true }), DOT(), i('PyTorch, CUDA')],
-        [link('jaspersands.com/llmcompression', 'https://jaspersands.com/llmcompression/')]
+        [link('WhatTheDuck', 'https://github.com/ShayManor/WhatTheDuck', { bold: true }), run(': quantum amplitude estimation for financial Value at Risk'),
+         DOT(), i('CUDA-Q, C++')],
+        'MIT iQuHACK 2026'
       ),
       bullet([run(
-        'Arithmetic coding on LLM predictions, 5–16× average and 39× best case, at 100–1000× ' +
-        'lower throughput than gzip and zstd.'
+        'Wrote the GPU-accelerated state prep, threshold oracle, and bisection search driving ' +
+        'Iterative Quantum Amplitude Estimation.'
+      )]),
+      bullet([run(
+        'Measured query scaling matched the O(1/ε) bound against an O(1/ε²) quasi-Monte Carlo ' +
+        'classical baseline.'
       )]),
 
       // ---------- research ----------
@@ -221,9 +226,8 @@ const doc = new Document({
         'Sep 2025 – Jun 2026'
       ),
       bullet([run(
-        'Built phishing and spam detection pipelines with Dr. Asaf Cidon and Barracuda Networks, ' +
-        'combining language-model embeddings with production email telemetry and tuning for precision ' +
-        'against a fixed false-positive budget.'
+        'Built phishing and spam detection with Dr. Asaf Cidon and Barracuda Networks from LLM ' +
+        'embeddings and email telemetry.'
       )]),
       entryLine(
         [b('Complex Resilient Intelligent Systems Lab'), run(', Columbia University'),
@@ -262,9 +266,8 @@ const doc = new Document({
       )]),
       entryLine([b('Highnote'), DOT(), i('Cybersecurity Engineer Intern')], 'May – Jul 2024'),
       bullet([run(
-        'Designed and deployed the company-wide SIEM for a card-issuing fintech, unifying AWS, GCP, ' +
-        'and Datadog telemetry into one Elasticsearch cluster ingesting over 1 TB/day, and wrote 100+ ' +
-        'rule-based and ML anomaly detections.'
+        'Built the company-wide SIEM for a card-issuing fintech: AWS, GCP and Datadog logs in one ' +
+        'Elasticsearch cluster (1 TB/day), 100+ detections.'
       )]),
 
       entryLine([b('Mindtrip'), DOT(), i('Software Engineer Intern')], 'May – Jul 2023'),
@@ -289,7 +292,7 @@ const doc = new Document({
       skill('Quantum methods:',
         'Hamiltonian simulation, phase and amplitude estimation, QSVT and block encoding, ' +
         'VQE, QAOA · surface codes, stabilizer formalism, MWPM and Union-Find decoding, ' +
-        'threshold estimation, noise modeling'),
+        'threshold estimation, noise modeling, lattice surgery'),
       skill('Languages:', 'Python, C++, Rust, C, MATLAB, JavaScript, TypeScript, Go, Java'),
       skill('ML & systems:',
         'PyTorch, CUDA, Hugging Face · Linux, Git, Docker, WebAssembly, ' +
